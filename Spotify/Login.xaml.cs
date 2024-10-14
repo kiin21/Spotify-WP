@@ -19,14 +19,18 @@ using Windows.Foundation.Collections;
 namespace Spotify
 {
     /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
+    /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ShellWindow : Window
+    public sealed partial class Login : Page
     {
-        public ShellWindow()
+        public Login()
         {
             this.InitializeComponent();
-            RootFrame.Navigate(typeof(Signup));
+        }
+
+        private void Signup_Button_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(Signup));
         }
     }
 }
