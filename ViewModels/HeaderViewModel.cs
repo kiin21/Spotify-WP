@@ -41,16 +41,13 @@ public class HeaderViewModel : INotifyPropertyChanged
 
     public HeaderViewModel(SongService songService)
     {
-        SearchCommand = new RelayCommand(_ => ExecuteSearchAsync(), _ => CanExecuteSearch());
+        SearchCommand = new RelayCommand(async _ => await ExecuteSearchAsync(), _ => CanExecuteSearch());
         _songService = songService;
         SearchResults = new ObservableCollection<SongDTO>();
     }
 
-    private void ExecuteSearchAsync()
+    private async Task ExecuteSearchAsync()
     {
-        string message = $"Searching for: {SearchQuery}";
-        Debug.WriteLine(message);
-
         var results = await _songService.SearchSongs(SearchQuery);
         SearchResults = new ObservableCollection<SongDTO>(results);
 
