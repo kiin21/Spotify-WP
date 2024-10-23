@@ -34,14 +34,23 @@
             <Image Source="/Assets/search_icon.png" Width="20" Height="20" VerticalAlignment="Center" Margin="10,0"/>
 
             <!-- Search TextBox -->
-            <TextBox 
+            <!--<TextBox 
                 x:Name="SearchTextBox"
                 Grid.Column="1"
-                VerticalAlignment="Center"
-                Padding="10"
+                AutomationProperties.Name="simple TextBox"
                 PlaceholderText="Search"
                 Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                KeyDown="SearchTextBox_KeyDown" />
+                KeyDown="SearchTextBox_KeyDown" />-->
+            <AutoSuggestBox
+                x:Name="SearchAutoSuggestBox"
+                Grid.Column="1"
+                AutomationProperties.Name="simple AutoSuggestBox"
+                PlaceholderText="Search"
+                QueryIcon="Find"
+                TextChanged="SearchAutoSuggestBox_TextChanged"
+                QuerySubmitted="SearchAutoSuggestBox_QuerySubmitted"
+                SuggestionChosen="SearchAutoSuggestBox_SuggestionChosen"
+                Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <!-- Use the event handler -->
         </Grid>
 

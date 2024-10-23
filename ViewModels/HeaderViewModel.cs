@@ -1,4 +1,6 @@
 ﻿// HeaderViewModel.cs
+using System.Collections.Generic;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -46,6 +48,7 @@ public class HeaderViewModel : INotifyPropertyChanged
         SearchResults = new ObservableCollection<SongDTO>();
     }
 
+
     private async Task ExecuteSearchAsync()
     {
         var results = await _songService.SearchSongs(SearchQuery);
@@ -54,6 +57,24 @@ public class HeaderViewModel : INotifyPropertyChanged
         var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
         var mainFrame = shellWindow.getMainFrame();
         shellWindow.NavigateToPage(typeof(SearchResultsPage), mainFrame, SearchResults);
+    }
+    // GetSuggestions method for auto-suggest functionality
+    public async Task<List<string>> GetSuggestions(string query)
+    {
+        // Retrieve the suggestions based on the current query
+        List<SongDTO> allSongs = await _songService.GetAllSongs(); // Assume you have a method to get all songs
+        var suggestions = new List<string>();
+
+        foreach (var song in allSongs)
+        {
+            if (song.Title.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                song.Artist.Contains(query, StringComparison.OrdinalIgnoreCase))
+            {
+                suggestions.Add(song.Title); // Add matching song titles
+            }
+        }
+
+        return suggestions;
     }
 
     private bool CanExecuteSearch()

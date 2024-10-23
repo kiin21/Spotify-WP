@@ -5,12 +5,13 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Spotify.Models;
+using Spotify.Models.DTOs;
 
 namespace Spotify.ViewModels;
 public class MainPanelViewModel : INotifyPropertyChanged
 {
-    private ObservableCollection<Song> _songs;
-    public ObservableCollection<Song> Songs
+    private ObservableCollection<SongDTO> _songs;
+    public ObservableCollection<SongDTO> Songs
     {
         get => _songs;
         set

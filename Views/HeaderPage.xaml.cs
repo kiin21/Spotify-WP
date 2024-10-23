@@ -23,9 +23,24 @@ public sealed partial class HeaderPage : Page
         DataContext = ViewModel;
     }
 
-    private void SearchTextBox_KeyDown(object sender, KeyRoutedEventArgs e)
+
+    private async void SearchAutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
     {
-        if (e.Key == VirtualKey.Enter)
+        if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+        {
+            // Update the suggestions based on user input
+            var query = sender.Text;
+
+            // Await the async method
+            var suggestions = await ViewModel.GetSuggestions(query);
+
+            sender.ItemsSource = suggestions; // Display suggestions
+        }
+    }
+
+    private void SearchAutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+    {
+        if (!string.IsNullOrEmpty(args.QueryText))
         {
             if (ViewModel.SearchCommand.CanExecute(null))
             {
@@ -33,4 +48,11 @@ public sealed partial class HeaderPage : Page
             }
         }
     }
+
+    private void SearchAutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+    {
+        // Set the selected suggestion as the search query
+        ViewModel.SearchQuery = args.SelectedItem.ToString();
+    }
+
 }
