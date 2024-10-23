@@ -17,6 +17,6 @@ public class MockSongDAO : ISongDAO
         // Add more mock songs here
     };
 
-    public Task<List<SongDTO>> SearchSongsAsync(string query) =>
+    public Task<List<SongDTO>> SearchSongs(string query) =>
         Task.FromResult(_mockSongs.Where(s => s.Title.Contains(query)).ToList());
 }

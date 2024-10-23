@@ -15,7 +15,7 @@ public class SongService
         _songDAO = songDAO;
     }
 
-    public Task<List<SongDTO>> SearchSongsAsync(string query) =>
-        _songDAO.SearchSongsAsync(query);
+    public Task<List<SongDTO>> SearchSongs(string query) =>
+        _songDAO.SearchSongs(query);
 
 }
