@@ -68,14 +68,16 @@
     <None Update="Assets\App.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\sample.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Page Update="Views\SongDetailPage.xaml">
     <Page Update="Views\LikedSongPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\PlaylistPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <None Update="Assets\sample.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Page Update="Views\SongDetailPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\SearchResultsPage.xaml">
