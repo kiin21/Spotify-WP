@@ -27,7 +27,10 @@ public sealed partial class HeaderPage : Page
     {
         if (e.Key == VirtualKey.Enter)
         {
-            ViewModel.SearchCommand.Execute(null);
+            if(ViewModel.SearchCommand.CanExecute(null))
+            {
+                ViewModel.SearchCommand.Execute(null);
+            }    
         }
     }
 }
