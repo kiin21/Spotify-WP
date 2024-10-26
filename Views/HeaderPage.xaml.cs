@@ -15,36 +15,22 @@ public sealed partial class HeaderPage : Page
     public HeaderPage()
     {
         this.InitializeComponent();
-        // Resolve the SongService from the service provider (DI container)
         var songService = (App.Current as App).Services.GetRequiredService<SongService>();
-
-        // Pass it to the ViewModel
         ViewModel = new HeaderViewModel(songService);
         DataContext = ViewModel;
     }
 
-
-    private async void SearchAutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+    private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
-        if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+        if (ViewModel.SearchCommand.CanExecute(null))
         {
-            // Update the suggestions based on user input
-            var query = sender.Text;
-
-            // Await the async method
-            var suggestions = await ViewModel.GetSuggestions(query);
-
-            sender.ItemsSource = suggestions; // Display suggestions
-            if(ViewModel.SearchCommand.CanExecute(null))
-            {
-                ViewModel.SearchCommand.Execute(null);
-            }    
+            ViewModel.SearchCommand.Execute(null);
         }
     }
 
-    private void SearchAutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+    private void SearchTextBox_KeyDown(object sender, KeyRoutedEventArgs e)
     {
-        if (!string.IsNullOrEmpty(args.QueryText))
+        if (e.Key == VirtualKey.Enter)
         {
             if (ViewModel.SearchCommand.CanExecute(null))
             {
@@ -52,11 +38,4 @@ public sealed partial class HeaderPage : Page
             }
         }
     }
-
-    private void SearchAutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
-    {
-        // Set the selected suggestion as the search query
-        ViewModel.SearchQuery = args.SelectedItem.ToString();
-    }
-
 }

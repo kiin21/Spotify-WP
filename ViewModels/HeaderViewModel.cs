@@ -50,35 +50,26 @@ public class HeaderViewModel : INotifyPropertyChanged
 
     private async Task ExecuteSearchAsync()
     {
-        var results = await _songService.SearchSongs(SearchQuery);
-        SearchResults = new ObservableCollection<SongDTO>(results);
+        if (SearchQuery == "")
+        {
+            var results = await _songService.GetAllSongs();
+            SearchResults = new ObservableCollection<SongDTO>(results);
+        }
+        else
+        {
+
+            var results = await _songService.SearchSongs(SearchQuery);
+            SearchResults = new ObservableCollection<SongDTO>(results);
+        }
 
         var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
         var mainFrame = shellWindow.getMainFrame();
         shellWindow.NavigateToPage(typeof(SearchResultsPage), mainFrame, SearchResults);
     }
-    // GetSuggestions method for auto-suggest functionality
-    public async Task<List<string>> GetSuggestions(string query)
-    {
-        // Retrieve the suggestions based on the current query
-        List<SongDTO> allSongs = await _songService.GetAllSongs(); // Assume you have a method to get all songs
-        var suggestions = new List<string>();
-
-        foreach (var song in allSongs)
-        {
-            if (song.Title.Contains(query, StringComparison.OrdinalIgnoreCase) ||
-                song.Artist.Contains(query, StringComparison.OrdinalIgnoreCase))
-            {
-                suggestions.Add(song.Title); // Add matching song titles
-            }
-        }
-
-        return suggestions;
-    }
 
     private bool CanExecuteSearch()
     {
-        return !string.IsNullOrEmpty(SearchQuery);
+        return SearchQuery!=null;
     }
 
     public event PropertyChangedEventHandler PropertyChanged;
