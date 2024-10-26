@@ -15,6 +15,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="Assets\App.ico" />
+    <Content Remove="Assets\sample.png" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="ShellWindow.xaml" />
@@ -24,6 +25,7 @@
     <None Remove="Views\PlaybackControlPage.xaml" />
     <None Remove="Views\QueuePage.xaml" />
     <None Remove="Views\SearchResultsPage.xaml" />
+    <None Remove="Views\SongDetailPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -59,6 +61,12 @@
     <None Update="Assets\App.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\sample.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Page Update="Views\SongDetailPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\SearchResultsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

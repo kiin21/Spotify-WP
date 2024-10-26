@@ -36,14 +36,6 @@ namespace Spotify
             services.AddTransient<HeaderViewModel>();
             services.AddTransient<MainPanelViewModel>();
 
-            // Register Pages
-            services.AddTransient<HeaderPage>();
-            services.AddTransient<LeftSidebarPage>();
-            services.AddTransient<SearchResultsPage>();
-            services.AddTransient<QueuePage>();
-            services.AddTransient<PlaybackControlPage>();
-            services.AddTransient<QueuePage>();
-
             return services.BuildServiceProvider();
         }
 

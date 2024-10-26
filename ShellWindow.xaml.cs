@@ -16,12 +16,12 @@ public sealed partial class ShellWindow : WindowEx
     {
         return MainFrame;
     }
-
+    private readonly INavigationService _navigationService;
     public ShellWindow()
     {
         InitializeComponent();
         AppWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets/App.ico"));
-
+        _navigationService = new NavigationService(MainFrame);
         InitializePages();
     }
 
@@ -38,5 +38,7 @@ public sealed partial class ShellWindow : WindowEx
     {
         frame.Navigate(pageType, parameter);
     }
+    // Method to expose navigation service to other parts of the app
+    public INavigationService GetNavigationService() => _navigationService;
 
 }

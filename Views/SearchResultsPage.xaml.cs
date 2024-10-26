@@ -1,30 +1,40 @@
+//SearchResultPage.xaml.cs
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Spotify.Models.DTOs;
 using Spotify.ViewModels;
 using System.Collections.ObjectModel;
 
-namespace Spotify.Views
+namespace Spotify.Views;
+
+public sealed partial class SearchResultsPage : Page
 {
-    public sealed partial class SearchResultsPage : Page
+    public SearchResultPageViewModel ViewModel { get; private set; }
+
+    public SearchResultsPage()
     {
-        public SearchResultPageViewModel ViewModel { get; private set; }
+        this.InitializeComponent();
+    }
 
-        public SearchResultsPage()
+    protected override void OnNavigatedTo(NavigationEventArgs e)
+    {
+        base.OnNavigatedTo(e);
+
+        // Get the navigation service from the shell window
+        var shellWindow = (App.Current as App)?.ShellWindow;
+        var navigationService = shellWindow?.GetNavigationService();
+
+        if (e.Parameter is ObservableCollection<SongDTO> searchResults)
         {
-            this.InitializeComponent();
+            ViewModel = new SearchResultPageViewModel(searchResults, navigationService);
+            DataContext = ViewModel;
         }
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+    }
+    private void ListView_ItemClick(object sender, ItemClickEventArgs e)
+    {
+        if (e.ClickedItem is SongDTO song)
         {
-            base.OnNavigatedTo(e);
-
-            // Cast the parameter to ObservableCollection<SongDTO>
-            if (e.Parameter is ObservableCollection<SongDTO> searchResults)
-            {
-                ViewModel = new SearchResultPageViewModel(searchResults);
-                DataContext = ViewModel;
-            }
+            ViewModel.SongSelectedCommand.Execute(song);
         }
     }
 }

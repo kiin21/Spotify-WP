@@ -12,7 +12,7 @@ namespace Spotify.DAO
     {
         private List<SongDTO> _mockSongs = new List<SongDTO>
         {
-            new SongDTO { Title = "Shape of You", Artist = "Ed Sheeran", Album = "Divide", Duration = TimeSpan.FromMinutes(3.5) },
+            new SongDTO { Title = "Shape of You", Artist = "Ed Sheeran", Album = "Divide", Duration = TimeSpan.FromMinutes(3.5),  },
             new SongDTO { Title = "Blinding Lights", Artist = "The Weeknd", Album = "After Hours", Duration = TimeSpan.FromMinutes(4) },
             new SongDTO { Title = "Rolling in the Deep", Artist = "Adele", Album = "21", Duration = TimeSpan.FromMinutes(3.5) },
             new SongDTO { Title = "Bohemian Rhapsody", Artist = "Queen", Album = "A Night at the Opera", Duration = TimeSpan.FromMinutes(6) },

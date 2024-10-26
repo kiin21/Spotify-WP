@@ -10,13 +10,43 @@
     mc:Ignorable="d">
 
     <Grid>
-        <ListView ItemsSource="{Binding SearchResults}">
+        <ListView 
+            ItemsSource="{Binding SearchResults}"
+            SelectionMode="Single"
+            IsItemClickEnabled="True"
+            ItemClick="ListView_ItemClick">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="Padding" Value="12,8" />
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Text="{Binding Title}" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding Artist}" Foreground="Gray"/>
-                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Thumbnail -->
+                        <Image 
+                            Source="{Binding ThumbnailUrl}" 
+                            Width="40" 
+                            Height="40" 
+                            Margin="0,0,12,0"/>
+
+                        <!-- Song Info -->
+                        <StackPanel Grid.Column="1">
+                            <TextBlock 
+                                Text="{Binding Title}" 
+                                FontWeight="SemiBold"/>
+                            <TextBlock 
+                                Text="{Binding Artist}" 
+                                Foreground="Gray"
+                                FontSize="12"/>
+                        </StackPanel>
+                    </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
