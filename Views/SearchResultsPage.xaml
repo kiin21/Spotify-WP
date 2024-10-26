@@ -8,9 +8,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
-
     <Grid>
         <ListView 
+            x:Name="SongListView"
             ItemsSource="{Binding SearchResults}"
             SelectionMode="Single"
             IsItemClickEnabled="True"
@@ -27,15 +27,14 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-
                         <!-- Thumbnail -->
                         <Image 
                             Source="{Binding CoverArt_url}" 
                             Width="40" 
                             Height="40" 
                             Margin="0,0,12,0"/>
-
                         <!-- Song Info -->
                         <StackPanel Grid.Column="1">
                             <TextBlock 
@@ -45,6 +44,37 @@
                                 Text="{Binding Artist}" 
                                 Foreground="Gray"
                                 FontSize="12"/>
+                        </StackPanel>
+                        <!-- Actions and Duration Container -->
+                        <StackPanel 
+                            Grid.Column="2" 
+                            Orientation="Horizontal" 
+                            Margin="0,0,5,0"
+                            Spacing="8">
+                            <Button 
+                                Content="&#xE710;"
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="7px"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Width="32"
+                                Height="32"/>
+
+                            <!-- Duration -->
+                            <TextBlock 
+                                Text="{Binding FormattedDuration}" 
+                                VerticalAlignment="Center"
+                                Margin="4,0"/>
+
+                            <Button 
+                                Content="&#xE712;"
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="5px"
+                                FontWeight="Bold"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Width="32"
+                                Height="32"/>
                         </StackPanel>
                     </Grid>
                 </DataTemplate>

@@ -7,6 +7,7 @@ using Spotify.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
+using System;
 
 namespace Spotify.ViewModels;
 
@@ -33,6 +34,10 @@ public class SearchResultPageViewModel : INotifyPropertyChanged
         INavigationService navigationService)
     {
         SearchResults = searchResults;
+        foreach (var song in SearchResults)
+        {
+            song.FormattedDuration = song.Duration.ToString("mm\\:ss");
+        }
         _navigationService = navigationService;
 
         SongSelectedCommand = new RelayCommand(
