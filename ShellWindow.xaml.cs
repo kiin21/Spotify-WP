@@ -6,6 +6,7 @@ using Spotify.Contracts.Services;
 using Spotify.Services;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
+using System.Windows;
 
 namespace Spotify;
 

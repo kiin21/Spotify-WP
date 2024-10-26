@@ -35,6 +35,10 @@ public sealed partial class HeaderPage : Page
             var suggestions = await ViewModel.GetSuggestions(query);
 
             sender.ItemsSource = suggestions; // Display suggestions
+            if(ViewModel.SearchCommand.CanExecute(null))
+            {
+                ViewModel.SearchCommand.Execute(null);
+            }    
         }
     }
 

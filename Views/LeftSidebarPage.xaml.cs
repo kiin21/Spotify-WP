@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -26,6 +26,31 @@ namespace Spotify.Views
         public LeftSidebarPage()
         {
             this.InitializeComponent();
+        }
+
+        // Thêm phương thức OnPlaylistButtonClick
+        private void OnPlaylistButtonClick(object sender, RoutedEventArgs e)
+        {
+            // Truy cập đến MainFrame và điều hướng đến PlaylistPage
+            var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
+            var mainFrame = shellWindow.getMainFrame();
+            shellWindow.NavigateToPage(typeof(PlaylistPage), mainFrame);
+        }
+        private void OnAddButtonClick(object sender, RoutedEventArgs e)
+        {
+            // TODO: Implement add playlist functionality
+        }
+
+        private void OnArrowButtonClick(object sender, RoutedEventArgs e)
+        {
+            // TODO: Implement arrow button functionality
+        }
+
+        private void OnLikedSongButtonClick(object sender, TappedRoutedEventArgs e)
+        {
+            var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
+            var mainFrame = shellWindow.getMainFrame();
+            shellWindow.NavigateToPage(typeof(LikedSongPage), mainFrame);
         }
     }
 }

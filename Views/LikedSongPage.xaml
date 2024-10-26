@@ -1,0 +1,131 @@
+<Page
+    x:Class="Spotify.Views.LikedSongPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:models="using:Spotify.Models.DTOs"
+    xmlns:local="using:Spotify.Views"
+    xmlns:converters="using:Spotify.Converters"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <converters:IndexConverter x:Key="IndexConverter"/>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header Section -->
+        <Grid Grid.Row="0" Padding="24" Background="#241E2E">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Liked Song Image -->
+            <StackPanel Grid.Column="0" Width="232" HorizontalAlignment="Left">
+                <Border Width="232" Height="232" Margin="0,0,24,0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#4B3F8D" Offset="0.0"/>
+                            <GradientStop Color="#2D2456" Offset="1.0"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <FontIcon Glyph="&#xE00B;" FontFamily="Segoe MDL2 Assets" 
+                             FontSize="64" Foreground="White" HorizontalAlignment="Center" 
+                             VerticalAlignment="Center"/>
+                </Border>
+            </StackPanel>
+
+            <!-- Liked Song Info -->
+            <StackPanel Grid.Column="1" VerticalAlignment="Bottom">
+                <TextBlock Text="Liked Songs" FontSize="96" FontWeight="Bold" 
+                         Foreground="White" TextWrapping="Wrap"/>
+                <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+                    <PersonPicture Width="24" Height="24"/>
+                    <TextBlock Text="{Binding Username}" Margin="8,0,4,0" 
+                             Foreground="White" VerticalAlignment="Center"/>
+                    <TextBlock Text="•" Margin="4,0" Foreground="#B3B3B3" 
+                             VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding SongCount}" 
+                             Foreground="#B3B3B3" VerticalAlignment="Center"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+        <!-- Songs List -->
+        <Grid Grid.Row="1" Background="#121212" Padding="24">
+
+            <!-- Title Bar -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="#" Foreground="Gray" FontSize="14" HorizontalAlignment="Center"/>
+                <TextBlock Grid.Column="1" Text="Tiêu đề" Foreground="Gray" FontSize="14"/>
+                <TextBlock Grid.Column="2" Text="Album" Foreground="Gray" FontSize="14"/>
+                <TextBlock Grid.Column="3" Text="Ngày thêm" Foreground="Gray" FontSize="14"/>
+                <TextBlock Grid.Column="4" Text="Thời lượng" Foreground="Gray" FontSize="14"/>
+            </Grid>
+
+            <ListView ItemsSource="{x:Bind ViewModel.LikedSongs, Mode=OneWay}" 
+          Margin="0,32,0,0" 
+          SelectionMode="Single" 
+          Background="Transparent">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="models:LikedSongDTO">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50"/>
+                                <!-- # -->
+                                <ColumnDefinition Width="*"/>
+                                <!-- Title -->
+                                <ColumnDefinition Width="200"/>
+                                <!-- Album -->
+                                <ColumnDefinition Width="200"/>
+                                <!-- Date Added -->
+                                <ColumnDefinition Width="100"/>
+                                <!-- Duration -->
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Index (Auto Incremented) -->
+                            <TextBlock Grid.Column="0" Text="1" 
+                           Foreground="#B3B3B3" Width="32" HorizontalAlignment="Left" VerticalAlignment="Center"
+                           TextAlignment="Left"/>
+
+                            <!-- Title (with Image and Text) -->
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                <Image Source="{x:Bind Image}" Width="40" Height="40" Margin="0,0,12,0"/>
+                                <TextBlock Text="{x:Bind Title}" Foreground="White" FontWeight="SemiBold" VerticalAlignment="Center" TextAlignment="Left"/>
+                            </StackPanel>
+
+                            <!-- Album -->
+                            <TextBlock Grid.Column="2" Text="{x:Bind Album}" 
+                           Foreground="#B3B3B3" Margin="12,0" 
+                           VerticalAlignment="Center" TextAlignment="Left"/>
+
+                            <!-- Date Added -->
+                            <TextBlock Grid.Column="3" Text="{x:Bind DateAdded}" 
+                           Foreground="#B3B3B3" Margin="12,0" 
+                           VerticalAlignment="Center" TextAlignment="Left"/>
+
+                            <!-- Duration -->
+                            <TextBlock Grid.Column="4" Text="{x:Bind Duration}" 
+                           Foreground="#B3B3B3" Width="64" 
+                           VerticalAlignment="Center" TextAlignment="Left"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+
+        </Grid>
+    </Grid>
+</Page>

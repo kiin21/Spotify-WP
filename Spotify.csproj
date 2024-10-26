@@ -21,8 +21,10 @@
     <None Remove="ShellWindow.xaml" />
     <None Remove="Views\HeaderPage.xaml" />
     <None Remove="Views\LeftSidebarPage.xaml" />
+    <None Remove="Views\LikedSongPage.xaml" />
     <None Remove="Views\MainPanelPage.xaml" />
     <None Remove="Views\PlaybackControlPage.xaml" />
+    <None Remove="Views\PlaylistPage.xaml" />
     <None Remove="Views\QueuePage.xaml" />
     <None Remove="Views\SearchResultsPage.xaml" />
     <None Remove="Views\SongDetailPage.xaml" />
@@ -70,6 +72,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Page Update="Views\SongDetailPage.xaml">
+    <Page Update="Views\LikedSongPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\PlaylistPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\SearchResultsPage.xaml">
