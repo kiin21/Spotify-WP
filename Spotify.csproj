@@ -18,6 +18,7 @@
     <Content Remove="Assets\sample.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove=".env" />
     <None Remove="ShellWindow.xaml" />
     <None Remove="Views\HeaderPage.xaml" />
     <None Remove="Views\LeftSidebarPage.xaml" />
@@ -31,6 +32,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include=".env">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
@@ -43,9 +47,12 @@
   <ItemGroup>
     <PackageReference Include="Catel.MVVM" Version="6.0.3" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+    <PackageReference Include="dotenv.net" Version="3.2.1" />
+    <PackageReference Include="DotNetEnv" Version="3.1.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240923002" />
+    <PackageReference Include="MongoDB.Driver" Version="3.0.0" />
     <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" />
     <PackageReference Include="WinUIEx" Version="2.4.2" />
     <Manifest Include="$(ApplicationManifest)" />
