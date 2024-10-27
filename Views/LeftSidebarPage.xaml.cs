@@ -37,6 +37,7 @@ namespace Spotify.Views
             //shellWindow.NavigateToPage(typeof(PlaylistPage), mainFrame);
             shellWindow.GetNavigationService().Navigate(typeof(PlaylistPage));
         }
+
         private void OnAddButtonClick(object sender, RoutedEventArgs e)
         {
             // TODO: Implement add playlist functionality
@@ -47,6 +48,7 @@ namespace Spotify.Views
             // TODO: Implement arrow button functionality
         }
 
+        // Thêm phương thức OnLikedSongsButtonClick
         private void OnLikedSongButtonClick(object sender, TappedRoutedEventArgs e)
         {
             var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
@@ -54,5 +56,16 @@ namespace Spotify.Views
             //shellWindow.NavigateToPage(typeof(LikedSongPage), mainFrame);
             shellWindow.GetNavigationService().Navigate(typeof(LikedSongPage));
         }
+
+        //// Thêm phương thức OnPlaylistButtonClick
+        //private void OnPlaylistButtonClick(object sender, RoutedEventArgs e)
+        //{
+        //    // Truy cập đến MainFrame và điều hướng đến PlaylistPage
+        //    var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
+        //    var mainFrame = shellWindow.getMainFrame();
+        //    shellWindow.NavigateToPage(typeof(PlaylistPage), mainFrame);
+        //}
+
+
     }
 }

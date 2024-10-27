@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,6 +15,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
 using Spotify.Services;
 using Spotify.ViewModels;
+using Spotify.Models.DTOs;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -41,6 +42,16 @@ namespace Spotify.Views
         private void OnPlayClick(object sender, RoutedEventArgs e)
         {
             // TODO: Implement play button functionality
+        }
+
+        private void OnRemoveFromLikedSongsClick(object sender, RoutedEventArgs e)
+        {
+            // Thêm logic xóa bài hát khỏi danh sách yêu thích
+        }
+
+        private void OnGoToArtistClick(object sender, RoutedEventArgs e)
+        {
+            // Thêm logic để chuyển tới trang nghệ sĩ
         }
     }
 }
