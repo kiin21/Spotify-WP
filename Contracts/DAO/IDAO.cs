@@ -1,5 +1,3 @@
-﻿using MongoDB.Driver;
+﻿namespace Spotify.Contracts.DAO;
 
-namespace Spotify.Contracts.DAO;
-
-public interface IDAO;
+public interface IDAO { };
