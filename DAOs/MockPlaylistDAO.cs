@@ -5,11 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Spotify.DAOs;
 
 namespace Spotify.DAO;
 
-public class MockPlaylistDAO : BaseDAO, IPlaylistDAO
+public class MockPlaylistDAO : IPlaylistDAO
 {
     private List<PlaylistDTO> _mockPlaylists = new List<PlaylistDTO>
     {
