@@ -1,4 +1,5 @@
 ﻿using Spotify.Contracts.DAO;
+using Spotify.DAOs;
 using Spotify.Models.DTOs;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Spotify.DAO;
 
-public class MockLikedSongDAO : ILikedSongDAO
+public class MockLikedSongDAO : BaseDAO, ILikedSongDAO
 {
     private List<LikedSongDTO> _mockLikedSongs = new List<LikedSongDTO>
     {

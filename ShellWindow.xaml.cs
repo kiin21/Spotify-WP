@@ -22,7 +22,9 @@ public sealed partial class ShellWindow : WindowEx
     {
         InitializeComponent();
         AppWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets/App.ico"));
+
         _navigationService = new NavigationService(MainFrame);
+        
         InitializePages();
     }
 
