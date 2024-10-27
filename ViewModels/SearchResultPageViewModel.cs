@@ -35,6 +35,10 @@ public class SearchResultPageViewModel : INotifyPropertyChanged
         INavigationService navigationService)
     {
         SearchResults = searchResults;
+        foreach (var song in SearchResults)
+        {
+            song.FormattedDuration = song.Duration.ToString("mm\\:ss");
+        }
         _navigationService = navigationService;
 
         SongSelectedCommand = new RelayCommand(
