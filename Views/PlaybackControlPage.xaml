@@ -1,35 +1,238 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Page
-    x:Class="Spotify.Views.PlaybackControlPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Spotify.Views"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+<Page  
+    x:Class="Spotify.Views.PlaybackControlPage"  
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"  
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  
+    xmlns:local="using:Spotify.Views" 
+    xmlns:local1="using:Spotify.Helpers"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="Pink">
+    mc:Ignorable="d"  
+    Background="Black">
 
-    <StackPanel Grid.Row="2" Orientation="Vertical" Background="#1E1E1E" Padding="10,0">
-        <!-- Progress Bar Section -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock x:Name="CurrentTimeText" Text="0:12" FontSize="12" Foreground="White" VerticalAlignment="Center"/>
-            <Slider x:Name="PlaybackSlider" Minimum="0" Maximum="100" Value="20" Margin="10,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="400" Background="White"/>
-            <TextBlock x:Name="TotalDurationText" Text="3:56" FontSize="12" Foreground="White" VerticalAlignment="Center"/>
-        </StackPanel>
+    <Page.Resources>
+        <Style x:Key="TransparentButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+         <!--Declare your TimeSpan to mm:ss converter--> 
+        <local1:TimeSpanToFormattedTimeConverter x:Key="timeConverter"/>
+    </Page.Resources>
 
-        <!-- Playback Controls -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
-            <!-- Shuffle Button -->
-            <Button x:Name="ShuffleButton" Width="40" Height="40" Margin="10" Content="🔀" Foreground="White" Background="Transparent"/>
-            <!-- Previous Button -->
-            <Button x:Name="PreviousButton" Width="40" Height="40" Margin="10" Content="⏮" Foreground="White" Background="Transparent"/>
-            <!-- Play/Pause Button -->
-            <Button x:Name="PlayPauseButton" Width="60" Height="60" Margin="10" Content="⏯" Foreground="White" Background="Transparent"/>
-            <!-- Next Button -->
-            <Button x:Name="NextButton" Width="40" Height="40" Margin="10" Content="⏭" Foreground="White" Background="Transparent"/>
-            <!-- Repeat Button -->
-            <Button x:Name="RepeatButton" Width="40" Height="40" Margin="10" Content="🔁" Foreground="White" Background="Transparent"/>
-        </StackPanel>
-    </StackPanel>
+    <Grid Padding="16" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1.5*"/>
+        </Grid.ColumnDefinitions>
+
+
+        <!--Left section with song info-->
+        <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Margin="0,0,0,16" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!--Album Art-->
+            <Border Grid.Column="0"  
+                    Width="56"  
+                    Height="56"  
+                    Margin="0,0,16,0"  
+                    CornerRadius="4"  
+                    Background="Black">
+                <Image Source="{x:Bind ViewModel.ImageSource, Mode=OneWay}"  
+                       Stretch="UniformToFill"/>
+            </Border>
+
+            <!--Song Info-->
+            <StackPanel Grid.Column="1"  
+                        VerticalAlignment="Center" Margin="0 0 0 5">
+                <TextBlock Text="{x:Bind ViewModel.Title, Mode=OneWay}"  
+                         Foreground="White"  
+                         FontSize="16"  
+                         FontWeight="SemiBold"/>
+                <TextBlock Text="{x:Bind ViewModel.Artist, Mode=OneWay}"  
+                         Foreground="Gray"  
+                         FontSize="14"/>
+            </StackPanel>
+
+            <!--Add to Playlist Button-->
+            <!--<Button Grid.Column="2"  
+                    Width="Auto"  
+                    Height="Auto"
+                    Margin="0 10 0 5"
+                    Background="Transparent"  
+                    BorderThickness="0"
+                    
+                    >
+                <FontIcon Glyph="&#xE710;"  
+                         Foreground="White"/>
+            </Button>-->
+        </Grid>
+
+        <!--Main section with controls-->
+        <Grid Grid.Column="1" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!--Media Controls-->
+            <StackPanel Grid.Row="0"  
+                        Orientation="Horizontal"  
+                        HorizontalAlignment="Center"  
+                        Margin="0,0,0,8">
+               <Button Style="{StaticResource TransparentButtonStyle}"  
+                        Width="40" Height="40"  
+                        Margin="8,0"
+                        Command="{x:Bind ViewModel.ShuffleCommand}"
+                        >
+                    <FontIcon Glyph="&#xE14B;"  
+                             Foreground="White"/>
+                </Button>
+                <Button Style="{StaticResource TransparentButtonStyle}"  
+                        Width="40" Height="40"  
+                        Margin="8,0"
+                        Command="{x:Bind ViewModel.PreviousCommand}"
+                        >
+                    <FontIcon Glyph="&#xE892;"  
+                             Foreground="White"/>
+                </Button>
+                <Button Style="{StaticResource TransparentButtonStyle}"  
+                        Width="48" Height="48"  
+                        Margin="8,0"
+                        Command="{x:Bind ViewModel.PlayPauseCommand}"
+                        >
+                    <FontIcon Glyph="{x:Bind ViewModel.PlayPauseGlyph, Mode=OneWay}"  
+                  FontSize="20"  
+                  Foreground="White"/>
+                </Button>
+                <Button Style="{StaticResource TransparentButtonStyle}"  
+                        Width="40" Height="40"  
+                        Margin="8,0"
+                        Command="{x:Bind ViewModel.NextCommand}"
+                        >
+                    <FontIcon Glyph="&#xE893;"  
+                             Foreground="White"/>
+                </Button>
+                <Button Style="{StaticResource TransparentButtonStyle}"  
+                        Width="Auto" Height="Auto"  
+                        Margin="8,0"
+                        Command="{x:Bind ViewModel.ToggleReplayCommand}"
+                        >
+                    <FontIcon Glyph="&#xE8EE;"  
+                             Foreground="White"/>
+                </Button>
+            </StackPanel>
+
+            <!--Progress Bar-->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"  
+                          Text="{x:Bind ViewModel.CurrentPosition,
+                    Mode=OneWay}"  
+                          Foreground="Gray"  
+                          Margin="0,0,8,0"/>
+
+                <Slider Grid.Column="1"  
+                        Minimum="0"  
+                        Maximum="{x:Bind ViewModel.SongDurationSeconds}"  
+                        Value="{x:Bind ViewModel.CurrentPositionSeconds, Mode=TwoWay}"  
+                        Background="#333333"  
+                        Foreground="White"/>
+
+                    <TextBlock Grid.Column="2"  
+                          Text="{x:Bind ViewModel.SongDuration, Mode=OneWay}"  
+                          Foreground="Gray"  
+                          Margin="8,0,0,0"/>
+            </Grid>
+        </Grid>
+
+        <!--Right section with volume control-->
+        <Grid Grid.Column="2"  Grid.RowSpan="2" Margin="16,0,0,0"  HorizontalAlignment="Center" >
+
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+
+                <!--Lyrics Icon-->
+                <Button   
+                    Width="Auto"  
+                    Height="Auto"  
+                    Background="Transparent"  
+                    BorderThickness="0"
+                    Margin="0 5 0 0"
+                    Command="{x:Bind ViewModel.ToggleLyricsCommand}"
+                    >
+                    <FontIcon Glyph="&#xE7F7;" 
+                    Foreground="White"/>
+                </Button>
+
+                <!--Queue Icon-->
+                <Button 
+                    Width="40"  
+                    Height="40"  
+                    Background="Transparent"  
+                    BorderThickness="0"
+                    Margin="0 5 0 0"
+                    Command="{x:Bind ViewModel.ToggleQueueCommand}"
+                    >
+                    <FontIcon Glyph="&#xE8E3;"
+                    Foreground="White"/>
+                </Button>
+
+                <!--Playback Speed ComboBox-->
+                <ComboBox SelectedItem="{x:Bind ViewModel.SelectedSpeed, Mode=TwoWay}" Width="100" VerticalAlignment="Bottom" Margin="10">
+                    <ComboBoxItem Content="1.0x" Tag="1.0"/>
+                    <ComboBoxItem Content="1.25x" Tag="1.25"/>
+                    <ComboBoxItem Content="1.5x" Tag="1.5"/>
+                    <ComboBoxItem Content="2.0x" Tag="2.0"/>
+                </ComboBox>
+
+                <!--Volume Icon-->
+                <Button   
+                    Width="40"  
+                    Height="40"  
+                    Background="Transparent"  
+                    BorderThickness="0"
+                    
+                    >
+                    <FontIcon Glyph="&#xE767;"  
+                    Foreground="White"/>
+                </Button>
+
+                <!--Volume Slider-->
+                <Slider  
+                    Minimum="0"  
+                    Maximum="100"  
+                    Value="{x:Bind ViewModel.Volume,
+                    Mode=TwoWay}"  
+                    Background="#333333"  
+                    Foreground="White"
+                    Width="100"
+                    Margin="0 5 0 0"
+                />
+
+                <!--Expand Icon-->
+                <Button
+                    Width="Auto"  
+                    Height="Auto"  
+                    Background="Transparent"  
+                    BorderThickness="0"
+                    Margin="0 5 0 10">
+                    <FontIcon Glyph="&#xE740;"  
+                    Foreground="White"/>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
 </Page>
