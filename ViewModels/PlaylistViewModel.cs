@@ -14,7 +14,18 @@ namespace Spotify.ViewModels
     {
         private readonly PlaylistService _playlistService;
         private ObservableCollection<PlaylistDTO> _playlists;
+        private string _username = "Brian Dang";
+        public string Username
+        {
+            get => _username;
+            set
+            {
+                _username = value;
+                OnPropertyChanged(nameof(Username));
+            }
+        }
 
+        public string SongCount => $"{Playlists?.Count ?? 0} songs";
         public ObservableCollection<PlaylistDTO> Playlists
         {
             get => _playlists;
@@ -22,6 +33,7 @@ namespace Spotify.ViewModels
             {
                 _playlists = value;
                 OnPropertyChanged(nameof(Playlists));
+                OnPropertyChanged(nameof(SongCount));
             }
         }
 
@@ -31,11 +43,17 @@ namespace Spotify.ViewModels
             _playlists = new ObservableCollection<PlaylistDTO>();
             LoadPlaylists();
         }
-
-        public async void LoadPlaylists()
+        private async void LoadPlaylists()
         {
-            var playlists = await _playlistService.GetPlaylistsAsync();
-            Playlists = new ObservableCollection<PlaylistDTO>(playlists);
+            // Giả sử bạn có một danh sách songs từ service
+            var songs = await _playlistService.GetPlaylistsAsync();
+
+            // Set index cho từng bài hát
+            for (int i = 0; i < songs.Count; i++)
+            {
+                songs[i].Index = i + 1;
+            }
+            Playlists = new ObservableCollection<PlaylistDTO>(songs);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

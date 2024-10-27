@@ -32,7 +32,7 @@ namespace Spotify.ViewModels
             {
                 _likedSongs = value;
                 OnPropertyChanged(nameof(LikedSongs));
-                OnPropertyChanged(nameof(SongCount));
+                OnPropertyChanged(nameof(SongCount));   
             }
         }
 

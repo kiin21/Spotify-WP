@@ -213,10 +213,11 @@
                                             Height="32"
                                             CornerRadius="16"
                                             Background="Transparent"
-                                            BorderThickness="0">
+                                            BorderThickness="0"
+                                            ToolTipService.ToolTip="Thêm vào danh sách phát">
                                         <FontIcon Glyph="&#xE73E;"
                                                   FontFamily="Segoe MDL2 Assets"
-                                                  FontSize="16"
+                                                  FontSize="12"
                                                   Foreground="#1DB954"/>
                                     </Button>
 
@@ -233,11 +234,22 @@
                                             Height="40"
                                             CornerRadius="16"
                                             Background="Transparent"
-                                            BorderThickness="0">
-                                        <FontIcon Glyph="&#xE712;"
-                                                  FontFamily="Segoe MDL2 Assets"
-                                                  FontSize="16"
-                                                  Foreground="#B3B3B3"/>
+                                            BorderThickness="0"
+                                            ToolTipService.ToolTip="Tùy chọn khác">
+                                        <Button.Content>
+                                            <FontIcon Glyph="&#xE712;"
+                                                      FontFamily="Segoe MDL2 Assets"
+                                                      FontSize="16"
+                                                      Foreground="#B3B3B3"/>
+                                        </Button.Content>
+                                        <Button.Flyout>
+                                            <MenuFlyout>
+                                                <MenuFlyoutItem Text="Xóa khỏi Bài hát đã thích"
+                                                                Click="OnRemoveFromLikedSongsClick"/>
+                                                <MenuFlyoutItem Text="Chuyển tới nghệ sĩ"
+                                                                Click="OnGoToArtistClick"/>
+                                            </MenuFlyout>
+                                        </Button.Flyout>
                                     </Button>
                                 </StackPanel>
                             </Grid>

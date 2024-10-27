@@ -12,9 +12,20 @@ public class MockPlaylistDAO : IPlaylistDAO
 {
     private List<PlaylistDTO> _mockPlaylists = new List<PlaylistDTO>
     {
-        new PlaylistDTO { Title = "Artist 1", Album = "Album 1", DateAdded = DateTime.Now, Duration = TimeSpan.FromMinutes(3) },
-        new PlaylistDTO { Title = "Artist 2", Album = "Album 2", DateAdded = DateTime.Now, Duration = TimeSpan.FromMinutes(4) },
-        // Add more mock playlists here
+        new PlaylistDTO {
+            Title = "Artist 1",
+            Album = "Album 1",
+            DateAdded = DateTime.Now,
+            Duration = TimeSpan.FromMinutes(3),
+            Image = "/Assets/Image1.jpg"
+        },
+        new PlaylistDTO {
+            Title = "Artist 2",
+            Album = "Album 2",
+            DateAdded = DateTime.Now,
+            Duration = TimeSpan.FromMinutes(4),
+            Image = "/Assets/Image2.jpg"
+        },
     };
 
     public Task<List<PlaylistDTO>> GetPlaylistsAsync() =>

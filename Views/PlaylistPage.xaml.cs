@@ -36,5 +36,19 @@ namespace Spotify.Views
             DataContext = ViewModel;
         }
 
+        private void OnPlayClick(object sender, RoutedEventArgs e)
+        {
+            // TODO: Implement play button functionality
+        }
+        private void OnRemoveFromLikedSongsClick(object sender, RoutedEventArgs e)
+        {
+            // Thêm logic xóa bài hát kh?i danh sách yêu thích
+        }
+
+        private void OnGoToArtistClick(object sender, RoutedEventArgs e)
+        {
+            // Thêm logic ?? chuy?n t?i trang ngh? s?
+        }
+
     }
 }
