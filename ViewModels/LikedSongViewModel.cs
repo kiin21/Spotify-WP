@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Catel.Services;
 using Spotify.Models.DTOs;
 using Spotify.Services;
 
@@ -44,7 +45,14 @@ namespace Spotify.ViewModels
 
         private async void LoadLikedSongsAsync()
         {
+            // Giả sử bạn có một danh sách songs từ service
             var songs = await _likedSongService.GetLikedSongsAsync();
+
+            // Set index cho từng bài hát
+            for (int i = 0; i < songs.Count; i++)
+            {
+                songs[i].Index = i + 1;
+            }
             LikedSongs = new ObservableCollection<LikedSongDTO>(songs);
         }
 

@@ -9,12 +9,18 @@
 
     <Page.Resources>
         <converters:IndexConverter x:Key="IndexConverter"/>
+        <converters:DateConverter x:Key="DateConverter"/>
+        <converters:DurationConverter x:Key="DurationConverter"/>
     </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <!-- Header -->
+            <RowDefinition Height="Auto"/>
+            <!-- Play Button Section -->
             <RowDefinition Height="*"/>
+            <!-- Songs List -->
         </Grid.RowDefinitions>
 
         <!-- Header Section -->
@@ -25,107 +31,220 @@
             </Grid.ColumnDefinitions>
 
             <!-- Liked Song Image -->
-            <StackPanel Grid.Column="0" Width="232" HorizontalAlignment="Left">
-                <Border Width="232" Height="232" Margin="0,0,24,0">
+            <StackPanel Grid.Column="0" Width="232" HorizontalAlignment="Left" Margin="0,0,24,0">
+                <Border Width="232" Height="232" >
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                             <GradientStop Color="#4B3F8D" Offset="0.0"/>
                             <GradientStop Color="#2D2456" Offset="1.0"/>
                         </LinearGradientBrush>
                     </Border.Background>
-                    <FontIcon Glyph="&#xE00B;" FontFamily="Segoe MDL2 Assets" 
-                             FontSize="64" Foreground="White" HorizontalAlignment="Center" 
-                             VerticalAlignment="Center"/>
+                    <!-- Centered Heart Icon -->
+                    <Grid>
+                        <FontIcon Glyph="&#xE00B;" 
+                                FontFamily="Segoe MDL2 Assets" 
+                                FontSize="64" 
+                                Foreground="White" 
+                                HorizontalAlignment="Center" 
+                                VerticalAlignment="Center"/>
+                    </Grid>
                 </Border>
             </StackPanel>
 
             <!-- Liked Song Info -->
             <StackPanel Grid.Column="1" VerticalAlignment="Bottom">
-                <TextBlock Text="Liked Songs" FontSize="96" FontWeight="Bold" 
-                         Foreground="White" TextWrapping="Wrap"/>
+                <TextBlock Text="Liked Songs" 
+                         FontSize="96" 
+                         FontWeight="Bold" 
+                         Foreground="White" 
+                         TextWrapping="Wrap"/>
                 <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
                     <PersonPicture Width="24" Height="24"/>
-                    <TextBlock Text="{Binding Username}" Margin="8,0,4,0" 
-                             Foreground="White" VerticalAlignment="Center"/>
-                    <TextBlock Text="•" Margin="4,0" Foreground="#B3B3B3" 
+                    <TextBlock Text="{Binding Username}" 
+                             Margin="8,0,4,0" 
+                             Foreground="White" 
+                             VerticalAlignment="Center"/>
+                    <TextBlock Text="•" 
+                             Margin="4,0" 
+                             Foreground="#B3B3B3" 
                              VerticalAlignment="Center"/>
                     <TextBlock Text="{Binding SongCount}" 
-                             Foreground="#B3B3B3" VerticalAlignment="Center"/>
+                             Foreground="#B3B3B3" 
+                             VerticalAlignment="Center"/>
                 </StackPanel>
             </StackPanel>
         </Grid>
 
-        <!-- Songs List -->
-        <Grid Grid.Row="1" Background="#121212" Padding="24">
+        <!-- Play Button Section -->
+        <Grid Grid.Row="1" Background="#241E2E" Padding="24,0,0,12">
+            <StackPanel Orientation="Horizontal" Spacing="32">
+                <!-- Play Button -->
+                <Button Style="{StaticResource AccentButtonStyle}"
+                        Width="40" 
+                        Height="40"
+                        Background="#1DB954"
+                        BorderThickness="0"
+                        CornerRadius="28">
+                    <FontIcon Glyph="&#xE768;"
+                             FontFamily="Segoe MDL2 Assets"
+                             FontSize="16"/>
+                </Button>
+            </StackPanel>
+        </Grid>
 
-            <!-- Title Bar -->
-            <Grid>
+        <!-- Songs List Section -->
+        <Grid Grid.Row="2" Background="#121212">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Common Grid Definitions -->
+            <Grid x:Name="ContentGrid" 
+                  Grid.RowSpan="2"
+                  Margin="24,24,24,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="50"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="200"/>
                     <ColumnDefinition Width="200"/>
-                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-                <TextBlock Grid.Column="0" Text="#" Foreground="Gray" FontSize="14" HorizontalAlignment="Center"/>
-                <TextBlock Grid.Column="1" Text="Tiêu đề" Foreground="Gray" FontSize="14"/>
-                <TextBlock Grid.Column="2" Text="Album" Foreground="Gray" FontSize="14"/>
-                <TextBlock Grid.Column="3" Text="Ngày thêm" Foreground="Gray" FontSize="14"/>
-                <TextBlock Grid.Column="4" Text="Thời lượng" Foreground="Gray" FontSize="14"/>
-            </Grid>
+                <!-- Table Header -->
+                <TextBlock Grid.Column="0" Grid.Row="0"
+                         Text="#" 
+                         Foreground="Gray" 
+                         FontSize="14"/>
 
-            <ListView ItemsSource="{x:Bind ViewModel.LikedSongs, Mode=OneWay}" 
-          Margin="0,32,0,0" 
-          SelectionMode="Single" 
-          Background="Transparent">
-                <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="models:LikedSongDTO">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="50"/>
-                                <!-- # -->
-                                <ColumnDefinition Width="*"/>
-                                <!-- Title -->
-                                <ColumnDefinition Width="200"/>
+                <TextBlock Grid.Column="1" Grid.Row="0"
+                         Text="Tiêu đề" 
+                         Foreground="Gray" 
+                         FontSize="14"
+                         Margin="12,0,0,0"/>
+
+                <TextBlock Grid.Column="2" Grid.Row="0"
+                         Text="Album" 
+                         Foreground="Gray" 
+                         FontSize="14"/>
+
+                <TextBlock Grid.Column="3" Grid.Row="0"
+                         Text="Ngày thêm" 
+                         Foreground="Gray" 
+                         FontSize="14"/>
+
+                <TextBlock Grid.Column="4" Grid.Row="0"
+                         Text="Thời lượng" 
+                         Foreground="Gray" 
+                         FontSize="14"/>
+
+                <!-- Songs ListView -->
+                <ListView Grid.Row="1" Grid.ColumnSpan="5"
+                         ItemsSource="{x:Bind ViewModel.LikedSongs, Mode=OneWay}"
+                         Margin="0,12,0,0"
+                         Padding="0"
+                         SelectionMode="Single" 
+                         Background="Transparent"
+                         HorizontalAlignment="Stretch">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Padding" Value="0"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="models:LikedSongDTO">
+                            <Grid Height="56">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="50"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="200"/>
+                                    <ColumnDefinition Width="200"/>
+                                    <ColumnDefinition Width="200"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Index -->
+                                <TextBlock Grid.Column="0" 
+                                         Text="{x:Bind Index}" 
+                                         Foreground="#B3B3B3" 
+                                         VerticalAlignment="Center"/>
+
+                                <!-- Title with Image -->
+                                <StackPanel Grid.Column="1" 
+                                          Orientation="Horizontal" 
+                                          VerticalAlignment="Center"
+                                          Margin="12,0,0,0">
+                                    <Image Source="{x:Bind Image}" 
+                                           Width="40" 
+                                           Height="40"/>
+                                    <TextBlock Text="{x:Bind Title}" 
+                                             Foreground="White" 
+                                             FontWeight="SemiBold" 
+                                             VerticalAlignment="Center" 
+                                             Margin="12,0,0,0"/>
+                                </StackPanel>
+
                                 <!-- Album -->
-                                <ColumnDefinition Width="200"/>
+                                <TextBlock Grid.Column="2" 
+                                         Text="{x:Bind Album}" 
+                                         Foreground="#B3B3B3" 
+                                         VerticalAlignment="Center"/>
+
                                 <!-- Date Added -->
-                                <ColumnDefinition Width="100"/>
-                                <!-- Duration -->
-                            </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="3" 
+                                        Text="{x:Bind DateAdded, Converter={StaticResource DateConverter}}" 
+                                        Foreground="#B3B3B3" 
+                                        VerticalAlignment="Center"/>
 
-                            <!-- Index (Auto Incremented) -->
-                            <TextBlock Grid.Column="0" Text="1" 
-                           Foreground="#B3B3B3" Width="32" HorizontalAlignment="Left" VerticalAlignment="Center"
-                           TextAlignment="Left"/>
+                                <!-- Duration column with action buttons -->
+                                <StackPanel Grid.Column="4" 
+                                            Orientation="Horizontal" 
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Left"
+                                            Spacing="4">
 
-                            <!-- Title (with Image and Text) -->
-                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                                <Image Source="{x:Bind Image}" Width="40" Height="40" Margin="0,0,12,0"/>
-                                <TextBlock Text="{x:Bind Title}" Foreground="White" FontWeight="SemiBold" VerticalAlignment="Center" TextAlignment="Left"/>
-                            </StackPanel>
+                                    <!-- Check/Save button -->
+                                    <Button x:Name="SaveButton"
+                                            Width="32" 
+                                            Height="32"
+                                            CornerRadius="16"
+                                            Background="Transparent"
+                                            BorderThickness="0">
+                                        <FontIcon Glyph="&#xE73E;"
+                                                  FontFamily="Segoe MDL2 Assets"
+                                                  FontSize="16"
+                                                  Foreground="#1DB954"/>
+                                    </Button>
 
-                            <!-- Album -->
-                            <TextBlock Grid.Column="2" Text="{x:Bind Album}" 
-                           Foreground="#B3B3B3" Margin="12,0" 
-                           VerticalAlignment="Center" TextAlignment="Left"/>
+                                    <!-- Duration text -->
+                                    <TextBlock Text="{x:Bind Duration, Converter={StaticResource DurationConverter}}"
+                                               Foreground="#B3B3B3"
+                                               VerticalAlignment="Center"
+                                               MinWidth="40"
+                                               TextAlignment="Center"/>
 
-                            <!-- Date Added -->
-                            <TextBlock Grid.Column="3" Text="{x:Bind DateAdded}" 
-                           Foreground="#B3B3B3" Margin="12,0" 
-                           VerticalAlignment="Center" TextAlignment="Left"/>
-
-                            <!-- Duration -->
-                            <TextBlock Grid.Column="4" Text="{x:Bind Duration}" 
-                           Foreground="#B3B3B3" Width="64" 
-                           VerticalAlignment="Center" TextAlignment="Left"/>
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-
-
+                                    <!-- More options button -->
+                                    <Button x:Name="MoreButton"
+                                            Width="40"
+                                            Height="40"
+                                            CornerRadius="16"
+                                            Background="Transparent"
+                                            BorderThickness="0">
+                                        <FontIcon Glyph="&#xE712;"
+                                                  FontFamily="Segoe MDL2 Assets"
+                                                  FontSize="16"
+                                                  Foreground="#B3B3B3"/>
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
         </Grid>
     </Grid>
 </Page>

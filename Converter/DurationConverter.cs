@@ -3,13 +3,13 @@ using System;
 
 namespace Spotify.Converters
 {
-    public class IndexConverter : IValueConverter
+    public class DurationConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value is int index)
+            if (value is TimeSpan duration)
             {
-                return (index + 1).ToString();
+                return duration.ToString(@"mm\:ss");
             }
             return string.Empty;
         }

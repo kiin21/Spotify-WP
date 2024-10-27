@@ -1,15 +1,16 @@
 ﻿using Microsoft.UI.Xaml.Data;
 using System;
+using System.Globalization;
 
 namespace Spotify.Converters
 {
-    public class IndexConverter : IValueConverter
+    public class DateConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value is int index)
+            if (value is DateTime date)
             {
-                return (index + 1).ToString();
+                return date.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
             }
             return string.Empty;
         }
