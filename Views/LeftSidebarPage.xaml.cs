@@ -34,7 +34,8 @@ namespace Spotify.Views
             // Truy cập đến MainFrame và điều hướng đến PlaylistPage
             var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
             var mainFrame = shellWindow.getMainFrame();
-            shellWindow.NavigateToPage(typeof(PlaylistPage), mainFrame);
+            //shellWindow.NavigateToPage(typeof(PlaylistPage), mainFrame);
+            shellWindow.GetNavigationService().Navigate(typeof(PlaylistPage));
         }
         private void OnAddButtonClick(object sender, RoutedEventArgs e)
         {
@@ -50,7 +51,8 @@ namespace Spotify.Views
         {
             var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
             var mainFrame = shellWindow.getMainFrame();
-            shellWindow.NavigateToPage(typeof(LikedSongPage), mainFrame);
+            //shellWindow.NavigateToPage(typeof(LikedSongPage), mainFrame);
+            shellWindow.GetNavigationService().Navigate(typeof(LikedSongPage));
         }
     }
 }

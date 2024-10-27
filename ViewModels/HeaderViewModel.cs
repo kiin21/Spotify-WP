@@ -64,7 +64,8 @@ public class HeaderViewModel : INotifyPropertyChanged
 
         var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
         var mainFrame = shellWindow.getMainFrame();
-        shellWindow.NavigateToPage(typeof(SearchResultsPage), mainFrame, SearchResults);
+        //shellWindow.NavigateToPage(typeof(SearchResultsPage), mainFrame, SearchResults);
+        shellWindow.GetNavigationService().Navigate(typeof(SearchResultsPage), SearchResults);
     }
 
     private bool CanExecuteSearch()

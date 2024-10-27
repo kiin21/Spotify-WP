@@ -29,11 +29,11 @@ public sealed partial class ShellWindow : WindowEx
     private void InitializePages()
     {
         // No need for Initialize method, just use navigation directly
-        NavigateToPage(typeof(MainPanelPage), MainFrame);
-        NavigateToPage(typeof(HeaderPage), HeaderFrame);
-        NavigateToPage(typeof(LeftSidebarPage), LeftSidebarFrame);
-        NavigateToPage(typeof(QueuePage), RightSidebarFrame);
-        NavigateToPage(typeof(PlaybackControlPage), PlaybackControlsFrame);
+        _navigationService.Navigate(typeof(MainPanelPage), MainFrame);
+        _navigationService.Navigate(typeof(HeaderPage), HeaderFrame);
+        _navigationService.Navigate(typeof(LeftSidebarPage), LeftSidebarFrame);
+        _navigationService.Navigate(typeof(QueuePage), RightSidebarFrame);
+        _navigationService.Navigate(typeof(PlaybackControlPage), PlaybackControlsFrame);
     }
     public void NavigateToPage(Type pageType, Frame frame, object parameter = null)
     {
