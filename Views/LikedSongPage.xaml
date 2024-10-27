@@ -12,6 +12,8 @@
         <converters:DateConverter x:Key="DateConverter"/>
         <converters:DurationConverter x:Key="DurationConverter"/>
     </Page.Resources>
+    
+   
 
     <Grid>
         <Grid.RowDefinitions>
@@ -259,4 +261,6 @@
             </Grid>
         </Grid>
     </Grid>
+    
+
 </Page>

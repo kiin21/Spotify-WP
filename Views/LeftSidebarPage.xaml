@@ -48,7 +48,8 @@
                     Width="32" Height="32" 
                     Background="Transparent"
                     Margin="4,0"
-                    BorderThickness="0">
+                    BorderThickness="0"
+                    Click="OnAddButtonClick">
                 <FontIcon Glyph="&#xE710;" 
                          FontSize="10"
                          FontFamily="Segoe MDL2 Assets"
@@ -125,5 +126,19 @@
                 </Grid>
             </ListViewItem>
         </ListView>
+        
+        <!-- Content Dialog for Creating Playlist -->
+        <ContentDialog x:Name="CreatePlaylistDialog"
+                       Title="Create New Playlist"
+                       PrimaryButtonText="Create"
+                       CloseButtonText="Cancel"
+                       PrimaryButtonClick="OnCreatePlaylistDialogPrimaryButtonClick">
+            <StackPanel>
+                <TextBlock Text="Enter Playlist Name:"/>
+                <TextBox x:Name="PlaylistNameTextBox" PlaceholderText="Playlist Name" />
+                <TextBlock Text="Enter Playlist Description:" Margin="0,12,0,0"/>
+                <TextBox x:Name="PlaylistDescriptionTextBox" PlaceholderText="Description" />
+            </StackPanel>
+        </ContentDialog>
     </Grid>
 </Page>
