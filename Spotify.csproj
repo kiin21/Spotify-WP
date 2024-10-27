@@ -18,7 +18,6 @@
     <Content Remove="Assets\sample.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove=".env" />
     <None Remove="ShellWindow.xaml" />
     <None Remove="Views\HeaderPage.xaml" />
     <None Remove="Views\LeftSidebarPage.xaml" />
@@ -32,9 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include=".env">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
