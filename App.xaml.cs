@@ -11,6 +11,8 @@ using DotNetEnv;
 using Spotify.Views;
 using System.Diagnostics;
 using System.IO;
+using Spotify.Views;
+using Spotify.DAOs;
 
 namespace Spotify
 {
@@ -45,6 +47,12 @@ namespace Spotify
             services.AddSingleton<PlaylistService>();
             services.AddSingleton<LikedSongService>();
 
+            services.AddSingleton<IPlaybackControlDAO, MockPlaybackControlDAO>();  // Add this line
+
+
+            // Register  Services
+            services.AddSingleton<SongService>();
+            services.AddSingleton<PlaybackControlService>();
 
             // Register ViewModels
             services.AddTransient<HeaderViewModel>();

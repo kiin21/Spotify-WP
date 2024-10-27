@@ -9,6 +9,9 @@ using System.ComponentModel;
 using System.Windows.Input;
 using System;
 using Spotify.Contracts.Services;
+﻿using Spotify.Models.DTOs;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace Spotify.ViewModels;
 
