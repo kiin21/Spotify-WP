@@ -1,63 +1,37 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Catel.MVVM;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
+using Spotify.Models.DTOs;
+using Spotify.Services;
+using Spotify.ViewModels;
 using System;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace Spotify.Views
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class LeftSidebarPage : Page
     {
+        public PlaylistViewModel ViewModel { get; set; }
+
         public LeftSidebarPage()
         {
             this.InitializeComponent();
+            var playlistService = (App.Current as App).Services.GetService<PlaylistService>();
+            ViewModel = new PlaylistViewModel(playlistService);
+            this.DataContext = ViewModel;
         }
 
-        // Thêm phương thức OnLikedSongsButtonClick
-        private void OnLikedSongButtonClick(object sender, TappedRoutedEventArgs e)
-        {
-            var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
-            var mainFrame = shellWindow.getMainFrame();
-            //shellWindow.NavigateToPage(typeof(LikedSongPage), mainFrame);
-            shellWindow.GetNavigationService().Navigate(typeof(LikedSongPage));
-        }
-
-        // Thêm phương thức OnPlaylistButtonClick
+        // Phương thức xử lý sự kiện khi click vào playlist
         private void OnPlaylistButtonClick(object sender, RoutedEventArgs e)
         {
-            // Truy cập đến MainFrame và điều hướng đến PlaylistPage
-            var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
-            var mainFrame = shellWindow.getMainFrame();
-            //shellWindow.NavigateToPage(typeof(PlaylistPage), mainFrame);
-            shellWindow.GetNavigationService().Navigate(typeof(PlaylistPage));
-        }
-
-        private async void OnAddButtonClick(object sender, RoutedEventArgs e)
-        {
-            // TODO: Implement add playlist functionality
-            await CreatePlaylistDialog.ShowAsync();
-        }
-
-        // Sự kiện khi nhấn nút "Create" trong ContentDialog
-        private void OnCreatePlaylistDialogPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {
-            string playlistName = PlaylistNameTextBox.Text;
-
-            // Kiểm tra tên playlist
-            if (string.IsNullOrWhiteSpace(playlistName))
+            // Lấy playlist được chọn từ ListView
+            var selectedPlaylist = (sender as ListViewItem)?.DataContext as PlaylistDTO;
+            if (selectedPlaylist != null)
             {
-                args.Cancel = true; // Hủy nếu tên trống
-                return;
+                // Điều hướng sang PlaylistPage với ID của playlist
+                var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
+                shellWindow?.GetNavigationService().Navigate(typeof(PlaylistPage), selectedPlaylist.Id.ToString());
             }
-
-            // Logic để tạo playlist mới có thể được thêm vào đây
-            System.Diagnostics.Debug.WriteLine($"Playlist created: {playlistName}");
-            // Bạn có thể thêm mã để lưu playlist mới vào cơ sở dữ liệu hoặc danh sách
         }
 
         private void OnArrowButtonClick(object sender, RoutedEventArgs e)
@@ -65,7 +39,9 @@ namespace Spotify.Views
             // TODO: Implement arrow button functionality
         }
 
-
-
+        private void OnAddButtonClick(object sender, RoutedEventArgs e)
+        {
+            // TODO: Implement add button functionality
+        }
     }
 }

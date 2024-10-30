@@ -2,10 +2,7 @@
 using Spotify.Models.DTOs;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-
 
 namespace Spotify.Services
 {
@@ -15,10 +12,13 @@ namespace Spotify.Services
 
         public PlaylistService(IPlaylistDAO playlistDAO)
         {
-            _playlistDAO = playlistDAO;
+            _playlistDAO = playlistDAO ?? throw new ArgumentNullException(nameof(playlistDAO));
         }
 
         public Task<List<PlaylistDTO>> GetPlaylistsAsync() =>
             _playlistDAO.GetPlaylistsAsync();
+
+        public Task<PlaylistDTO> GetPlaylistByIdAsync(string id) =>
+            _playlistDAO.GetPlaylistByIdAsync(id);
     }
 }

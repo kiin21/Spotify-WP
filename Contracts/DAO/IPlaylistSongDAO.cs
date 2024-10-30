@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Spotify.Contracts.DAO
 {
-    public interface IPlaylistDAO : IDAO
+    public interface IPlaylistSongDAO : IDAO
     {
-        Task<List<PlaylistDTO>> GetPlaylistsAsync();
-        Task<PlaylistDTO> GetPlaylistByIdAsync(string id);
+        Task<List<PlaylistSongDTO>> GetSongsByPlaylistIdAsync(string id);
     }
 }

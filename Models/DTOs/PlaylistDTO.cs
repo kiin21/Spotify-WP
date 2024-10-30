@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,12 +10,25 @@ namespace Spotify.Models.DTOs
 {
     public class PlaylistDTO
     {
-        public int Index { get; set; }
-        public string Title { get; set; }
-        public string Album { get; set; }
-        public DateTime DateAdded { get; set; }
-        public TimeSpan Duration { get; set; }
-        public string Image { get; set; } // Thêm thuộc tính Image
+        [BsonId]
+        public ObjectId Id { get; set; }
 
+        [BsonElement("avatar")]
+        public string Avatar { get; set; }
+
+        [BsonElement("title")]
+        public string Title { get; set; }
+
+        [BsonElement("description")]
+        public string Description { get; set; }
+
+        [BsonElement("is_public")]
+        public bool IsPublic { get; set; }
+
+        [BsonElement("created_at")]
+        public DateTime CreatedAt { get; set; }
+
+        [BsonElement("created_by")]
+        public string CreatedBy { get; set; }
     }
 }

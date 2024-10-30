@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Page
     x:Class="Spotify.Views.LeftSidebarPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -6,6 +5,7 @@
     xmlns:local="using:Spotify.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:Spotify.Models.DTOs" xmlns:viewmodels="using:Spotify.ViewModels"
     mc:Ignorable="d"
     Background="#121212">
 
@@ -61,7 +61,8 @@
                     Width="32" Height="32" 
                     Background="Transparent"
                     Margin="4,0"
-                    BorderThickness="0">
+                    BorderThickness="0"
+                    Click="OnArrowButtonClick">
                 <FontIcon Glyph="&#xE72A;" 
                          FontSize="10"
                          FontFamily="Segoe MDL2 Assets"
@@ -73,72 +74,38 @@
         <ListView Grid.Row="1" 
                   Background="#121212" 
                   SelectionMode="Single"
+                  ItemsSource="{Binding Playlists}"
                   Padding="0,8,0,0">
-            <!-- Liked Songs -->
-            <ListViewItem Padding="8" Tapped="OnLikedSongButtonClick">
-                <Grid Height="56">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="56"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" 
-                           Source="ms-appx:///Assets/LikedSongs.png"
-                           Width="48" Height="48"/>
-                    <StackPanel Grid.Column="1" 
-                              VerticalAlignment="Center"
-                              Margin="12,0,0,0">
-                        <TextBlock Text="Liked Songs" 
-                                 Foreground="White"
-                                 FontWeight="SemiBold"/>
-                        <StackPanel Orientation="Horizontal" 
-                                  Spacing="8">
-                            <FontIcon Glyph="&#xE735;" 
-                                    Foreground="#1DB954"
-                                    FontSize="12"/>
-                            <TextBlock Text="2 songs" 
-                                     Foreground="#BBBBBD"
-                                     FontSize="12"/>
-                        </StackPanel>
-                    </StackPanel>
-                </Grid>
-            </ListViewItem>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="models:PlaylistDTO">
+                    <ListViewItem Padding="8" Tapped="OnPlaylistButtonClick">
+                        <Grid Height="56">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="56"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
 
-            <!-- Playlist -->
-            <ListViewItem Padding="8" Tapped="OnPlaylistButtonClick">
-                <Grid Height="56">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="56"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" 
-                           Source="ms-appx:///Assets/Playlist.png"
-                           Width="48" Height="48"/>
-                    <StackPanel Grid.Column="1" 
-                              VerticalAlignment="Center"
-                              Margin="12,0,0,0">
-                        <TextBlock Text="Best of All Time" 
-                                 Foreground="White"
-                                 FontWeight="SemiBold"/>
-                        <TextBlock Text="Playlist • NKhank11" 
-                                 Foreground="#BBBBBD"
-                                 FontSize="12"/>
-                    </StackPanel>
-                </Grid>
-            </ListViewItem>
+                            <!-- Avatar Image -->
+                            <Image Grid.Column="0" 
+                                   Source="{Binding Avatar}" 
+                                   Width="48" Height="48"/>
+
+                            <!-- Playlist Title and Description -->
+                            <StackPanel Grid.Column="1" 
+                                        VerticalAlignment="Center"
+                                        Margin="12,0,0,0">
+                                <TextBlock Text="{Binding Title}" 
+                                           Foreground="White"
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,0,4"/>
+                                <TextBlock Text="{Binding CreatedBy}" 
+                                           Foreground="#BBBBBD"
+                                           FontSize="12"/>
+                            </StackPanel>
+                        </Grid>
+                    </ListViewItem>
+                </DataTemplate>
+            </ListView.ItemTemplate>
         </ListView>
-        
-        <!-- Content Dialog for Creating Playlist -->
-        <ContentDialog x:Name="CreatePlaylistDialog"
-                       Title="Create New Playlist"
-                       PrimaryButtonText="Create"
-                       CloseButtonText="Cancel"
-                       PrimaryButtonClick="OnCreatePlaylistDialogPrimaryButtonClick">
-            <StackPanel>
-                <TextBlock Text="Enter Playlist Name:"/>
-                <TextBox x:Name="PlaylistNameTextBox" PlaceholderText="Playlist Name" />
-                <TextBlock Text="Enter Playlist Description:" Margin="0,12,0,0"/>
-                <TextBox x:Name="PlaylistDescriptionTextBox" PlaceholderText="Description" />
-            </StackPanel>
-        </ContentDialog>
     </Grid>
 </Page>
