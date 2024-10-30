@@ -14,7 +14,9 @@ using System.Windows.Threading;
 using System.Collections.ObjectModel;
 using Spotify.Contracts.Services;
 using PropertyChanged;
+using Microsoft.UI.Dispatching;
 using System.Diagnostics;
+
 
 namespace Spotify.ViewModels;
 
@@ -31,9 +33,6 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
     [ObservableProperty]
     public double _volume;
-
-    [ObservableProperty]
-    public string _selectedSpeed = "1.0x";
 
     [ObservableProperty]
     public TimeSpan _currentPosition;
@@ -58,6 +57,20 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
     [ObservableProperty]
     public string _artist;
+
+    [ObservableProperty]
+    private string _selectedSpeed;
+
+    private bool _isProcessingSpeedChange;
+
+    // Change to use simple string collection for speeds
+    public ObservableCollection<string> SpeedOptions { get; } = new()
+    {
+        "1.0x",
+        "1.25x",
+        "1.5x",
+        "2.0x"
+    };
 
     private TimeSpan FormatTimeSpan(TimeSpan time)
     {
@@ -87,6 +100,8 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         try
         {
             _playbackControlService = playbackControlService;
+
+            _selectedSpeed = SpeedOptions.First();
 
             PlayPauseGlyph = "\uE768";
 
@@ -118,7 +133,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
             IsPlaying = state.IsPlaying;
             Volume = state.Volume;
-            SelectedSpeed = state.PlaybackSpeed;
+            UpdateSpeedFromService(state.PlaybackSpeed);
             CurrentPosition = state.CurrentPosition;
             SongDuration = state.Duration;
             IsReplayEnabled = state.IsRepeatEnabled;
@@ -174,18 +189,85 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
+    //[SuppressPropertyChangedWarnings]
+    //partial void OnSelectedSpeedChanged(string value)
+    //{
+    //    try
+    //    {
+    //        // Remove the 'x' suffix if present
+    //        string speedValue = value.TrimEnd('x');
+    //        _ = _playbackControlService.SetPlaybackSpeedAsync(speedValue);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        System.Diagnostics.Debug.WriteLine($"Error changing playback speed: {ex.Message}");
+    //    }
+    //}
+
+    
     [SuppressPropertyChangedWarnings]
     partial void OnSelectedSpeedChanged(string value)
     {
+        if (_isProcessingSpeedChange) return;
+
         try
         {
-            // Remove the 'x' suffix if present
-            string speedValue = value.TrimEnd('x');
-            _ = _playbackControlService.SetPlaybackSpeedAsync(speedValue);
+            _isProcessingSpeedChange = true;
+            
+            Task.Run(async () =>
+            {
+                try
+                {
+                    // Remove 'x' before sending to service
+                    string speedValue = value.TrimEnd('x');
+                    await _playbackControlService.SetPlaybackSpeedAsync(speedValue);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error in async speed change: {ex.Message}");
+                }
+                finally
+                {
+                    _isProcessingSpeedChange = false;
+                }
+            });
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error changing playback speed: {ex.Message}");
+            _isProcessingSpeedChange = false;
+        }
+    }
+
+    private void UpdateSpeedFromService(string newSpeed)
+    {
+        if (_isProcessingSpeedChange) return;
+        try
+        {
+            _isProcessingSpeedChange = true;
+
+            // Find matching speed option (with 'x' suffix)
+            var matchingSpeed = SpeedOptions.FirstOrDefault(x => x.StartsWith(newSpeed))
+                ?? SpeedOptions.First();
+
+            // Get the dispatcher from the current window
+            var dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+            if (dispatcher != null)
+            {
+                dispatcher.TryEnqueue(() =>
+                {
+                    SelectedSpeed = matchingSpeed;
+                });
+            }
+            else
+            {
+                // Fallback if we're already on the UI thread
+                SelectedSpeed = matchingSpeed;
+            }
+        }
+        finally
+        {
+            _isProcessingSpeedChange = false;
         }
     }
 
@@ -305,7 +387,8 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         {
             IsPlaying = state.IsPlaying;
             Volume = state.Volume;
-            SelectedSpeed = state.PlaybackSpeed;
+            //   SelectedSpeed = state.PlaybackSpeed;
+            UpdateSpeedFromService(state.PlaybackSpeed);
             CurrentPosition = FormatTimeSpan(state.CurrentPosition);
             SongDuration = FormatTimeSpan(state.Duration);
             IsReplayEnabled = state.IsRepeatEnabled;

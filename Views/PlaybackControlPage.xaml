@@ -191,12 +191,12 @@
                 </Button>
 
                 <!--Playback Speed ComboBox-->
-                <ComboBox SelectedItem="{x:Bind ViewModel.SelectedSpeed, Mode=TwoWay}" Width="100" VerticalAlignment="Bottom" Margin="10">
-                    <ComboBoxItem Content="1.0x" Tag="1.0"/>
-                    <ComboBoxItem Content="1.25x" Tag="1.25"/>
-                    <ComboBoxItem Content="1.5x" Tag="1.5"/>
-                    <ComboBoxItem Content="2.0x" Tag="2.0"/>
-                </ComboBox>
+                <ComboBox SelectedItem="{x:Bind ViewModel.SelectedSpeed, Mode=TwoWay}" 
+                  ItemsSource="{x:Bind ViewModel.SpeedOptions}"
+                  Width="100"
+                  VerticalAlignment="Bottom" 
+                  Margin="10" />        
+
 
                 <!--Volume Icon-->
                 <Button   
