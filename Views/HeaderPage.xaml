@@ -34,14 +34,14 @@
             <Image Source="/Assets/search_icon.png" Width="20" Height="20" VerticalAlignment="Center" Margin="10,0"/>
 
             <!-- Search TextBox -->
-            <!--<TextBox 
+            <TextBox 
                 x:Name="SearchTextBox"
                 Grid.Column="1"
-                VerticalAlignment="Center"
-                Padding="10"
                 PlaceholderText="Search"
-                Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                KeyDown="SearchTextBox_KeyDown" />-->
+                Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                TextChanged="SearchTextBox_TextChanged"
+                KeyDown="SearchTextBox_KeyDown"
+                VerticalAlignment="Center"/>
             <!-- Use the event handler -->
         </Grid>
 

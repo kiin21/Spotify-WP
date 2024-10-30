@@ -15,15 +15,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="Assets\App.ico" />
+    <Content Remove="Assets\sample.png" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="ShellWindow.xaml" />
     <None Remove="Views\HeaderPage.xaml" />
     <None Remove="Views\LeftSidebarPage.xaml" />
+    <None Remove="Views\LikedSongPage.xaml" />
     <None Remove="Views\MainPanelPage.xaml" />
     <None Remove="Views\PlaybackControlPage.xaml" />
+    <None Remove="Views\PlaylistPage.xaml" />
     <None Remove="Views\QueuePage.xaml" />
     <None Remove="Views\SearchResultsPage.xaml" />
+    <None Remove="Views\SongDetailPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,9 +43,12 @@
   <ItemGroup>
     <PackageReference Include="Catel.MVVM" Version="6.0.3" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+    <PackageReference Include="dotenv.net" Version="3.2.1" />
+    <PackageReference Include="DotNetEnv" Version="3.1.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240923002" />
+    <PackageReference Include="MongoDB.Driver" Version="3.0.0" />
     <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" />
     <PackageReference Include="WinUIEx" Version="2.4.2" />
     <Manifest Include="$(ApplicationManifest)" />
@@ -56,9 +63,26 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <Content Update="Assets\OMG_NewJeans.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <None Update="Assets\App.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\LikedSongPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\PlaylistPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <None Update="Assets\sample.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Page Update="Views\SongDetailPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\SearchResultsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

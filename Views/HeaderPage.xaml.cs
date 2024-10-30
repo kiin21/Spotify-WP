@@ -15,21 +15,27 @@ public sealed partial class HeaderPage : Page
     public HeaderPage()
     {
         this.InitializeComponent();
-        // Resolve the SongService from the service provider (DI container)
         var songService = (App.Current as App).Services.GetRequiredService<SongService>();
-
-        // Pass it to the ViewModel
         ViewModel = new HeaderViewModel(songService);
         DataContext = ViewModel;
+    }
+
+    private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (ViewModel.SearchCommand.CanExecute(null))
+        {
+            ViewModel.SearchCommand.Execute(null);
+        }
     }
 
     private void SearchTextBox_KeyDown(object sender, KeyRoutedEventArgs e)
     {
         if (e.Key == VirtualKey.Enter)
         {
-            if (ViewModel.SearchCommand.CanExecute(null)) {
+            if (ViewModel.SearchCommand.CanExecute(null))
+            {
                 ViewModel.SearchCommand.Execute(null);
-            }   
+            }
         }
     }
 }

@@ -8,15 +8,95 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
-
     <Grid>
-        <ListView ItemsSource="{Binding SearchResults}">
+        <ListView 
+            x:Name="SongListView"
+            ItemsSource="{Binding SearchResults}"
+            SelectionMode="Single"
+            IsItemClickEnabled="True"
+            ItemClick="ListView_ItemClick">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="Padding" Value="12,8" />
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Text="{Binding Title}" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding Artist}" Foreground="Gray"/>
-                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <!-- Thumbnail -->
+                        <Image 
+                            Source="{Binding CoverArt_url}" 
+                            Width="40" 
+                            Height="40" 
+                            Margin="0,0,12,0"/>
+                        <!-- Song Info -->
+                        <StackPanel Grid.Column="1">
+                            <TextBlock 
+                                Text="{Binding Title}" 
+                                FontWeight="SemiBold"/>
+                            <TextBlock 
+                                Text="{Binding Artist}" 
+                                Foreground="Gray"
+                                FontSize="12"/>
+                        </StackPanel>
+                        <!-- Actions and Duration Container -->
+                        <StackPanel 
+                            Grid.Column="2" 
+                            Orientation="Horizontal" 
+                            Margin="0,0,5,0"
+                            Spacing="8">
+                            <!-- Add to Playlist Button -->
+                            <Button 
+                                Content="&#xE710;" 
+                                FontFamily="Segoe MDL2 Assets" 
+                                FontSize="7px" 
+                                Background="Transparent" 
+                                BorderThickness="0" 
+                                Width="32" 
+                                Height="32">
+                                <Button.Flyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem Text="Create New Playlist" Icon="Add"/>
+                                        <MenuFlyoutSeparator/>
+                                        <MenuFlyoutItem Text="My Playlist 1" Icon="List"/>
+                                        <MenuFlyoutItem Text="My Playlist 2" Icon="List"/>
+                                        <MenuFlyoutItem Text="My Playlist 3" Icon="List"/>
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+                            <!-- Duration -->
+                            <TextBlock 
+                                Text="{Binding FormattedDuration}" 
+                                VerticalAlignment="Center"
+                                Margin="4,0"/>
+                            <!-- More Options Button -->
+                            <Button 
+                                Content="&#xE712;" 
+                                FontFamily="Segoe MDL2 Assets" 
+                                FontSize="5px" 
+                                FontWeight="Bold" 
+                                Background="Transparent" 
+                                BorderThickness="0" 
+                                Width="32" 
+                                Height="32">
+                                <Button.Flyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem Text="Add to Queue" Icon="Add"/>
+                                        <MenuFlyoutItem Text="Add to Playlist" Icon="List"/>
+                                        <MenuFlyoutSeparator/>
+                                        <MenuFlyoutItem Text="Share" Icon="Share"/>
+                                        <MenuFlyoutItem Text="Download" Icon="Download"/>
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

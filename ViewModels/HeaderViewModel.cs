@@ -1,4 +1,8 @@
 ﻿// HeaderViewModel.cs
+using System.Collections.Generic;
+using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -46,22 +50,30 @@ public class HeaderViewModel : INotifyPropertyChanged
         SearchResults = new ObservableCollection<SongDTO>();
     }
 
+
     private async Task ExecuteSearchAsync()
     {
-        string message = $"Searching for: {SearchQuery}";
-        Debug.WriteLine(message);
+        if (SearchQuery == "")
+        {
+            var results = await _songService.GetAllSongs();
+            SearchResults = new ObservableCollection<SongDTO>(results);
+        }
+        else
+        {
 
-        var results = await _songService.SearchSongsAsync(SearchQuery);
-        SearchResults = new ObservableCollection<SongDTO>(results);
+            var results = await _songService.SearchSongs(SearchQuery);
+            SearchResults = new ObservableCollection<SongDTO>(results);
+        }
 
         var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
         var mainFrame = shellWindow.getMainFrame();
-        shellWindow.NavigateToPage(typeof(SearchResultsPage), mainFrame, SearchResults);
+        //shellWindow.NavigateToPage(typeof(SearchResultsPage), mainFrame, SearchResults);
+        shellWindow.GetNavigationService().Navigate(typeof(SearchResultsPage), SearchResults);
     }
 
     private bool CanExecuteSearch()
     {
-        return !string.IsNullOrEmpty(SearchQuery);
+        return SearchQuery!=null;
     }
 
     public event PropertyChangedEventHandler PropertyChanged;

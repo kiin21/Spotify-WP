@@ -1,7 +1,9 @@
-﻿using System;
+﻿// RelayCommand.cs
+using System;
 using System.Windows.Input;
 
 namespace Spotify.Helpers;
+
 public class RelayCommand : ICommand
 {
     private readonly Action<object> _execute;
@@ -13,10 +15,12 @@ public class RelayCommand : ICommand
         _canExecute = canExecute;
     }
 
-    public event EventHandler CanExecuteChanged
+    // In WinUI 3, we don't have CommandManager, so we'll implement a basic event
+    public event EventHandler CanExecuteChanged;
+
+    protected virtual void OnCanExecuteChanged()
     {
-        add => CommandManager.RequerySuggested += value;
-        remove => CommandManager.RequerySuggested -= value;
+        CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public bool CanExecute(object parameter) => _canExecute == null || _canExecute(parameter);

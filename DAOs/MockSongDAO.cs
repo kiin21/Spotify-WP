@@ -3,23 +3,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using Spotify.Contracts.DAO;
+using Spotify.DAOs;
 using Spotify.Models.DTOs;
 
 namespace Spotify.DAO;
 
-public class MockSongDAO : ISongDAO
-{ 
-    private static string FOLDER_URL = "D:\\Download\\Music Audio";
+public class MockSongDAO : BaseDAO, ISongDAO
+{
+    private readonly IMongoCollection<SongDTO> _songsCollection;
 
-    private List<SongDTO> _mockSongs = new List<SongDTO>
+    public MockSongDAO()
     {
-        // new SongDTO { Id = 1, Title = "Song 1", Artist = "Artist 1", Album = "Album 1", Duration = TimeSpan.FromMinutes(3) },
-        // new SongDTO { Id = 2, Title = "Song 2", Artist = "Artist 2", Album = "Album 2", Duration = TimeSpan.FromMinutes(4) },
-        new SongDTO { Id = 3, Title = "Want you", Artist = "Oxlade", ImageUrl = "../Assets/want_you_img.png", AudioUrl = $"{FOLDER_URL}\\Want_You.mp3", Duration = TimeSpan.FromMinutes(2.33) },
-        new SongDTO { Id = 4, Title = "ThienLyOi", Artist = "J97", ImageUrl = "../Assets/ThienLyOi_img.png", AudioUrl = $"{FOLDER_URL}\\ThienLyOi.mp3", Duration = TimeSpan.FromMinutes(1.30) },
-    };
-   
-    public Task<List<SongDTO>> SearchSongsAsync(string query) =>
-        Task.FromResult(_mockSongs.Where(s => s.Title.Contains(query)).ToList());
-};
+        var database = connection.GetDatabase("SpotifineDB");
+        _songsCollection = database.GetCollection<SongDTO>("Songs");
+    }
+
+    public async Task<List<SongDTO>> SearchSongs(string query)
+    {
+        var filter = Builders<SongDTO>.Filter.Regex("Title", new BsonRegularExpression(query, "i"));
+        var songs = await _songsCollection.Find(filter).ToListAsync();
+        return songs;
+    }
+
+    public async Task<List<SongDTO>> GetAllSongs()
+    {
+        var songs = await _songsCollection.Find(new BsonDocument()).ToListAsync();
+        return songs; // Duration will be automatically converted via the property
+    }
+}

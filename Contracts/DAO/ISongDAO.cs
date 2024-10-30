@@ -7,5 +7,6 @@ namespace Spotify.Contracts.DAO;
 
 public interface ISongDAO : IDAO
 {
-    Task<List<SongDTO>> SearchSongsAsync(string query);
+    Task<List<SongDTO>> SearchSongs(string query);
+    Task<List<SongDTO>> GetAllSongs();
 }
