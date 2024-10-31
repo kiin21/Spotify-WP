@@ -23,7 +23,7 @@ public class MockSongDAO : BaseDAO, ISongDAO
 
     public async Task<List<SongDTO>> SearchSongs(string query)
     {
-        var filter = Builders<SongDTO>.Filter.Regex("Title", new BsonRegularExpression(query, "i"));
+        var filter = Builders<SongDTO>.Filter.Regex("title", new BsonRegularExpression(query, "i"));
         var songs = await _songsCollection.Find(filter).ToListAsync();
         return songs;
     }
