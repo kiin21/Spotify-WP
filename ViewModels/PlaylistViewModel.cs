@@ -5,6 +5,9 @@ using System.ComponentModel;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
+
+namespace Spotify.ViewModels;
 
 public class PlaylistViewModel : INotifyPropertyChanged
 {
@@ -12,7 +15,7 @@ public class PlaylistViewModel : INotifyPropertyChanged
     private ObservableCollection<PlaylistDTO> _playlists;
     private PlaylistDTO _selectedPlaylist;
 
-    public event PropertyChangedEventHandler PropertyChanged;
+
     public ObservableCollection<PlaylistDTO> Playlists
     {
         get => _playlists;
@@ -59,7 +62,15 @@ public class PlaylistViewModel : INotifyPropertyChanged
             SelectedPlaylist = playlist;
         }
     }
+    public async Task LoadLikedSongsPlaylist()
+    {
+        SelectedPlaylist = await _playlistService.GetLikedSongsPlaylistAsync();
+    }
 
-    protected void OnPropertyChanged(string propertyName) =>
+    // Implement INotifyPropertyChanged
+    public event PropertyChangedEventHandler PropertyChanged;
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 }

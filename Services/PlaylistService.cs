@@ -20,5 +20,8 @@ namespace Spotify.Services
 
         public Task<PlaylistDTO> GetPlaylistByIdAsync(string id) =>
             _playlistDAO.GetPlaylistByIdAsync(id);
+
+        public Task<PlaylistDTO> GetLikedSongsPlaylistAsync() =>
+            _playlistDAO.GetLikedSongsPlaylistAsync();
     }
 }

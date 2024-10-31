@@ -11,5 +11,6 @@ namespace Spotify.Contracts.DAO
     {
         Task<List<PlaylistDTO>> GetPlaylistsAsync();
         Task<PlaylistDTO> GetPlaylistByIdAsync(string id);
+        Task<PlaylistDTO> GetLikedSongsPlaylistAsync();
     }
 }

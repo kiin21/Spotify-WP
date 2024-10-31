@@ -5,7 +5,8 @@
     xmlns:local="using:Spotify.Views"
     xmlns:models="using:Spotify.Models.DTOs" 
     xmlns:viewmodels="using:Spotify.ViewModels"
-    xmlns:converters="using:Spotify.Converters" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:converters="using:Spotify.Converters" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
@@ -98,7 +99,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="200"/>
                     <ColumnDefinition Width="200"/>
-                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="100"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -133,7 +134,7 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="200"/>
                                     <ColumnDefinition Width="200"/>
-                                    <ColumnDefinition Width="200"/>
+                                    <ColumnDefinition Width="100"/>
                                 </Grid.ColumnDefinitions>
 
                                 <!-- Position -->

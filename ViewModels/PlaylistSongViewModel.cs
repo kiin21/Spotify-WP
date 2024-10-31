@@ -1,5 +1,6 @@
 ﻿using Spotify.Models.DTOs;
 using Spotify.Services;
+using Spotify.ViewModels;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;

@@ -10,6 +10,13 @@ namespace Spotify.Models.DTOs
 {
     public class PlaylistDTO
     {
+        private PlaylistDTO likedSongs;
+
+        public PlaylistDTO(PlaylistDTO likedSongs)
+        {
+            this.likedSongs = likedSongs;
+        }
+
         [BsonId]
         public ObjectId Id { get; set; }
 
@@ -30,5 +37,9 @@ namespace Spotify.Models.DTOs
 
         [BsonElement("created_by")]
         public string CreatedBy { get; set; }
+
+        [BsonElement("is_liked_song")]
+        public bool IsLikedSong { get; set; }
+
     }
 }

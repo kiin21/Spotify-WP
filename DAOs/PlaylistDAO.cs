@@ -29,4 +29,14 @@ public class PlaylistDAO : BaseDAO, IPlaylistDAO
         // Gọi MongoDB để lấy playlist với ID cụ thể
         return await _playlists.Find(p => p.Id.ToString() == playlistId).FirstOrDefaultAsync();
     }
+
+    public async Task<PlaylistDTO> GetLikedSongsPlaylistAsync()
+    {
+        // Tìm kiếm playlist có thuộc tính IsLikedSongs là true
+        var likedSongs = await _playlists.Find(p => p.IsLikedSong).FirstOrDefaultAsync();
+
+        // Trả về PlaylistDTO nếu tìm thấy, ngược lại trả về null
+        return likedSongs != null ? new PlaylistDTO(likedSongs) : null;
+    }
+
 }
