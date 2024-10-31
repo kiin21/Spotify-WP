@@ -43,48 +43,4 @@ public sealed partial class PlaybackControlPage : Page
         DataContext = ViewModel;
     }
 
- 
-
-    //public static readonly DependencyProperty ViewModelProperty =
-    //    DependencyProperty.Register(
-    //        nameof(ViewModel),
-    //        typeof(PlaybackControlViewModel),
-    //        typeof(PlaybackControlPage),
-    //        new PropertyMetadata(null)
-    //    );
-
-    //public PlaybackControlViewModel ViewModel
-    //{
-    //    get => (PlaybackControlViewModel)GetValue(ViewModelProperty);
-    //    set => SetValue(ViewModelProperty, value);
-    //}
-
-    //public PlaybackControlPage()
-    //{
-    //    try
-    //    {
-    //        this.InitializeComponent();
-
-    //        // Safer type checking and casting
-    //        if (App.Current is not App currentApp)
-    //        {
-    //            throw new InvalidOperationException("Application instance is not of the expected type 'App'");
-    //        }
-
-    //        var services = currentApp.Services ??
-    //            throw new InvalidOperationException("Service provider is not initialized");
-
-    //        // Get the ViewModel from DI
-    //       ViewModel = services.GetRequiredService<PlaybackControlViewModel>() ?? throw new InvalidOperationException("Failed to resolve PlaybackControlViewModel");
-
-    //        DataContext = ViewModel;
-
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // Log the error appropriately
-    //        System.Diagnostics.Debug.WriteLine($"Error initializing PlaybackControlPage: {ex}");
-    //        throw; // Rethrow to maintain the error state
-    //    }
-    //}
 }

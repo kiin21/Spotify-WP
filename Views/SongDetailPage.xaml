@@ -63,6 +63,7 @@
                         Width="50"
                         Height="50"
                         Background="Green"
+                        Click="PlayButton_Click"
                         CornerRadius="25">
                         <SymbolIcon Symbol="Play" />
                     </Button>

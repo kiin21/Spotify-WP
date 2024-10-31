@@ -17,7 +17,7 @@ public class PlaybackControlService : IPlaybackControlService
     private readonly IPlaybackControlDAO _playbackControlDAO;
     private readonly MediaPlayer _mediaPlayer;
     private PlaybackStateDTO _currentState;
-    private SongPlaybackDTO _currentSong;
+    private SongPlaybackDTO _currentSong = new SongPlaybackDTO(); // Initialize to empty song
     private List<SongPlaybackDTO> _queue;
     private bool _disposed;
 
@@ -230,7 +230,8 @@ public class PlaybackControlService : IPlaybackControlService
 
     private async Task LoadAndPlaySongAsync(SongPlaybackDTO song)
     {
-        try { 
+        try
+        {
             _currentSong = song;
             var mediaSource = MediaSource.CreateFromUri(new Uri(song.AudioUrl));
             _mediaPlayer.Source = mediaSource;
@@ -238,7 +239,7 @@ public class PlaybackControlService : IPlaybackControlService
             _currentState.CurrentPosition = TimeSpan.Zero;
             _currentState.Duration = song.Duration;
 
-            if(_currentState.IsPlaying)
+            if (_currentState.IsPlaying)
             {
                 _mediaPlayer.Play();
             }
@@ -246,7 +247,8 @@ public class PlaybackControlService : IPlaybackControlService
             await UpdatePlaybackStateAsync();
             OnCurrentSongChanged(song);
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             System.Diagnostics.Debug.WriteLine($"Error loading song: {ex.Message}");
         }
     }
@@ -255,7 +257,7 @@ public class PlaybackControlService : IPlaybackControlService
     {
         try
         {
-           _currentState.CurrentPosition = _mediaPlayer.Position;
+            _currentState.CurrentPosition = _mediaPlayer.Position;
             PlaybackStateChanged?.Invoke(this, _currentState);
             await _playbackControlDAO.UpdatePlaybackStateAsync(_currentState);
         }
@@ -283,7 +285,8 @@ public class PlaybackControlService : IPlaybackControlService
         }
     }
 
-    private void MediaPlayer_MediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args) {
+    private void MediaPlayer_MediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
+    {
         System.Diagnostics.Debug.WriteLine($"Media playback failed: {args.Error} - {args.ErrorMessage}");
     }
 
@@ -308,6 +311,29 @@ public class PlaybackControlService : IPlaybackControlService
                 _mediaPlayer.Dispose();
             }
             _disposed = true;
+        }
+    }
+    public async Task AddToQueueAsync(SongPlaybackDTO song)
+    {
+        try
+        {
+            if (_queue == null)
+            {
+                _queue = new List<SongPlaybackDTO>();
+            }
+
+            await _playbackControlDAO.AddToQueueAsync(song);
+            _queue = await _playbackControlDAO.GetQueueAsync(); // Refresh queue
+
+            // If no song is currently playing, start playing the added song
+            if (_currentSong == null)
+            {
+                await LoadAndPlaySongAsync(song);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error adding song to queue: {ex.Message}");
         }
     }
 }
