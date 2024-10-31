@@ -27,7 +27,7 @@
                 Width="150"
                 Height="150"
                 Margin="20,20,20,0"
-                Source="ms-appx:///Assets/Image1.jpg"
+                Source="{x:Bind ViewModel.ImageUrl, Mode=OneWay}"
                 Stretch="UniformToFill" />
 
             <!--  Song Information  -->
@@ -42,13 +42,13 @@
                     FontSize="48"
                     FontWeight="Bold"
                     Foreground="White"
-                    Text="OMG" />
+                    Text="{x:Bind ViewModel.Title, Mode=OneWay}" />
 
                 <!--  Artist Name and Additional Info  -->
                 <TextBlock
                     FontSize="16"
                     Foreground="LightGray"
-                    Text="NewJeans • NewJeans 'OMG' • 2023 • 3:32 • 741,523,389" />
+                    Text="{x:Bind ViewModel.MoreInfo, Mode=OneWay}" />
             </StackPanel>
 
             <!--  Playback Controls and Lyrics  -->
@@ -88,7 +88,7 @@
                     Margin="10"
                     FontSize="14"
                     Foreground="White"
-                    Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation \n ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id \n est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                    Text="{x:Bind ViewModel.Lyrics, Mode=OneWay}"
                     TextWrapping="Wrap" />
             </StackPanel>
         </Grid>
