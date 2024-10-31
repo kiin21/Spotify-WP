@@ -1,54 +1,75 @@
 ﻿//SongDTO.cs
 using System;
+using System.Collections.Generic;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Spotify.Models.DTOs;
-
-public class SongDTO
+namespace Spotify.Models.DTOs
 {
-    public ObjectId Id { get; set; }
-    public string Title { get; set; }
-    public string Audio_url { get; set; }
-    public string CoverArt_url { get; set; } = "ms-appx:///Assets/OMG_NewJeans.jpg";
-    public string Artist { get; set; }
-    public string Album { get; set; }
-
-    // This property will be used for deserialization
-    [BsonElement("Duration")]
-    public Decimal128 DurationDecimal { get; set; }
-
-    // This will be calculated from DurationDecimal
-    [BsonIgnore]
-    public TimeSpan Duration
+    public class SongDTO
     {
-        get => TimeSpan.FromMinutes((double)DurationDecimal);
-    }
+        [BsonId]
+        public ObjectId Id { get; set; }
 
-    public string FormattedDuration => $"{(int)Duration.TotalMinutes}:{Duration.Seconds:D2}"; // Format as "MM:SS"
+        public string title { get; set; }
 
-    public string Genre { get; set; }
+        [BsonElement("duration")]
+        public int Duration { get; set; }
 
-    // Optional fields depending on what your app needs:
-    public DateTime ReleaseDate { get; set; }
-    public string FilePath { get; set; } // If the song is stored locally
-
-    // Method to set Duration based on formatted string
-    public void SetFormattedDuration(string formattedDuration)
-    {
-        // Parse the formatted duration "MM:SS"
-        var parts = formattedDuration.Split(':');
-        if (parts.Length == 2 &&
-            int.TryParse(parts[0], out int minutes) &&
-            int.TryParse(parts[1], out int seconds))
+        [BsonIgnore]
+        public string FormattedDuration
         {
-            // Convert to TimeSpan and then to Decimal128
-            var duration = new TimeSpan(0, minutes, seconds);
-            DurationDecimal = (Decimal128)duration.TotalMinutes; // Set the Decimal128 property
+            get
+            {
+                int minutes = Duration / 60;
+                int seconds = Duration % 60;
+                return $"{minutes}:{seconds:D2}";
+            }
         }
-        else
+
+        public string audio_url { get; set; }
+
+        [BsonElement("coverArt_url")]
+        public string CoverArtUrl { get; set; }
+
+        public string syncedLyrics { get; set; }  // Changed to string
+
+        public string plainLyrics { get; set; }
+
+        [BsonElement("artist_name")]
+        public string ArtistName { get; set; }
+
+        [BsonElement("release_date")]
+        public string ReleaseDate { get; set; }
+
+        // Optional: Add helper method to parse synced lyrics if needed
+        [BsonIgnore]
+        public List<(TimeSpan Timestamp, string Text)> ParsedSyncedLyrics
         {
-            throw new FormatException("Formatted duration must be in the format 'MM:SS'.");
+            get
+            {
+                if (string.IsNullOrEmpty(syncedLyrics))
+                    return new List<(TimeSpan, string)>();
+
+                var result = new List<(TimeSpan, string)>();
+                var lines = syncedLyrics.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (var line in lines)
+                {
+                    if (line.StartsWith("[") && line.Contains("]"))
+                    {
+                        var timeStr = line.Substring(1, line.IndexOf("]") - 1);
+                        var text = line.Substring(line.IndexOf("]") + 1).Trim();
+
+                        if (TimeSpan.TryParseExact(timeStr, @"mm\:ss\.ff", null, out TimeSpan timestamp))
+                        {
+                            result.Add((timestamp, text));
+                        }
+                    }
+                }
+
+                return result;
+            }
         }
     }
 }
