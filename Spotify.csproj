@@ -21,6 +21,7 @@
     <None Remove=".env" />
     <None Remove=".env.example" />
     <None Remove="ShellWindow.xaml" />
+    <None Remove="Views\AddPlaylistDialog.xaml" />
     <None Remove="Views\HeaderPage.xaml" />
     <None Remove="Views\LeftSidebarPage.xaml" />
     <None Remove="Views\MainPanelPage.xaml" />
@@ -74,6 +75,9 @@
     <None Update="Assets\App.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\AddPlaylistDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\PlaylistPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

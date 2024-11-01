@@ -1,8 +1,6 @@
-﻿using Microsoft.UI.Xaml.Data;
+﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Data;
 using System;
-using System.Globalization;
-using System.Windows;
-
 
 namespace Spotify.Converters
 {
@@ -12,7 +10,8 @@ namespace Spotify.Converters
         {
             if (value is bool boolValue)
             {
-                return boolValue ? Visibility.Visible : Visibility.Collapsed;
+                bool invert = parameter?.ToString() == "Invert";
+                return (boolValue != invert) ? Visibility.Visible : Visibility.Collapsed;
             }
             return Visibility.Collapsed;
         }

@@ -21,13 +21,32 @@ public class PlaylistDAO : BaseDAO, IPlaylistDAO
 
     public async Task<List<PlaylistDTO>> GetPlaylistsAsync()
     {
-        return await _playlists.Find(_ => true).ToListAsync();
+        return await _playlists.Find(p => !p.IsDeleted).ToListAsync();
     }
 
     public async Task<PlaylistDTO> GetPlaylistByIdAsync(string playlistId)
     {
-        // Gọi MongoDB để lấy playlist với ID cụ thể
-        return await _playlists.Find(p => p.Id.ToString() == playlistId).FirstOrDefaultAsync();
+        if (string.IsNullOrEmpty(playlistId))
+            return null;
+
+        try
+        {
+            var filter = Builders<PlaylistDTO>.Filter.And(
+                Builders<PlaylistDTO>.Filter.Eq(p => p.Id, playlistId),
+                Builders<PlaylistDTO>.Filter.Eq(p => p.IsDeleted, false)
+            );
+
+            var playlist = await _playlists.Find(filter)
+                .FirstOrDefaultAsync();
+
+            return playlist;
+        }
+        catch (Exception ex)
+        {
+            // Log exception if you have logging system
+            Console.WriteLine($"Error getting playlist by ID: {ex.Message}");
+            throw; // Re-throw to handle it at higher level
+        }
     }
 
     public async Task<PlaylistDTO> GetLikedSongsPlaylistAsync()
@@ -37,6 +56,20 @@ public class PlaylistDAO : BaseDAO, IPlaylistDAO
 
         // Trả về PlaylistDTO nếu tìm thấy, ngược lại trả về null
         return likedSongs != null ? new PlaylistDTO(likedSongs) : null;
+    }
+
+    public async Task AddPlaylistAsync(PlaylistDTO playlist)
+    {
+        if (playlist == null) throw new ArgumentNullException(nameof(playlist));
+        await _playlists.InsertOneAsync(playlist);
+    }
+
+    public async Task RemovePlaylistAsync(string playlistId)
+    {
+        // Không cần chuyển đổi ObjectId, vì Id là kiểu string
+        var filter = Builders<PlaylistDTO>.Filter.Eq(p => p.Id, playlistId);
+        var update = Builders<PlaylistDTO>.Update.Set(p => p.IsDeleted, true);
+        await _playlists.UpdateOneAsync(filter, update);
     }
 
 }

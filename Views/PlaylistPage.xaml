@@ -13,6 +13,7 @@
         <converters:IndexConverter x:Key="IndexConverter"/>
         <converters:DateConverter x:Key="DateConverter"/>
         <converters:DurationConverter x:Key="DurationConverter"/>
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Page.Resources>
 
     <Grid>
@@ -32,27 +33,24 @@
             <!-- Playlist Image -->
             <StackPanel Grid.Column="0" Width="232" HorizontalAlignment="Left" Margin="0,0,24,0">
                 <Border Width="232" Height="232">
-                    <Grid>
-                        <!-- Hình ảnh playlist -->
-                        <Image Source="{Binding PlaylistVM.SelectedPlaylist.Avatar}" 
-                               Width="232" Height="232" 
-                               Stretch="UniformToFill"
-                               HorizontalAlignment="Center" 
-                               VerticalAlignment="Center"/>
-                    </Grid>
+                    <Image Source="{Binding SelectedPlaylist.Avatar}" 
+                           Width="232" Height="232" 
+                           Stretch="UniformToFill"
+                           HorizontalAlignment="Center" 
+                           VerticalAlignment="Center"/>
                 </Border>
             </StackPanel>
 
             <!-- Playlist Info -->
             <StackPanel Grid.Column="1" VerticalAlignment="Bottom">
-                <TextBlock Text="{Binding PlaylistVM.SelectedPlaylist.Title}" 
+                <TextBlock Text="{Binding SelectedPlaylist.Title}" 
                            FontSize="96" 
                            FontWeight="Bold" 
                            Foreground="White" 
                            TextWrapping="Wrap"/>
                 <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
                     <PersonPicture Width="24" Height="24"/>
-                    <TextBlock Text="{Binding PlaylistVM.SelectedPlaylist.CreatedBy}" 
+                    <TextBlock Text="{Binding SelectedPlaylist.CreatedBy}" 
                                Margin="8,0,4,0" 
                                Foreground="White" 
                                VerticalAlignment="Center"/>
@@ -60,7 +58,7 @@
                                Margin="4,0" 
                                Foreground="#B3B3B3" 
                                VerticalAlignment="Center"/>
-                    <TextBlock Text="{Binding PlaylistSongVM.SongCount}" 
+                    <TextBlock Text="{Binding SongCount}" 
                                Foreground="#B3B3B3" 
                                VerticalAlignment="Center"/>
                 </StackPanel>
@@ -70,15 +68,38 @@
         <!-- Play Button Section -->
         <Grid Grid.Row="1" Background="#241E2E" Padding="24,0,0,12">
             <StackPanel Orientation="Horizontal" Spacing="32">
+                <!-- Play Button -->
                 <Button Style="{StaticResource AccentButtonStyle}"
                         Width="40" 
                         Height="40"
                         Background="#1DB954"
                         BorderThickness="0"
-                        CornerRadius="28">
+                        CornerRadius="28"
+                        Click="OnPlayClick">
                     <FontIcon Glyph="&#xE768;"
                               FontFamily="Segoe MDL2 Assets"
                               FontSize="16"/>
+                </Button>
+
+                <!-- More Options Button (3 dots) -->
+                <Button Style="{StaticResource AccentButtonStyle}"
+                        Width="40"
+                        Height="40"
+                        BorderThickness="0"
+                        CornerRadius="28"
+                        Background="Transparent"
+                        Visibility="{Binding SelectedPlaylist.IsLikedSong, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Invert}">
+                    <FontIcon Glyph="&#xE712;" 
+                              FontFamily="Segoe MDL2 Assets"
+                              FontSize="16"/>
+
+                    <!-- Define MenuFlyout for More Options Button -->
+                    <Button.Flyout>
+                        <MenuFlyout Placement="Right">
+                            <MenuFlyoutItem Text="Add to queue" Icon="Add"/>
+                            <MenuFlyoutItem Text="Remove playlist" Icon="Remove" Click="OnRemovePlaylistClick"/>
+                        </MenuFlyout>
+                    </Button.Flyout>
                 </Button>
             </StackPanel>
         </Grid>
@@ -119,7 +140,7 @@
                           SelectionMode="Single" 
                           Background="Transparent"
                           HorizontalAlignment="Stretch"
-                          ItemsSource="{Binding PlaylistSongVM.PlaylistSongs}">
+                          ItemsSource="{Binding PlaylistSongs}">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

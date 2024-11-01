@@ -6,71 +6,88 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
-namespace Spotify.ViewModels;
-
-public class PlaylistViewModel : INotifyPropertyChanged
+namespace Spotify.ViewModels
 {
-    private readonly PlaylistService _playlistService;
-    private ObservableCollection<PlaylistDTO> _playlists;
-    private PlaylistDTO _selectedPlaylist;
-
-
-    public ObservableCollection<PlaylistDTO> Playlists
+    public class PlaylistViewModel : INotifyPropertyChanged
     {
-        get => _playlists;
-        set
+        private readonly PlaylistService _playlistService;
+        private ObservableCollection<PlaylistDTO> _playlists;
+        private PlaylistDTO _selectedPlaylist;
+
+        public ObservableCollection<PlaylistDTO> Playlists
         {
-            _playlists = value;
-            OnPropertyChanged(nameof(Playlists));
+            get => _playlists;
+            set
+            {
+                _playlists = value;
+                OnPropertyChanged(nameof(Playlists));
+            }
+        }
+
+        public PlaylistDTO SelectedPlaylist
+        {
+            get => _selectedPlaylist;
+            set
+            {
+                _selectedPlaylist = value;
+                OnPropertyChanged(nameof(SelectedPlaylist));
+                // Kích hoạt sự kiện SelectedPlaylistIdChanged khi SelectedPlaylist thay đổi
+                SelectedPlaylistIdChanged?.Invoke(this, _selectedPlaylist?.Id.ToString());
+            }
+        }
+
+        // Khai báo sự kiện SelectedPlaylistIdChanged
+        public event EventHandler<string> SelectedPlaylistIdChanged;
+
+        public PlaylistViewModel(PlaylistService playlistService)
+        {
+            _playlistService = playlistService;
+            _playlists = new ObservableCollection<PlaylistDTO>();
+            LoadPlaylists();
+        }
+
+        private async void LoadPlaylists()
+        {
+            var playlists = await _playlistService.GetPlaylistsAsync();
+            var filteredPlaylists = playlists.Where(p => !p.IsDeleted).ToList();
+            Playlists = new ObservableCollection<PlaylistDTO>(filteredPlaylists);
+        }
+
+        public void ClearData()
+        {
+            SelectedPlaylist = null;
+            // Clear any other data that needs to be reset
+        }
+
+        public async Task LoadSelectedPlaylist(string playlistId)
+        {
+            if (string.IsNullOrEmpty(playlistId))
+                return;
+
+            try
+            {
+                var playlist = await _playlistService.GetPlaylistByIdAsync(playlistId);
+                if (playlist != null)
+                {
+                    SelectedPlaylist = playlist;
+                    // Load additional data if needed
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle error appropriately
+                Debug.WriteLine($"Error loading playlist: {ex.Message}");
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 
-    public PlaylistDTO SelectedPlaylist
-    {
-        get => _selectedPlaylist;
-        set
-        {
-            _selectedPlaylist = value;
-            OnPropertyChanged(nameof(SelectedPlaylist));
-            // Check if _selectedPlaylist is not null before accessing Id
-            SelectedPlaylistIdChanged?.Invoke(this, _selectedPlaylist != null ? _selectedPlaylist.Id.ToString() : string.Empty);
-        }
-    }
 
-    public event EventHandler<string> SelectedPlaylistIdChanged;
-
-    public PlaylistViewModel(PlaylistService playlistService)
-    {
-        _playlistService = playlistService;
-        _playlists = new ObservableCollection<PlaylistDTO>();
-        LoadPlaylists();
-    }
-
-    private async void LoadPlaylists()
-    {
-        var playlists = await _playlistService.GetPlaylistsAsync();
-        Playlists = new ObservableCollection<PlaylistDTO>(playlists);
-        SelectedPlaylist = Playlists.FirstOrDefault(); // Tự động chọn playlist đầu tiên nếu cần
-    }
-
-    public async Task LoadSelectedPlaylist(string playlistId)
-    {
-        var playlist = await _playlistService.GetPlaylistByIdAsync(playlistId);
-        if (playlist != null)
-        {
-            SelectedPlaylist = playlist;
-        }
-    }
-    public async Task LoadLikedSongsPlaylist()
-    {
-        SelectedPlaylist = await _playlistService.GetLikedSongsPlaylistAsync();
-    }
-
-    // Implement INotifyPropertyChanged
-    public event PropertyChangedEventHandler PropertyChanged;
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
 }

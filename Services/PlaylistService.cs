@@ -21,7 +21,19 @@ namespace Spotify.Services
         public Task<PlaylistDTO> GetPlaylistByIdAsync(string id) =>
             _playlistDAO.GetPlaylistByIdAsync(id);
 
-        public Task<PlaylistDTO> GetLikedSongsPlaylistAsync() =>
-            _playlistDAO.GetLikedSongsPlaylistAsync();
+        public async Task<PlaylistDTO> GetLikedSongsPlaylistAsync() =>
+            await _playlistDAO.GetLikedSongsPlaylistAsync();
+
+        public Task AddPlaylistAsync(PlaylistDTO playlist)
+        {
+            if (playlist == null) throw new ArgumentNullException(nameof(playlist));
+            return _playlistDAO.AddPlaylistAsync(playlist);
+        }
+
+        public async Task RemovePlaylistAsync(string playlistId)
+        {
+            await _playlistDAO.RemovePlaylistAsync(playlistId);
+            // Không cần trả về gì vì chúng ta sẽ lấy lại danh sách trong ViewModel
+        }
     }
 }

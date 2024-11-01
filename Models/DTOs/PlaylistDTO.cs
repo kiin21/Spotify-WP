@@ -10,15 +10,17 @@ namespace Spotify.Models.DTOs
 {
     public class PlaylistDTO
     {
-        private PlaylistDTO likedSongs;
+        public PlaylistDTO() { }
 
+        private PlaylistDTO likedSongs;
         public PlaylistDTO(PlaylistDTO likedSongs)
         {
             this.likedSongs = likedSongs;
         }
 
         [BsonId]
-        public ObjectId Id { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)] // Dùng để chuyển ObjectId thành string tự động
+        public string Id { get; set; }
 
         [BsonElement("avatar")]
         public string Avatar { get; set; }
@@ -40,6 +42,9 @@ namespace Spotify.Models.DTOs
 
         [BsonElement("is_liked_song")]
         public bool IsLikedSong { get; set; }
+
+        [BsonElement("is_deleted")]
+        public bool IsDeleted { get; set; }
 
     }
 }
