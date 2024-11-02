@@ -1,0 +1,15 @@
+<ContentDialog
+    x:Class="Spotify.Views.AddPlaylistDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Add New Playlist"
+    PrimaryButtonText="Save"
+    CloseButtonText="Cancel"
+    DefaultButton="Primary"
+    Width="300">
+
+    <StackPanel>
+        <TextBlock Text="Playlist Name" Margin="0,0,0,8"/>
+        <TextBox x:Name="PlaylistNameTextBox" PlaceholderText="Enter playlist name" Width="250"/>
+    </StackPanel>
+</ContentDialog>

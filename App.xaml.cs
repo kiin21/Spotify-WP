@@ -36,8 +36,8 @@ namespace Spotify
             var services = new ServiceCollection();
             // Register DAOs
             services.AddSingleton<ISongDAO, MockSongDAO>();
-            services.AddSingleton<IPlaylistDAO, MockPlaylistDAO>();
-            services.AddSingleton<ILikedSongDAO, MockLikedSongDAO>();
+            services.AddSingleton<IPlaylistDAO, PlaylistDAO>();
+            services.AddSingleton<IPlaylistSongDAO, PlaylistSongDAO>();
 
             // Register Services
             services.AddSingleton<SongService>();
@@ -49,6 +49,11 @@ namespace Spotify
             services.AddSingleton<IPlaybackControlService, PlaybackControlService>();
 
             services.AddSingleton<IPlaybackControlDAO, MockPlaybackControlDAO>();  
+            services.AddSingleton<PlaylistSongService>();
+            services.AddSingleton<PlaybackControlService>();
+
+            services.AddSingleton<IPlaybackControlDAO, MockPlaybackControlDAO>();  // Add this line
+
 
 
 
