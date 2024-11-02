@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove=".env" />
+    <None Remove=".env.example" />
     <None Remove="ShellWindow.xaml" />
     <None Remove="Views\AddPlaylistDialog.xaml" />
     <None Remove="Views\HeaderPage.xaml" />

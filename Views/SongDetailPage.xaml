@@ -68,17 +68,17 @@
                         <SymbolIcon Symbol="Play" />
                     </Button>
 
-                    <!--  Other Icons  -->
+                    <!--  Like and More info Icons  -->
                     <Button
-                        Width="40"
-                        Height="40"
-                        Margin="10,0,0,0"
+                        Width="50"
+                        Height="50"
+                        Margin="10,0,10,0"
                         Background="Transparent">
                         <SymbolIcon Symbol="Like" />
                     </Button>
                     <Button
-                        Width="40"
-                        Height="40"
+                        Width="50"
+                        Height="50"
                         Background="Transparent">
                         <SymbolIcon Symbol="More" />
                     </Button>

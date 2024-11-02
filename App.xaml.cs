@@ -42,7 +42,7 @@ namespace Spotify
             // Register Services
             services.AddSingleton<SongService>();
             services.AddSingleton<PlaylistService>();
-            services.AddSingleton<LikedSongService>();
+            //services.AddSingleton<LikedSongService>();
             services.AddSingleton<PlaybackControlService>();
             // Register PlaybackControl services
             //services.AddSingleton<IPlaybackControlDAO, MockPlaybackControlDAO>();
