@@ -11,7 +11,6 @@ using DotNetEnv;
 using Spotify.Views;
 using System.Diagnostics;
 using System.IO;
-using Spotify.Views;
 using Spotify.DAOs;
 
 namespace Spotify
@@ -27,14 +26,12 @@ namespace Spotify
             string baseDirectory = AppContext.BaseDirectory;
             
             DotNetEnv.Env.Load($"{baseDirectory}/.env");
-            string connectionString = Environment.GetEnvironmentVariable("MONGODB_CONNECTION_STRING");
-
 
             Services = ConfigureServices();
             this.InitializeComponent();
         }
 
-        private static IServiceProvider ConfigureServices()
+        private static ServiceProvider ConfigureServices()
         {
             var services = new ServiceCollection();
             // Register DAOs

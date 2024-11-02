@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -15,7 +13,7 @@ using Spotify.Views;
 
 namespace Spotify.ViewModels;
 
-public class HeaderViewModel : INotifyPropertyChanged
+public partial class HeaderViewModel : INotifyPropertyChanged
 {
     private string _searchQuery;
     private readonly SongService _songService;
@@ -66,14 +64,14 @@ public class HeaderViewModel : INotifyPropertyChanged
         }
 
         var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
-        var mainFrame = shellWindow.getMainFrame();
+        //var mainFrame = shellWindow.getMainFrame();
         //shellWindow.NavigateToPage(typeof(SearchResultsPage), mainFrame, SearchResults);
         shellWindow.GetNavigationService().Navigate(typeof(SearchResultsPage), SearchResults);
     }
 
     private bool CanExecuteSearch()
     {
-        return SearchQuery!=null;
+        return SearchQuery != null;
     }
 
     public event PropertyChangedEventHandler PropertyChanged;
