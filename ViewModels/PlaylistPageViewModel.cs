@@ -60,7 +60,7 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
         _playlistSongService = playlistSongService;
         _playlists = new ObservableCollection<PlaylistDTO>();
         _playlistSongs = new ObservableCollection<PlaylistSongDTO>();
-        _ = LoadPlaylists();
+        //_ = LoadPlaylists();
     }
 
     private async Task LoadPlaylists()
