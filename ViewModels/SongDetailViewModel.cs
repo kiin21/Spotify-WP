@@ -1,4 +1,5 @@
 ﻿// SongDetailViewModel.cs
+using System.Data.Common;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Spotify.Models.DTOs;
 
@@ -6,6 +7,8 @@ namespace Spotify.ViewModels;
 
 public partial class SongDetailViewModel : ObservableObject
 {
+    [ObservableProperty]
+    private string id = string.Empty;  
     [ObservableProperty]
     private string title = string.Empty;
 
@@ -27,6 +30,7 @@ public partial class SongDetailViewModel : ObservableObject
 
     public void Initialize(SongDTO songInfo)
     {
+        Id = songInfo.Id.ToString();
         Title = songInfo.title;
         Lyrics = songInfo.plainLyrics;
         MoreInfo = $"{songInfo.ArtistName} • {songInfo.ReleaseDate} • {songInfo.Duration}";

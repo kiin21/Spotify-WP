@@ -60,7 +60,7 @@ public class PlaybackControlService : IPlaybackControlService
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error initializing playback: {ex.Message}");
-            InitializeDefaultState();
+            //InitializeDefaultState();
         }
     }
 
@@ -228,7 +228,7 @@ public class PlaybackControlService : IPlaybackControlService
         await UpdatePlaybackStateAsync();
     }
 
-    private async Task LoadAndPlaySongAsync(SongPlaybackDTO song)
+    public async Task LoadAndPlaySongAsync(SongPlaybackDTO song)
     {
         try
         {
@@ -238,11 +238,8 @@ public class PlaybackControlService : IPlaybackControlService
 
             _currentState.CurrentPosition = TimeSpan.Zero;
             _currentState.Duration = song.Duration;
-
-            if (_currentState.IsPlaying)
-            {
-                _mediaPlayer.Play();
-            }
+            _currentState.IsPlaying = true;
+            _mediaPlayer.Play();
 
             await UpdatePlaybackStateAsync();
             OnCurrentSongChanged(song);

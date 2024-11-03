@@ -16,11 +16,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="Assets\App.ico" />
-    <Content Remove="Assets\sample.png" />
   </ItemGroup>
   <ItemGroup>
     <None Remove=".env" />
     <None Remove=".env.example" />
+    <None Remove="Assets\sample.png" />
     <None Remove="ShellWindow.xaml" />
     <None Remove="Views\AddPlaylistDialog.xaml" />
     <None Remove="Views\HeaderPage.xaml" />
@@ -68,6 +68,9 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <Content Update="Assets\Error.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Update="Assets\OMG_NewJeans.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -82,9 +85,9 @@
     <Page Update="Views\PlaylistPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <None Update="Assets\sample.png">
+    <Content Update="Assets\sample.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
     <Page Update="Views\SongDetailPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

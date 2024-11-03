@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Spotify.Contracts.Services;
 using Spotify.Services;
 using Spotify.ViewModels;
 using Windows.Foundation;
@@ -30,13 +31,12 @@ public sealed partial class PlaybackControlPage : Page
 { 
     public PlaybackControlViewModel ViewModel { get; }
 
-
     public PlaybackControlPage()
     {
         this.InitializeComponent();
         // Resolve the SongService from the service provider (DI container)
         
-        var playbackControlService = (App.Current as App).Services.GetRequiredService<PlaybackControlService>();
+        var playbackControlService = (App.Current as App).Services.GetRequiredService<IPlaybackControlService>();
 
         // Pass it to the ViewModel
         ViewModel = new PlaybackControlViewModel(playbackControlService);

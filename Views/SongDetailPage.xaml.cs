@@ -5,12 +5,14 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Spotify.Contracts.Services;
 using Spotify.Models.DTOs;
+using Spotify.Services;
 using Spotify.ViewModels;
 
 namespace Spotify.Views;
 
 public sealed partial class SongDetailPage : Page
 {
+    private bool isPlaying = false;
     public SongDetailViewModel ViewModel { get; }
 
     public SongDetailPage()
@@ -31,18 +33,30 @@ public sealed partial class SongDetailPage : Page
     private async void PlayButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         var playbackService = (App.Current as App).Services.GetRequiredService<IPlaybackControlService>();
+        isPlaying = !isPlaying; // Toggle the playing state
+        // Update the button icon based on state
+        PlayButtonIcon.Symbol = isPlaying ? Symbol.Pause : Symbol.Play;
 
-        // Convert SongDTO to SongPlaybackDTO
-        var songPlayback = new SongPlaybackDTO
+        // If the current song is the same as the song being played, resume playing
+        SongPlaybackDTO currentSong = playbackService.GetCurrentSong();
+        if (currentSong.Id == ViewModel.Id)
         {
-            Id = "NULL",
-            Title = ViewModel.Title,
-            Artist = ViewModel.ArtistInfo,
-            AudioUrl = ViewModel.AudioUrl,
-            ImageUrl = ViewModel.ImageUrl,
-            Duration = TimeSpan.FromSeconds(ViewModel.Duration), 
-        };
-
-        await playbackService.AddToQueueAsync(songPlayback);
+            await playbackService.SetPlayPauseAsync(isPlaying);
+        }
+        // Otherwise, load and play the new song
+        else
+        {
+            var newSong = new SongPlaybackDTO
+            {
+                Id = ViewModel.Id,
+                Title = ViewModel.Title,
+                Artist = ViewModel.ArtistInfo,
+                AudioUrl = ViewModel.AudioUrl,
+                ImageUrl = ViewModel.ImageUrl,
+                Duration = TimeSpan.FromSeconds(ViewModel.Duration),
+            };
+            await playbackService.LoadAndPlaySongAsync(newSong);
+        }
     }
+
 }
