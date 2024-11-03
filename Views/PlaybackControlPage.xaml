@@ -42,7 +42,7 @@
             <!--Album Art-->
             <Border Grid.Column="0"  
                     Width="56"  
-                    Height="56"  
+                    Height="auto"  
                     Margin="0,0,16,0"  
                     CornerRadius="4"  
                     Background="Black">
@@ -63,7 +63,7 @@
             </StackPanel>
 
             <!--Add to Playlist Button-->
-            <!--<Button Grid.Column="2"  
+            <Button Grid.Column="2"  
                     Width="Auto"  
                     Height="Auto"
                     Margin="0 10 0 5"
@@ -73,7 +73,7 @@
                     >
                 <FontIcon Glyph="&#xE710;"  
                          Foreground="White"/>
-            </Button>-->
+            </Button>
         </Grid>
 
         <!--Main section with controls-->
