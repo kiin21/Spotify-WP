@@ -13,58 +13,57 @@ using System.Diagnostics;
 using System.IO;
 using Spotify.DAOs;
 
-namespace Spotify
+namespace Spotify;
+
+public partial class App : Application
 {
-    public partial class App : Application
+    public ShellWindow ShellWindow { get; private set; }
+    public IServiceProvider Services { get; }
+
+    public App()
     {
-        public ShellWindow ShellWindow { get; private set; }
-        public IServiceProvider Services { get; }
+        // Get the base directory of the application
+        string baseDirectory = AppContext.BaseDirectory;
+        
+        DotNetEnv.Env.Load($"{baseDirectory}/.env");
 
-        public App()
-        {
-            // Get the base directory of the application
-            string baseDirectory = AppContext.BaseDirectory;
-            
-            DotNetEnv.Env.Load($"{baseDirectory}/.env");
-
-            Services = ConfigureServices();
-            this.InitializeComponent();
-        }
-
-        private static ServiceProvider ConfigureServices()
-        {
-            var services = new ServiceCollection();
-            // Register DAOs
-            services.AddSingleton<ISongDAO, MockSongDAO>();
-            services.AddSingleton<IPlaylistDAO, PlaylistDAO>();
-            services.AddSingleton<IPlaylistSongDAO, PlaylistSongDAO>();
-
-            // Register Services
-            services.AddSingleton<SongService>();
-            services.AddSingleton<PlaylistService>();
-            // Register PlaybackControl services
-            //services.AddSingleton<IPlaybackControlDAO, MockPlaybackControlDAO>();
-            services.AddSingleton<IPlaybackControlService, PlaybackControlService>();
-
-            services.AddSingleton<IPlaybackControlDAO, MockPlaybackControlDAO>();  
-            services.AddSingleton<PlaylistSongService>();
-
-            services.AddSingleton<IPlaybackControlDAO, MockPlaybackControlDAO>();  
-
-
-
-            // Register ViewModels
-            services.AddTransient<HeaderViewModel>();
-            services.AddTransient<MainPanelViewModel>();
-
-            return services.BuildServiceProvider();
-        }
-
-        protected override void OnLaunched(LaunchActivatedEventArgs args)
-        {
-            ShellWindow = new ShellWindow();
-            ShellWindow.Activate();
-        }
-
+        Services = ConfigureServices();
+        this.InitializeComponent();
     }
+
+    private static ServiceProvider ConfigureServices()
+    {
+        var services = new ServiceCollection();
+        // Register DAOs
+        services.AddSingleton<ISongDAO, MockSongDAO>();
+        services.AddSingleton<IPlaylistDAO, PlaylistDAO>();
+        services.AddSingleton<IPlaylistSongDAO, PlaylistSongDAO>();
+
+        // Register Services
+        services.AddSingleton<SongService>();
+        services.AddSingleton<PlaylistService>();
+        // Register PlaybackControl services
+        //services.AddSingleton<IPlaybackControlDAO, MockPlaybackControlDAO>();
+        services.AddSingleton<IPlaybackControlService, PlaybackControlService>();
+
+        services.AddSingleton<IPlaybackControlDAO, MockPlaybackControlDAO>();  
+        services.AddSingleton<PlaylistSongService>();
+
+        services.AddSingleton<IPlaybackControlDAO, MockPlaybackControlDAO>();  
+
+
+
+        // Register ViewModels
+        services.AddTransient<HeaderViewModel>();
+        services.AddTransient<MainPanelViewModel>();
+
+        return services.BuildServiceProvider();
+    }
+
+    protected override void OnLaunched(LaunchActivatedEventArgs args)
+    {
+        ShellWindow = new ShellWindow();
+        ShellWindow.Activate();
+    }
+
 }

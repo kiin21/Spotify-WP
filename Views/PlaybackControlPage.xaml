@@ -39,10 +39,10 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <!--Album Art-->
+            <!--Cover Art-->
             <Border Grid.Column="0"  
-                    Width="56"  
-                    Height="auto"  
+                    Width="60"  
+                    Height="Auto"  
                     Margin="0,0,16,0"  
                     CornerRadius="4"  
                     Background="Black">
