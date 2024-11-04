@@ -26,7 +26,7 @@ namespace Spotify.ViewModels;
 
 public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 {
-    
+
     private readonly IPlaybackControlService _playbackControlService;
     private readonly DispatcherTimer _playbackTimer;
     private bool _disposed;
@@ -98,12 +98,15 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     public ObservableCollection<SongPlaybackDTO> _queueSongs = new();
 
-    [ObservableProperty]
-    public string _playPauseGlyph;
+    private string _playPauseGlyph;
+    public string PlayPauseGlyph
+    {
+        get => _playPauseGlyph;
+        private set => SetProperty(ref _playPauseGlyph, value);
+    }
 
 
-
-    public PlaybackControlViewModel(PlaybackControlService playbackControlService)
+    public PlaybackControlViewModel(IPlaybackControlService playbackControlService)
     {
         try
         {
@@ -150,7 +153,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             Title = currentSong.Title;
             Artist = currentSong.Artist;
 
-           _ = LoadQueueAsync();
+            _ = LoadQueueAsync();
             Console.WriteLine("Initialize successfully!!!");
         }
         catch (Exception ex)
@@ -529,7 +532,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             if (shellWindow != null)
             {
                 var rightSidebarFrame = shellWindow.getRightSidebarFrame();
-                shellWindow.GetNavigationService().Navigate(typeof(QueuePage), navigationParams);
+                shellWindow.GetNavigationService().Navigate(typeof(QueuePage), rightSidebarFrame, navigationParams);
             }
             else
             {

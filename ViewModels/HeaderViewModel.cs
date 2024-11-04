@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -16,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Spotify.ViewModels;
 
-public class HeaderViewModel : INotifyPropertyChanged
+public partial class HeaderViewModel : INotifyPropertyChanged
 {
     private string _searchQuery;
     private readonly SongService _songService;
@@ -76,7 +74,7 @@ public class HeaderViewModel : INotifyPropertyChanged
 
     private bool CanExecuteSearch()
     {
-        return SearchQuery!=null;
+        return SearchQuery != null;
     }
 
     public event PropertyChangedEventHandler PropertyChanged;

@@ -6,30 +6,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Spotify.DAOs
+namespace Spotify.DAOs;
+
+public class MockPlaybackControlDAO : IPlaybackControlDAO
 {
-    public class MockPlaybackControlDAO : IPlaybackControlDAO
-    {
-        private PlaybackStateDTO _currentState;
-        private List<SongPlaybackDTO> _queue;
-        private int _currentIndex;
-        private List<int> _shuffleOrder;
+    private PlaybackStateDTO _currentState;
+    private List<SongPlaybackDTO> _queue;
+    private int _currentIndex;
+    private List<int> _shuffleOrder;
 
-        public MockPlaybackControlDAO() {
+    public MockPlaybackControlDAO() {
 
-            _currentState = new PlaybackStateDTO
-            {
-                CurrentSongId = "1",
-                IsPlaying = false,
-                Volume = 50,
-                PlaybackSpeed = "1.0x",
-                CurrentPosition = TimeSpan.Zero,
-                Duration = TimeSpan.FromSeconds(60),
-                IsShuffleEnabled = false,
-                IsRepeatEnabled = false
-            };
+        _currentState = new PlaybackStateDTO
+        {
+            CurrentSongId = "1",
+            IsPlaying = false,
+            Volume = 50,
+            PlaybackSpeed = "1.0x",
+            CurrentPosition = TimeSpan.Zero,
+            Duration = TimeSpan.FromSeconds(60),
+            IsShuffleEnabled = false,
+            IsRepeatEnabled = false
+        };
 
-            _queue = new List<SongPlaybackDTO>
+        _queue = new List<SongPlaybackDTO>
             {
                 new SongPlaybackDTO
                 {
@@ -78,51 +78,25 @@ namespace Spotify.DAOs
                 }
             };
 
-            _currentIndex = 0;
-        }
+        _currentIndex = 0;
+    }
 
-        public async Task<PlaybackStateDTO> GetPlaybackStateAsync()
-        {
-            return await Task.FromResult(_currentState);
-        }
+    public async Task<PlaybackStateDTO> GetPlaybackStateAsync()
+    {
+        return await Task.FromResult(_currentState);
+    }
 
-        public async Task UpdatePlaybackStateAsync(PlaybackStateDTO state)
-        {
-            _currentState = state;
-            await Task.CompletedTask;
-        }
+    public async Task UpdatePlaybackStateAsync(PlaybackStateDTO state)
+    {
+        _currentState = state;
+        await Task.CompletedTask;
+    }
 
-        public async Task<SongPlaybackDTO> GetCurrentSongAsync()
-        {
-            return await Task.FromResult(_queue[_currentIndex]);
-        }
-
-        //public async Task<SongPlaybackDTO> GetNextSongAsync()
-        //{
-        //    if (_currentIndex < _queue.Count - 1)
-        //    {
-        //        _currentIndex++;
-        //    }
-        //    else if (_currentState.IsRepeatEnabled)
-        //    {
-        //        _currentIndex = 0;
-        //    }
-        //    return await Task.FromResult(_queue[_currentIndex]);
-        //}
-
-        //public async Task<SongPlaybackDTO> GetPreviousSongAsync()
-        //{
-        //    if (_currentIndex > 0)
-        //    {
-        //        _currentIndex--;
-        //    }
-        //    else if (_currentState.IsRepeatEnabled)
-        //    {
-        //        _currentIndex = _queue.Count - 1;
-        //    }
-        //    return await Task.FromResult(_queue[_currentIndex]);
-        //}
-
+    public async Task<SongPlaybackDTO> GetCurrentSongAsync()
+    {
+        return await Task.FromResult(_queue[_currentIndex]);
+    }
+   
     public async Task<SongPlaybackDTO> GetNextSongAsync()
     {
         if (_queue == null || _queue.Count == 0)
@@ -160,7 +134,7 @@ namespace Spotify.DAOs
             }
             // If neither condition is met, stay on current song
         }
-
+        
         _currentState.CurrentSongId = _queue[_currentIndex].Id;
         _currentState.CurrentPosition = TimeSpan.Zero;
         return await Task.FromResult(_queue[_currentIndex]);
@@ -239,46 +213,26 @@ namespace Spotify.DAOs
         await Task.CompletedTask;
     }
    
-
     public async Task UpdateCurrentPositionAsync(TimeSpan position)
-        {
-            _currentState.CurrentPosition = position;
-            await Task.CompletedTask;
-        }
+    {
+        _currentState.CurrentPosition = position;
+        await Task.CompletedTask;
+    }
 
-        public async Task<List<SongPlaybackDTO>> GetQueueAsync()
-        {
-            return await Task.FromResult(_queue.ToList());
-        }
+    public async Task<List<SongPlaybackDTO>> GetQueueAsync()
+    {
+        return await Task.FromResult(_queue.ToList());
+    }
 
-        //public async Task ShuffleQueueAsync()
-        //{
-        //    var currentSong = _queue[_currentIndex];
-        //    var remainingSongs = _queue.Skip(_currentIndex + 1).ToList();
-
-        //    // Fisher-Yates shuffle algorithm
-        //    Random rng = new Random();
-        //    int n = remainingSongs.Count;
-        //    while (n > 1)
-        //    {
-        //        n--;
-        //        int k = rng.Next(n + 1);
-        //        var value = remainingSongs[k];
-        //        remainingSongs[k] = remainingSongs[n];
-        //        remainingSongs[n] = value;
-        //    }
-
-        //    _queue = new List<SongPlaybackDTO> { currentSong };
-        //    _queue.AddRange(remainingSongs);
-        //    _currentIndex = 0;
-
-        //    await Task.CompletedTask;
-        //}
-
-        public async Task SetRepeatStateAsync(bool isEnabled)
+    public async Task SetRepeatStateAsync(bool isEnabled)
     {
         await Task.Delay(50); // Simulate network delay
         _currentState.IsRepeatEnabled = isEnabled;
     }
+
+    public async Task AddToQueueAsync(SongPlaybackDTO song)
+    {
+        _queue.Add(song);
+        await Task.CompletedTask;
     }
 }

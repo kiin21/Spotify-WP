@@ -7,6 +7,6 @@ namespace Spotify.DAOs;
 
 public class BaseDAO : IDAO
 {
-    static string connectionString = Environment.GetEnvironmentVariable("MONGODB_CONNECTION_STRING");
+    static readonly string connectionString = Environment.GetEnvironmentVariable("MONGODB_CONNECTION_STRING");
     public MongoClient connection = new MongoClient(connectionString);
 }

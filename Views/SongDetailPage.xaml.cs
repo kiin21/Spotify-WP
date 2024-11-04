@@ -1,31 +1,62 @@
+// SongDetailPage.xaml.cs
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Microsoft.UI.Xaml;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Spotify.Contracts.Services;
+using Spotify.Models.DTOs;
+using Spotify.Services;
+using Spotify.ViewModels;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+namespace Spotify.Views;
 
-namespace Spotify.Views
+public sealed partial class SongDetailPage : Page
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class SongDetailPage : Page
+    private bool isPlaying = false;
+    public SongDetailViewModel ViewModel { get; }
+
+    public SongDetailPage()
     {
-        public SongDetailPage()
+        ViewModel = new SongDetailViewModel();
+        this.InitializeComponent();
+    }
+
+    protected override void OnNavigatedTo(NavigationEventArgs e)
+    {
+        base.OnNavigatedTo(e);
+        if (e.Parameter is SongDTO song)
         {
-            this.InitializeComponent();
+            ViewModel.Initialize(song);
         }
     }
+
+    private async void PlayButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        var playbackService = (App.Current as App).Services.GetRequiredService<PlaybackControlService>();
+        isPlaying = !isPlaying; // Toggle the playing state
+        // Update the button icon based on state
+        PlayButtonIcon.Symbol = isPlaying ? Symbol.Pause : Symbol.Play;
+
+        // If the current song is the same as the song being played, resume playing
+        SongPlaybackDTO currentSong = playbackService.GetCurrentSong();
+        if (currentSong.Id == ViewModel.Id)
+        {
+            await playbackService.SetPlayPauseAsync(isPlaying);
+        }
+        // Otherwise, load and play the new song
+        else
+        {
+            var newSong = new SongPlaybackDTO
+            {
+                Id = ViewModel.Id,
+                Title = ViewModel.Title,
+                Artist = ViewModel.ArtistInfo,
+                AudioUrl = ViewModel.AudioUrl,
+                ImageUrl = ViewModel.ImageUrl,
+                Duration = TimeSpan.FromSeconds(ViewModel.Duration),
+            };
+            await playbackService.LoadAndPlaySongAsync(newSong);
+        }
+    }
+
 }

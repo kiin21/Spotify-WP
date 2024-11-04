@@ -10,5 +10,9 @@ namespace Spotify.Contracts.DAO
     public interface IPlaylistDAO : IDAO
     {
         Task<List<PlaylistDTO>> GetPlaylistsAsync();
+        Task<PlaylistDTO> GetPlaylistByIdAsync(string id);
+        Task<PlaylistDTO> GetLikedSongsPlaylistAsync();
+        Task AddPlaylistAsync(PlaylistDTO playlist);
+        Task RemovePlaylistAsync(string playlistId);
     }
 }

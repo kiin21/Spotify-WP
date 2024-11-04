@@ -9,9 +9,6 @@ using System.ComponentModel;
 using System.Windows.Input;
 using System;
 using Spotify.Contracts.Services;
-﻿using Spotify.Models.DTOs;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 
 namespace Spotify.ViewModels;
 
@@ -40,10 +37,10 @@ public class SearchResultPageViewModel : INotifyPropertyChanged
         SearchResults = searchResults;
         _navigationService = navigationService;
 
-        SongSelectedCommand = new RelayCommand(
-            execute: param => NavigateToSongDetail(param as SongDTO),
-            canExecute: param => param is SongDTO
-        );
+        SongSelectedCommand =
+                        new RelayCommand(
+                                execute: param => NavigateToSongDetail(param as SongDTO),
+                                canExecute: param => param is SongDTO);
     }
 
     private void NavigateToSongDetail(SongDTO song)

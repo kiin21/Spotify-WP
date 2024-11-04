@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// SongPlaybackDTO.cs
+using System;
 
 namespace Spotify.Models.DTOs
 {
     public class SongPlaybackDTO
     {
-        public string Id { get; set; }
-        public string Title { get; set; }
-        public string Artist { get; set; }
-        public string ImageUrl { get; set; }
-        public TimeSpan Duration { get; set; }
-        public string AudioUrl { get; set; }
+        public string Id { get; set; } = string.Empty;
+        public string Title { get; set; } = string.Empty;
+        public string Artist { get; set; } = string.Empty;
+        public string ImageUrl { get; set; } = "ms-appx:///Assets/Error.svg";
+        public TimeSpan Duration { get; set; } = TimeSpan.Zero;
+        public string AudioUrl { get; set; } = string.Empty;
     }
 }

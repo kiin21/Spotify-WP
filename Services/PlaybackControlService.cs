@@ -24,7 +24,7 @@ public class PlaybackControlService : IPlaybackControlService
  //   private IWavePlayer _wavePlayer;
     private VarispeedSampleProvider _varispeedSampleProvider;
     private PlaybackStateDTO _currentState;
-    private SongPlaybackDTO _currentSong;
+    private SongPlaybackDTO _currentSong = new SongPlaybackDTO(); // Initialize to empty song
     private List<SongPlaybackDTO> _queue;
     private bool _disposed;
     private VolumeSampleProvider _volumeProvider;
@@ -62,7 +62,7 @@ public class PlaybackControlService : IPlaybackControlService
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error initializing playback: {ex.Message}");
-            InitializeDefaultState();
+            //InitializeDefaultState();
         }
     }
 
@@ -316,7 +316,7 @@ public class PlaybackControlService : IPlaybackControlService
         await UpdatePlaybackStateAsync();
     }
 
-    private async Task LoadAndPlaySongAsync(SongPlaybackDTO song)
+    public async Task LoadAndPlaySongAsync(SongPlaybackDTO song)
 {
     if (song == null) return;
     lock (_lockObject)
@@ -435,59 +435,6 @@ public class PlaybackControlService : IPlaybackControlService
         CurrentSongChanged?.Invoke(this, song);
     }
 
-    //private void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
-    //{
-    //    if (_currentState.IsRepeatEnabled)
-    //    {
-    //        _mediaPlayer.Position = TimeSpan.Zero;
-    //        _mediaPlayer.Play();
-    //    }
-    //    else
-    //    {
-    //        _ = NextAsync();
-    //    }
-    //}
-
-    //private void MediaPlayer_MediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args) {
-    //    System.Diagnostics.Debug.WriteLine($"Media playback failed: {args.Error} - {args.ErrorMessage}");
-    //}
-
-    //private void MediaPlayer_MediaOpened(MediaPlayer sender, object args)
-    //{
-    //    _currentState.Duration = _mediaPlayer.NaturalDuration;
-    //    _ = UpdatePlaybackStateAsync();
-    //}
-
-    //private void WaveOutEvent_PlaybackStopped(object sender, StoppedEventArgs e)
-    //{
-    //    if (_currentState.IsRepeatEnabled)
-    //    {
-    //        _mediaFoundationReader.CurrentTime = TimeSpan.Zero;
-    //        _waveOutEvent.Play();
-    //    }
-    //    else
-    //    {
-    //        _ = NextAsync();
-    //    }
-    //}
-
-    //private void WaveOutEvent_PlaybackStopped(object sender, StoppedEventArgs e)
-    //{
-    //    // Only proceed if we're actually at the end of the track
-    //    if (_mediaFoundationReader?.CurrentTime >= _currentState.Duration)
-    //    {
-    //        if (_currentState.IsRepeatEnabled)
-    //        {
-    //            _mediaFoundationReader.CurrentTime = TimeSpan.Zero;
-    //            _waveOutEvent.Play();
-    //        }
-    //        else
-    //        {
-    //            _ = NextAsync();
-    //        }
-    //    }
-    //}
-
     private void WaveOutEvent_PlaybackStopped(object sender, StoppedEventArgs e)
     {
         try
@@ -547,6 +494,29 @@ public class PlaybackControlService : IPlaybackControlService
                 _mediaFoundationReader?.Dispose();
             }
             _disposed = true;
+        }
+    }
+    public async Task AddToQueueAsync(SongPlaybackDTO song)
+    {
+        try
+        {
+            if (_queue == null)
+            {
+                _queue = new List<SongPlaybackDTO>();
+            }
+
+            await _playbackControlDAO.AddToQueueAsync(song);
+            _queue = await _playbackControlDAO.GetQueueAsync(); // Refresh queue
+
+            // If no song is currently playing, start playing the added song
+            if (_currentSong == null)
+            {
+                await LoadAndPlaySongAsync(song);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error adding song to queue: {ex.Message}");
         }
     }
 }

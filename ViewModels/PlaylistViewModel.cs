@@ -1,12 +1,12 @@
 ﻿using Spotify.Models.DTOs;
 using Spotify.Services;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 namespace Spotify.ViewModels
 {
@@ -14,18 +14,8 @@ namespace Spotify.ViewModels
     {
         private readonly PlaylistService _playlistService;
         private ObservableCollection<PlaylistDTO> _playlists;
-        private string _username = "Brian Dang";
-        public string Username
-        {
-            get => _username;
-            set
-            {
-                _username = value;
-                OnPropertyChanged(nameof(Username));
-            }
-        }
+        private PlaylistDTO _selectedPlaylist;
 
-        public string SongCount => $"{Playlists?.Count ?? 0} songs";
         public ObservableCollection<PlaylistDTO> Playlists
         {
             get => _playlists;
@@ -33,9 +23,23 @@ namespace Spotify.ViewModels
             {
                 _playlists = value;
                 OnPropertyChanged(nameof(Playlists));
-                OnPropertyChanged(nameof(SongCount));
             }
         }
+
+        public PlaylistDTO SelectedPlaylist
+        {
+            get => _selectedPlaylist;
+            set
+            {
+                _selectedPlaylist = value;
+                OnPropertyChanged(nameof(SelectedPlaylist));
+                // Kích hoạt sự kiện SelectedPlaylistIdChanged khi SelectedPlaylist thay đổi
+                SelectedPlaylistIdChanged?.Invoke(this, _selectedPlaylist?.Id.ToString());
+            }
+        }
+
+        // Khai báo sự kiện SelectedPlaylistIdChanged
+        public event EventHandler<string> SelectedPlaylistIdChanged;
 
         public PlaylistViewModel(PlaylistService playlistService)
         {
@@ -43,24 +47,47 @@ namespace Spotify.ViewModels
             _playlists = new ObservableCollection<PlaylistDTO>();
             LoadPlaylists();
         }
+
         private async void LoadPlaylists()
         {
-            // Giả sử bạn có một danh sách songs từ service
-            var songs = await _playlistService.GetPlaylistsAsync();
+            var playlists = await _playlistService.GetPlaylistsAsync();
+            var filteredPlaylists = playlists.Where(p => !p.IsDeleted).ToList();
+            Playlists = new ObservableCollection<PlaylistDTO>(filteredPlaylists);
+        }
 
-            // Set index cho từng bài hát
-            for (int i = 0; i < songs.Count; i++)
+        public void ClearData()
+        {
+            SelectedPlaylist = null;
+            // Clear any other data that needs to be reset
+        }
+
+        public async Task LoadSelectedPlaylist(string playlistId)
+        {
+            if (string.IsNullOrEmpty(playlistId))
+                return;
+
+            try
             {
-                songs[i].Index = i + 1;
+                var playlist = await _playlistService.GetPlaylistByIdAsync(playlistId);
+                if (playlist != null)
+                {
+                    SelectedPlaylist = playlist;
+                    // Load additional data if needed
+                }
             }
-            Playlists = new ObservableCollection<PlaylistDTO>(songs);
+            catch (Exception ex)
+            {
+                // Handle error appropriately
+                Debug.WriteLine($"Error loading playlist: {ex.Message}");
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
+
+
 }
