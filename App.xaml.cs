@@ -17,9 +17,8 @@ namespace Spotify
 {
     public partial class App : Application
     {
-        // Make _shellWindow internal so it can be accessed from LoginPage
         internal ShellWindow _shellWindow;
-        private LoginSignupWindow _loginSignupWindow;
+        internal LoginSignupWindow _loginSignupWindow;
         private readonly IServiceProvider _services;
 
         public IServiceProvider Services => _services;
@@ -72,6 +71,7 @@ namespace Spotify
             services.AddSingleton<IPlaylistSongDAO, PlaylistSongDAO>();
 
             // Register Services
+            services.AddSingleton<Spotify.Services.WindowManager>();
             services.AddSingleton<SongService>();
             services.AddSingleton<PlaylistService>();
             services.AddSingleton<PlaylistSongService>();

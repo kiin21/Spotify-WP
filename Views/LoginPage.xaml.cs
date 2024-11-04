@@ -1,4 +1,4 @@
-//LoginPage.xaml.cs:
+﻿//LoginPage.xaml.cs:
 using Microsoft.UI.Xaml.Controls;
 using Spotify.ViewModels;
 using Spotify.Services;
@@ -6,14 +6,7 @@ using System.Threading.Tasks;
 using System;
 
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace Spotify.Views;
-
-/// <summary>
-/// An empty page that can be used on its own or navigated to within a Frame.
-/// </summary>
 public sealed partial class LoginPage : Page
 {
     public LoginViewModel ViewModel { get; set; }
@@ -22,16 +15,6 @@ public sealed partial class LoginPage : Page
     {
         this.InitializeComponent();
         ViewModel = new LoginViewModel();
-    }
-
-    protected override void OnNavigatedTo(Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
-    {
-        base.OnNavigatedTo(e);
-        if (Frame == null)
-        {
-            throw new InvalidOperationException("Frame is null. Ensure this page is hosted in a Frame.");
-        }
-        var navigationService = new NavigationService(Frame);
     }
 
     private async void OnLoginButtonClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
@@ -48,19 +31,8 @@ public sealed partial class LoginPage : Page
                 else
                 {
                     await ShowContentDialogAsync("Login Successful", "You have successfully logged in.");
-
-                    // Get the current app instance
-                    var app = App.Current as App;
-
-                    // Create and show the ShellWindow first
-                    app._shellWindow = new ShellWindow();
-                    app._shellWindow.Activate();
-
-                    // Then close the LoginSignupWindow
-                    if (app.LoginSignupWindow != null)
-                    {
-                        app.LoginSignupWindow.Close();
-                    }
+                    // Sử dụng WindowManager để chuyển đổi sang ShellWindow
+                    Spotify.Services.WindowManager.Instance.SwitchToShellWindow();
                 }
             }
         }
