@@ -53,7 +53,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     public bool _isLyricsVisible;
 
     [ObservableProperty]
-    public bool _isQueueVisible;
+    public bool _isQueueVisible = true;
 
     [ObservableProperty]
     public string _imageSource;

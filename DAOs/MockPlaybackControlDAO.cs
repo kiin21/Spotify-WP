@@ -15,7 +15,8 @@ public class MockPlaybackControlDAO : IPlaybackControlDAO
     private int _currentIndex;
     private List<int> _shuffleOrder;
 
-    public MockPlaybackControlDAO() {
+    public MockPlaybackControlDAO()
+    {
 
         _currentState = new PlaybackStateDTO
         {
@@ -38,7 +39,7 @@ public class MockPlaybackControlDAO : IPlaybackControlDAO
                     Artist = "J97",
                     ImageUrl = "../Assets/ThienLyOi_img.png",
                     Duration = TimeSpan.FromSeconds(89),
-                    AudioUrl = "D:\\Download\\Music Audio\\ThienLyOi.mp3"
+                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\ThienLyOi.mp3"
                 },
                 new SongPlaybackDTO
                 {
@@ -47,7 +48,7 @@ public class MockPlaybackControlDAO : IPlaybackControlDAO
                     Artist = "Anonymous",
                     ImageUrl = "../Assets/want_you_img.png",
                     Duration = TimeSpan.FromSeconds(139),
-                    AudioUrl = "D:\\Download\\Music Audio\\Want_You.mp3"
+                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\Want_You.mp3"
                 },
                 new SongPlaybackDTO
                 {
@@ -56,7 +57,7 @@ public class MockPlaybackControlDAO : IPlaybackControlDAO
                     Artist = "Vu",
                     ImageUrl = "../Assets/DongKiemEm.png",
                     Duration = TimeSpan.FromSeconds(246),
-                    AudioUrl = "D:\\Download\\Music Audio\\DongKiemEm.mp3"
+                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\DongKiemEm.mp3"
                 },
                 new SongPlaybackDTO
                 {
@@ -65,7 +66,7 @@ public class MockPlaybackControlDAO : IPlaybackControlDAO
                     Artist = "Khanh Ly",
                     ImageUrl = "../Assets/CatBui.png",
                     Duration = TimeSpan.FromSeconds(209),
-                    AudioUrl = "D:\\Download\\Music Audio\\CatBui.mp3"
+                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\CatBui.mp3"
                 },
                 new SongPlaybackDTO
                 {
@@ -74,8 +75,143 @@ public class MockPlaybackControlDAO : IPlaybackControlDAO
                     Artist = "Tuan Ngoc",
                     ImageUrl = "../Assets/PhoiPha.png",
                     Duration = TimeSpan.FromSeconds(196),
-                    AudioUrl = "D:\\Download\\Music Audio\\PhoiPha.mp3"
-                }
+                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\PhoiPha.mp3"
+                },
+                new SongPlaybackDTO
+                {
+                    Id = "11",
+                    Title = "Thien Ly Oi",
+                    Artist = "J97",
+                    ImageUrl = "../Assets/ThienLyOi_img.png",
+                    Duration = TimeSpan.FromSeconds(89),
+                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\ThienLyOi.mp3"
+                },
+                new SongPlaybackDTO
+                {
+                    Id = "22",
+                    Title = "Want You",
+                    Artist = "Anonymous",
+                    ImageUrl = "../Assets/want_you_img.png",
+                    Duration = TimeSpan.FromSeconds(139),
+                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\Want_You.mp3"
+                },
+                new SongPlaybackDTO
+                {
+                    Id = "33",
+                    Title = "Dong Kiem Em",
+                    Artist = "Vu",
+                    ImageUrl = "../Assets/DongKiemEm.png",
+                    Duration = TimeSpan.FromSeconds(246),
+                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\DongKiemEm.mp3"
+                },
+                new SongPlaybackDTO
+                {
+                    Id = "44",
+                    Title = "Cat Bui",
+                    Artist = "Khanh Ly",
+                    ImageUrl = "../Assets/CatBui.png",
+                    Duration = TimeSpan.FromSeconds(209),
+                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\CatBui.mp3"
+                },
+                new SongPlaybackDTO
+                {
+                    Id = "55",
+                    Title = "Phoi Pha",
+                    Artist = "Tuan Ngoc",
+                    ImageUrl = "../Assets/PhoiPha.png",
+                    Duration = TimeSpan.FromSeconds(196),
+                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\PhoiPha.mp3"
+                },
+                                new SongPlaybackDTO
+                {
+                    Id = "1",
+                    Title = "Thien Ly Oi",
+                    Artist = "J97",
+                    ImageUrl = "../Assets/ThienLyOi_img.png",
+                    Duration = TimeSpan.FromSeconds(89),
+                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\ThienLyOi.mp3"
+                },
+                new SongPlaybackDTO
+                {
+                    Id = "2",
+                    Title = "Want You",
+                    Artist = "Anonymous",
+                    ImageUrl = "../Assets/want_you_img.png",
+                    Duration = TimeSpan.FromSeconds(139),
+                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\Want_You.mp3"
+                },
+                new SongPlaybackDTO
+                {
+                    Id = "3",
+                    Title = "Dong Kiem Em",
+                    Artist = "Vu",
+                    ImageUrl = "../Assets/DongKiemEm.png",
+                    Duration = TimeSpan.FromSeconds(246),
+                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\DongKiemEm.mp3"
+                },
+                new SongPlaybackDTO
+                {
+                    Id = "4",
+                    Title = "Cat Bui",
+                    Artist = "Khanh Ly",
+                    ImageUrl = "../Assets/CatBui.png",
+                    Duration = TimeSpan.FromSeconds(209),
+                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\CatBui.mp3"
+                },
+                new SongPlaybackDTO
+                {
+                    Id = "5",
+                    Title = "Phoi Pha",
+                    Artist = "Tuan Ngoc",
+                    ImageUrl = "../Assets/PhoiPha.png",
+                    Duration = TimeSpan.FromSeconds(196),
+                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\PhoiPha.mp3"
+                },
+                new SongPlaybackDTO
+                {
+                    Id = "11",
+                    Title = "Thien Ly Oi",
+                    Artist = "J97",
+                    ImageUrl = "../Assets/ThienLyOi_img.png",
+                    Duration = TimeSpan.FromSeconds(89),
+                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\ThienLyOi.mp3"
+                },
+                new SongPlaybackDTO
+                {
+                    Id = "22",
+                    Title = "Want You",
+                    Artist = "Anonymous",
+                    ImageUrl = "../Assets/want_you_img.png",
+                    Duration = TimeSpan.FromSeconds(139),
+                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\Want_You.mp3"
+                },
+                new SongPlaybackDTO
+                {
+                    Id = "33",
+                    Title = "Dong Kiem Em",
+                    Artist = "Vu",
+                    ImageUrl = "../Assets/DongKiemEm.png",
+                    Duration = TimeSpan.FromSeconds(246),
+                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\DongKiemEm.mp3"
+                },
+                new SongPlaybackDTO
+                {
+                    Id = "44",
+                    Title = "Cat Bui",
+                    Artist = "Khanh Ly",
+                    ImageUrl = "../Assets/CatBui.png",
+                    Duration = TimeSpan.FromSeconds(209),
+                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\CatBui.mp3"
+                },
+                new SongPlaybackDTO
+                {
+                    Id = "55",
+                    Title = "Phoi Pha",
+                    Artist = "Tuan Ngoc",
+                    ImageUrl = "../Assets/PhoiPha.png",
+                    Duration = TimeSpan.FromSeconds(196),
+                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\PhoiPha.mp3"
+                },
             };
 
         _currentIndex = 0;
@@ -96,7 +232,7 @@ public class MockPlaybackControlDAO : IPlaybackControlDAO
     {
         return await Task.FromResult(_queue[_currentIndex]);
     }
-   
+
     public async Task<SongPlaybackDTO> GetNextSongAsync()
     {
         if (_queue == null || _queue.Count == 0)
@@ -134,7 +270,7 @@ public class MockPlaybackControlDAO : IPlaybackControlDAO
             }
             // If neither condition is met, stay on current song
         }
-        
+
         _currentState.CurrentSongId = _queue[_currentIndex].Id;
         _currentState.CurrentPosition = TimeSpan.Zero;
         return await Task.FromResult(_queue[_currentIndex]);
@@ -212,7 +348,7 @@ public class MockPlaybackControlDAO : IPlaybackControlDAO
         _currentIndex = currentSongIndex;
         await Task.CompletedTask;
     }
-   
+
     public async Task UpdateCurrentPositionAsync(TimeSpan position)
     {
         _currentState.CurrentPosition = position;

@@ -48,6 +48,7 @@ public sealed partial class QueuePage : Page
             var playbackControlService = parameters.Item7;
 
             ViewModel = new QueueViewModel(queueSongs, isQueueVisible, currentSong, title, artist, imageSource, playbackControlService);
+            this.DataContext = ViewModel;
         }
         base.OnNavigatedTo(e);
     }
