@@ -75,6 +75,7 @@ namespace Spotify
             services.AddSingleton<PlaylistService>();
             services.AddSingleton<PlaylistSongService>();
             services.AddSingleton<PlaybackControlService>();
+            services.AddSingleton<LocalStorageService>();
 
             // Register ViewModels
             services.AddTransient<HeaderViewModel>();
@@ -87,9 +88,12 @@ namespace Spotify
         {
             try
             {
-                // Create ShellWindow first
-                _shellWindow = new ShellWindow();
-                _shellWindow.Activate();
+                //// Create ShellWindow first
+                //_shellWindow = new ShellWindow();
+                //_shellWindow.Activate();
+
+                _loginSignupWindow = new LoginSignupWindow();
+                _loginSignupWindow.Activate();
             }
             catch (Exception ex)
             {
