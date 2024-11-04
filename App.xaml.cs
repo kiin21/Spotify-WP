@@ -1,4 +1,4 @@
-﻿// App.xaml.cs
+// App.xaml.cs
 using System;
 using Microsoft.UI.Xaml;
 using Microsoft.Extensions.DependencyInjection;

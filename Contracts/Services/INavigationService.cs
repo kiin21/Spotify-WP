@@ -1,4 +1,5 @@
-﻿using System;
+﻿//INavigationService.cs
+using System;
 using Microsoft.UI.Xaml.Controls;
 
 namespace Spotify.Contracts.Services;

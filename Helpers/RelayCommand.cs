@@ -15,7 +15,6 @@ public class RelayCommand : ICommand
         _canExecute = canExecute;
     }
 
-    // In WinUI 3, we don't have CommandManager, so we'll implement a basic event
     public event EventHandler CanExecuteChanged;
 
     protected virtual void OnCanExecuteChanged()
