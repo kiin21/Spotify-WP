@@ -21,15 +21,18 @@
     <None Remove=".env" />
     <None Remove=".env.example" />
     <None Remove="Assets\sample.png" />
+    <None Remove="LoginSignupWindow.xaml" />
     <None Remove="ShellWindow.xaml" />
     <None Remove="Views\AddPlaylistDialog.xaml" />
     <None Remove="Views\HeaderPage.xaml" />
     <None Remove="Views\LeftSidebarPage.xaml" />
+    <None Remove="Views\LoginPage.xaml" />
     <None Remove="Views\MainPanelPage.xaml" />
     <None Remove="Views\PlaybackControlPage.xaml" />
     <None Remove="Views\PlaylistPage.xaml" />
     <None Remove="Views\QueuePage.xaml" />
     <None Remove="Views\SearchResultsPage.xaml" />
+    <None Remove="Views\SignupPage.xaml" />
     <None Remove="Views\SongDetailPage.xaml" />
   </ItemGroup>
 
@@ -82,6 +85,15 @@
     <None Update="Assets\App.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="LoginSignupWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\SignupPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\LoginPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\AddPlaylistDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
