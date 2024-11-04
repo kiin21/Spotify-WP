@@ -36,11 +36,23 @@ public sealed partial class PlaybackControlPage : Page
         this.InitializeComponent();
         // Resolve the SongService from the service provider (DI container)
         
-        var playbackControlService = (App.Current as App).Services.GetRequiredService<IPlaybackControlService>();
+        var playbackControlService = (App.Current as App).Services.GetRequiredService<PlaybackControlService>();
 
         // Pass it to the ViewModel
         ViewModel = new PlaybackControlViewModel(playbackControlService);
         DataContext = ViewModel;
+    }
+
+    private void Slider_DragStarted(object sender, DragStartedEventArgs e)
+    {
+        var vm = (PlaybackControlViewModel)DataContext;
+        vm.BeginSeeking();
+    }
+
+    private void Slider_DragCompleted(object sender, DragCompletedEventArgs e)
+    {
+        var vm = (PlaybackControlViewModel)DataContext;
+        vm.EndSeeking();
     }
 
 }

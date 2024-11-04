@@ -14,7 +14,12 @@ using System.Windows.Threading;
 using System.Collections.ObjectModel;
 using Spotify.Contracts.Services;
 using PropertyChanged;
+using Microsoft.UI.Dispatching;
 using System.Diagnostics;
+using Spotify.Views;
+using System.DirectoryServices;
+using Microsoft.Extensions.DependencyInjection;
+
 
 namespace Spotify.ViewModels;
 
@@ -25,15 +30,15 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     private readonly IPlaybackControlService _playbackControlService;
     private readonly DispatcherTimer _playbackTimer;
     private bool _disposed;
+    private bool _isFirstPlayClicked = false;
+//    private bool _isUserSeeking; // Add this field to track user-initiated seeking
+
 
     [ObservableProperty]
     public bool _isPlaying;
 
     [ObservableProperty]
     public double _volume;
-
-    [ObservableProperty]
-    public string _selectedSpeed = "1.0x";
 
     [ObservableProperty]
     public TimeSpan _currentPosition;
@@ -58,6 +63,22 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
     [ObservableProperty]
     public string _artist;
+
+    [ObservableProperty]
+    private string _selectedSpeed;
+
+    private bool _isProcessingSpeedChange;
+
+    // Change to use simple string collection for speeds
+    public ObservableCollection<string> SpeedOptions { get; } = new()
+    {
+        "1.0x",
+        "1.25x",
+        "1.5x",
+        "1.75x",
+        "2.0x",
+        "2.5x",
+    };
 
     private TimeSpan FormatTimeSpan(TimeSpan time)
     {
@@ -91,11 +112,13 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         {
             _playbackControlService = playbackControlService;
 
+            _selectedSpeed = SpeedOptions.First();
+
             PlayPauseGlyph = "\uE768";
 
             _playbackTimer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromSeconds(1)
+                Interval = TimeSpan.FromMilliseconds(100)
             };
             _playbackTimer.Tick += PlaybackTimer_Tick;
 
@@ -121,7 +144,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
             IsPlaying = state.IsPlaying;
             Volume = state.Volume;
-            SelectedSpeed = state.PlaybackSpeed;
+            UpdateSpeedFromService(state.PlaybackSpeed);
             CurrentPosition = state.CurrentPosition;
             SongDuration = state.Duration;
             IsReplayEnabled = state.IsRepeatEnabled;
@@ -177,18 +200,70 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
+   
     [SuppressPropertyChangedWarnings]
     partial void OnSelectedSpeedChanged(string value)
     {
+        if (_isProcessingSpeedChange) return;
+
         try
         {
-            // Remove the 'x' suffix if present
-            string speedValue = value.TrimEnd('x');
-            _ = _playbackControlService.SetPlaybackSpeedAsync(speedValue);
+            _isProcessingSpeedChange = true;
+            
+            Task.Run(async () =>
+            {
+                try
+                {
+                    // Remove 'x' before sending to service
+                    string speedValue = value.TrimEnd('x');
+                    await _playbackControlService.SetPlaybackSpeedAsync(speedValue);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error in async speed change: {ex.Message}");
+                }
+                finally
+                {
+                    _isProcessingSpeedChange = false;
+                }
+            });
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error changing playback speed: {ex.Message}");
+            _isProcessingSpeedChange = false;
+        }
+    }
+
+    private void UpdateSpeedFromService(string newSpeed)
+    {
+        if (_isProcessingSpeedChange) return;
+        try
+        {
+            _isProcessingSpeedChange = true;
+
+            // Find matching speed option (with 'x' suffix)
+            var matchingSpeed = SpeedOptions.FirstOrDefault(x => x.StartsWith(newSpeed))
+                ?? SpeedOptions.First();
+
+            // Get the dispatcher from the current window
+            var dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+            if (dispatcher != null)
+            {
+                dispatcher.TryEnqueue(() =>
+                {
+                    SelectedSpeed = matchingSpeed;
+                });
+            }
+            else
+            {
+                // Fallback if we're already on the UI thread
+                SelectedSpeed = matchingSpeed;
+            }
+        }
+        finally
+        {
+            _isProcessingSpeedChange = false;
         }
     }
 
@@ -197,11 +272,30 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     {
         try
         {
-            _ = _playbackControlService.SeekToPositionAsync(value);
+        
+            Task.Run(async () =>
+            {
+                await _playbackControlService.SeekToPositionAsync(value);
+            }).Wait(100); // Small timeout to prevent flooding
+      
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error seeking position: {ex.Message}");
+        }
+    }
+
+    // Add method to handle user-initiated seeking
+    public void BeginSeeking()
+    {
+        _playbackTimer.Stop();
+    }
+
+    public void EndSeeking()
+    {
+        if (IsPlaying)
+        {
+            _playbackTimer.Start(); // Restart timer if playing
         }
     }
 
@@ -222,6 +316,11 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     private async Task PlayPause()
     {
         IsPlaying = !IsPlaying;
+        if (!_isFirstPlayClicked)
+        {
+            _ = LoadQueueAsync();
+            _isFirstPlayClicked = true;
+        }
     }
 
     [RelayCommand]
@@ -260,6 +359,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     private void ToggleQueue()
     {
         IsQueueVisible = !IsQueueVisible;
+        _ = LoadQueueAsync();
     }
 
     [RelayCommand]
@@ -284,22 +384,48 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
     private void PlaybackTimer_Tick(object sender, object e)
     {
-        if (IsPlaying)
+        try
         {
-            CurrentPosition = FormatTimeSpan(CurrentPosition + TimeSpan.FromSeconds(1));
-            if (CurrentPosition >= SongDuration)
+            if (IsPlaying)
             {
-                if (IsReplayEnabled)
+                var state = _playbackControlService.GetCurrentState();
+
+                // Get the current position from the service
+                var servicePosition = (state.CurrentPosition);
+
+                // Smooth update threshold
+                double thresholdInSeconds = 0.9999;
+
+                // Update only if the difference is beyond the threshold
+                if (Math.Abs((servicePosition - CurrentPosition).TotalSeconds) > thresholdInSeconds)
                 {
-                    CurrentPosition = TimeSpan.Zero;
+                    CurrentPosition = servicePosition;
+                //    OnPropertyChanged(nameof(CurrentPositionSeconds));
                 }
-                else
+
+                // Check if we've reached the end of the song
+                if (CurrentPosition >= SongDuration)
                 {
-                    _ = NextCommand.ExecuteAsync(null);
+                    if (IsReplayEnabled)
+                    {
+                        // Reset to beginning if replay is enabled
+                        CurrentPosition = TimeSpan.Zero;
+                    }
+                    else
+                    {
+                        _ = NextCommand.ExecuteAsync(null);
+                    }
                 }
+
+                // Update other UI bindings here if necessary
             }
         }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error in playback timer tick: {ex.Message}");
+        }
     }
+
 
     [SuppressPropertyChangedWarnings]
     private void OnPlaybackStateChanged(object sender, PlaybackStateDTO state)
@@ -308,10 +434,23 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         {
             IsPlaying = state.IsPlaying;
             Volume = state.Volume;
-            SelectedSpeed = state.PlaybackSpeed;
+           
+            UpdateSpeedFromService(state.PlaybackSpeed);
+           
             CurrentPosition = FormatTimeSpan(state.CurrentPosition);
+       
             SongDuration = FormatTimeSpan(state.Duration);
             IsReplayEnabled = state.IsRepeatEnabled;
+
+            // Ensure timer is running/stopped based on playback state
+            if (IsPlaying)
+            {
+                _playbackTimer.Start();
+            }
+            else
+            {
+                _playbackTimer.Stop();
+            }
         }
         catch (Exception ex)
         {
@@ -339,6 +478,15 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
                 // Fallback to formatting the existing TimeSpan
                 SongDuration = FormatTimeSpan(song.Duration);
             }
+
+            // Set playback speed to 1.0x in the ViewModel
+            SelectedSpeed = "1.0x";
+
+            // Set playback speed to 1.0 in the backend
+            _ = _playbackControlService.SetPlaybackSpeedAsync("1.0");
+
+            UpdateSpeedFromService("1.0");
+            _ = LoadQueueAsync();
         }
         catch (Exception ex)
         {
@@ -361,6 +509,8 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
                         if (song == null)
                         {
                             throw new InvalidCastException("Null song in queue");
+                            // Get ShellWindow from App.Current directly
+                            var shellWindow = (App.Current as App).ShellWindow;
                         }
                         return song;
                     })
@@ -371,6 +521,25 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             {
                 QueueSongs = new ObservableCollection<SongPlaybackDTO>();
             }
+
+            var currentSong = _playbackControlService.GetCurrentSong();
+            var navigationParams = new Tuple<ObservableCollection<SongPlaybackDTO>, bool, SongPlaybackDTO , string, string, string, IPlaybackControlService>(
+    QueueSongs, IsQueueVisible, currentSong, Title, Artist, ImageSource, _playbackControlService);
+            //   var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
+            //var shellWindow = App.Current.Services.GetRequiredService<ShellWindow>();
+            // Get ShellWindow from App.Current directly
+            var shellWindow = (App.Current as App).ShellWindow;
+            if (shellWindow != null)
+            {
+                var rightSidebarFrame = shellWindow.getRightSidebarFrame();
+                shellWindow.GetNavigationService().Navigate(typeof(QueuePage), rightSidebarFrame, navigationParams);
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("ShellWindow is not initialized.");
+            }
+
+           
         }
         catch (Exception ex)
         {

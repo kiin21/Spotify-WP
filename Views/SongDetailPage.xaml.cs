@@ -32,7 +32,7 @@ public sealed partial class SongDetailPage : Page
 
     private async void PlayButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-        var playbackService = (App.Current as App).Services.GetRequiredService<IPlaybackControlService>();
+        var playbackService = (App.Current as App).Services.GetRequiredService<PlaybackControlService>();
         isPlaying = !isPlaying; // Toggle the playing state
         // Update the button icon based on state
         PlayButtonIcon.Symbol = isPlaying ? Symbol.Pause : Symbol.Play;

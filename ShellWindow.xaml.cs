@@ -5,6 +5,8 @@ using Spotify.Views;
 using Spotify.Contracts.Services;
 using Spotify.Services;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.Extensions.DependencyInjection;
+using System.Windows;
 
 namespace Spotify;
 
@@ -15,15 +17,19 @@ public sealed partial class ShellWindow : WindowEx
     {
         return MainFrame;
     }
+
+    public Frame getRightSidebarFrame()
+    {
+        return RightSidebarFrame;
+    }
+
     private readonly INavigationService _navigationService;
     public ShellWindow()
     {
         InitializeComponent();
-
         AppWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets/App.ico"));
-
         _navigationService = new NavigationService(MainFrame);
-
+    //    _navigationService = new NavigationService(RightSidebarFrame);
         InitializePages();
     }
 

@@ -1,4 +1,5 @@
 //SearchResultPage.xaml.cs
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Spotify.Models.DTOs;
@@ -21,7 +22,9 @@ public sealed partial class SearchResultsPage : Page
         base.OnNavigatedTo(e);
 
         // Get the navigation service from the shell window
-        var shellWindow = (App.Current as App)?.ShellWindow;
+        //    var shellWindow = (App.Current as App)?.ShellWindow;
+        // Get ShellWindow from App.Current directly
+        var shellWindow = (App.Current as App).ShellWindow;
         var navigationService = shellWindow?.GetNavigationService();
 
         if (e.Parameter is ObservableCollection<SongDTO> searchResults)

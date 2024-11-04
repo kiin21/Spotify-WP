@@ -1,4 +1,4 @@
-﻿    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.UI.Xaml;
     using Microsoft.UI.Xaml.Controls;
     using Spotify.Models.DTOs;
@@ -24,11 +24,19 @@
 
         private void OnPlaylistButtonClick(object sender, RoutedEventArgs e)
         {
+            // Truy cập đến MainFrame và điều hướng đến PlaylistPage
+            //    var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
+            // Get ShellWindow from App.Current directly
+            //var shellWindow = (App.Current as App).ShellWindow;
+            //var mainFrame = shellWindow.getMainFrame();
+            //shellWindow.NavigateToPage(typeof(PlaylistPage), mainFrame);
+            //shellWindow.GetNavigationService().Navigate(typeof(PlaylistPage));
             if (sender is ListViewItem item && item.DataContext is PlaylistDTO selectedPlaylist)
             {
                 // Set selected playlist trước khi navigate
                 ViewModel.SelectedPlaylist = selectedPlaylist;
-                var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
+            //    var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
+                var shellWindow = (App.Current as App).ShellWindow;
                 shellWindow?.GetNavigationService().Navigate(typeof(PlaylistPage), selectedPlaylist.Id);
             }
         }
