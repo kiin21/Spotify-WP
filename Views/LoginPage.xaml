@@ -8,7 +8,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
     <Grid Background="#FF121212">
         <Border
             Width="400"
@@ -39,12 +38,17 @@
                     Text="Log in to Spotify" />
                 <TextBox
                     Margin="0,0,0,10"
-                    PlaceholderText="Email or username"
+                    PlaceholderText="Username"
                     Text="{x:Bind ViewModel.Username, Mode=TwoWay}" />
                 <PasswordBox
                     Margin="0,0,0,10"
                     Password="{x:Bind ViewModel.Password, Mode=TwoWay}"
                     PlaceholderText="Password" />
+                <CheckBox 
+                    Margin="0,0,0,10"
+                    Content="Remember me"
+                    Foreground="#FFB3B3B3"
+                    IsChecked="{x:Bind ViewModel.RememberMe, Mode=TwoWay}"/>
                 <Button
                     Height="40"
                     HorizontalAlignment="Stretch"
