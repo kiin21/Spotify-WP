@@ -26,7 +26,6 @@ public partial class App : Application
         string baseDirectory = AppContext.BaseDirectory;
         
         DotNetEnv.Env.Load($"{baseDirectory}/.env");
-
         Services = ConfigureServices();
         this.InitializeComponent();
     }
@@ -50,8 +49,6 @@ public partial class App : Application
         services.AddSingleton<PlaylistSongService>();
 
         services.AddSingleton<IPlaybackControlDAO, MockPlaybackControlDAO>();  
-
-
 
         // Register ViewModels
         services.AddTransient<HeaderViewModel>();
