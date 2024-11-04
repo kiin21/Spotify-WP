@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 
 namespace Spotify.Contracts.Services;
 
-internal interface IPlaybackControlService
+public interface IPlaybackControlService
 {
 
     event EventHandler<PlaybackStateDTO> PlaybackStateChanged;
     event EventHandler<SongPlaybackDTO> CurrentSongChanged;
+
+    Task<int> GetCurrentSongIndex();
     PlaybackStateDTO GetCurrentState();
     SongPlaybackDTO GetCurrentSong();
     Task<List<SongPlaybackDTO>> GetQueueAsync();

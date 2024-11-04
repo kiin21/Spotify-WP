@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -11,6 +12,9 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Spotify.Contracts.Services;
+using Spotify.Models.DTOs;
+using Spotify.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -24,14 +28,34 @@ namespace Spotify.Views;
 /// </summary>
 public sealed partial class QueuePage : Page
 {
-    //public RightSidebarViewModel ViewModel => (RightSidebarViewModel)DataContext;
 
+    public QueueViewModel ViewModel { get; private set; }
     public QueuePage()
     {
         this.InitializeComponent();
-        //this.DataContext = (App.Current as App).Services.GetRequiredService<RightSidebarViewModel>();
+    }
 
-        //// Bind the QueueListView to the ViewModel's Queue property
-        //QueueListView.ItemsSource = ViewModel.Queue;
+    protected override void OnNavigatedTo(NavigationEventArgs e)
+    {
+        if (e.Parameter is Tuple<ObservableCollection<SongPlaybackDTO>, bool, SongPlaybackDTO, string, string, string, IPlaybackControlService> parameters)
+        {
+            var queueSongs = parameters.Item1;
+            var isQueueVisible = parameters.Item2;
+            var currentSong = parameters.Item3;
+            var title = parameters.Item4;
+            var artist = parameters.Item5;
+            var imageSource = parameters.Item6;
+            var playbackControlService = parameters.Item7;
+
+            ViewModel = new QueueViewModel(queueSongs, isQueueVisible, currentSong, title, artist, imageSource, playbackControlService);
+        }
+        base.OnNavigatedTo(e);
+    }
+    private async void QueueList_ItemClick(object sender, ItemClickEventArgs e)
+    {
+        if (e.ClickedItem is SongPlaybackDTO selectedSong)
+        {
+            await ViewModel.PlaySelectedSongAsync(selectedSong);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using System;
@@ -21,7 +22,9 @@ namespace Spotify.Views
         // Thêm phương thức OnLikedSongsButtonClick
         private void OnLikedSongButtonClick(object sender, TappedRoutedEventArgs e)
         {
-            var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
+            //    var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
+            // Get ShellWindow from App.Current directly
+            var shellWindow = (App.Current as App).ShellWindow;
             var mainFrame = shellWindow.getMainFrame();
             //shellWindow.NavigateToPage(typeof(LikedSongPage), mainFrame);
             shellWindow.GetNavigationService().Navigate(typeof(LikedSongPage));
@@ -31,7 +34,9 @@ namespace Spotify.Views
         private void OnPlaylistButtonClick(object sender, RoutedEventArgs e)
         {
             // Truy cập đến MainFrame và điều hướng đến PlaylistPage
-            var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
+            //    var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
+            // Get ShellWindow from App.Current directly
+            var shellWindow = (App.Current as App).ShellWindow;
             var mainFrame = shellWindow.getMainFrame();
             //shellWindow.NavigateToPage(typeof(PlaylistPage), mainFrame);
             shellWindow.GetNavigationService().Navigate(typeof(PlaylistPage));

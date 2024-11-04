@@ -12,6 +12,7 @@ using Spotify.Helpers;
 using Spotify.Models.DTOs;
 using Spotify.Services;
 using Spotify.Views;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Spotify.ViewModels;
 
@@ -65,7 +66,9 @@ public class HeaderViewModel : INotifyPropertyChanged
             SearchResults = new ObservableCollection<SongDTO>(results);
         }
 
-        var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
+        //   var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
+        // Get ShellWindow from App.Current directly
+        var shellWindow = (App.Current as App).ShellWindow;
         var mainFrame = shellWindow.getMainFrame();
         //shellWindow.NavigateToPage(typeof(SearchResultsPage), mainFrame, SearchResults);
         shellWindow.GetNavigationService().Navigate(typeof(SearchResultsPage), SearchResults);
