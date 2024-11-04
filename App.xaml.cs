@@ -16,8 +16,9 @@ using Spotify.DAOs;
 namespace Spotify
 {
     public partial class App : Application
-    { 
-        private ShellWindow _shellWindow;
+    {
+        // Make _shellWindow internal so it can be accessed from LoginPage
+        internal ShellWindow _shellWindow;
         private LoginSignupWindow _loginSignupWindow;
         private readonly IServiceProvider _services;
 

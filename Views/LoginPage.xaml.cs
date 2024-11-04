@@ -48,6 +48,19 @@ public sealed partial class LoginPage : Page
                 else
                 {
                     await ShowContentDialogAsync("Login Successful", "You have successfully logged in.");
+
+                    // Get the current app instance
+                    var app = App.Current as App;
+
+                    // Create and show the ShellWindow first
+                    app._shellWindow = new ShellWindow();
+                    app._shellWindow.Activate();
+
+                    // Then close the LoginSignupWindow
+                    if (app.LoginSignupWindow != null)
+                    {
+                        app.LoginSignupWindow.Close();
+                    }
                 }
             }
         }
@@ -66,7 +79,6 @@ public sealed partial class LoginPage : Page
             CloseButtonText = "Ok",
             XamlRoot = this.XamlRoot
         };
-
         await dialog.ShowAsync();
     }
 }
