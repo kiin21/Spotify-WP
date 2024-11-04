@@ -12,8 +12,7 @@ namespace Spotify.ViewModels
     public class LeftSidebarPageViewModel : INotifyPropertyChanged
     {
         private readonly PlaylistService _playlistService;
-        private ObservableCollection<PlaylistDTO> _playlists;
-        private PlaylistDTO _selectedPlaylist;
+        private ObservableCollection<PlaylistDTO> _playlists { get; set; }
 
         public ObservableCollection<PlaylistDTO> Playlists
         {
@@ -21,24 +20,24 @@ namespace Spotify.ViewModels
             set
             {
                 _playlists = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(Playlists));
             }
         }
 
+        private PlaylistDTO _selectedPlaylist;
         public PlaylistDTO SelectedPlaylist
         {
             get => _selectedPlaylist;
             set
             {
                 _selectedPlaylist = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(SelectedPlaylist));
             }
         }
 
         public LeftSidebarPageViewModel(PlaylistService playlistService)
         {
             _playlistService = playlistService;
-            _playlists = new ObservableCollection<PlaylistDTO>();
             LoadPlaylists();
         }
 
@@ -46,7 +45,9 @@ namespace Spotify.ViewModels
         {
             var playlists = await _playlistService.GetPlaylistsAsync();
             var filteredPlaylists = playlists.Where(p => !p.IsDeleted).ToList();
+
             Playlists = new ObservableCollection<PlaylistDTO>(filteredPlaylists);
+            OnPropertyChanged(nameof(Playlists)); // Thông báo cho UI biết có sự thay đổi
             SelectedPlaylist = Playlists.FirstOrDefault();
         }
 
@@ -66,36 +67,17 @@ namespace Spotify.ViewModels
             Playlists.Add(newPlaylist);
         }
 
-        private readonly PlaylistPageViewModel _playlistPageViewModel;
-
-        public LeftSidebarPageViewModel(PlaylistService playlistService, PlaylistPageViewModel playlistPageViewModel)
-        {
-            _playlistService = playlistService;
-            _playlistPageViewModel = playlistPageViewModel;
-            _playlists = new ObservableCollection<PlaylistDTO>();
-            LoadPlaylists();
-
-            // Đăng ký sự kiện PlaylistRemoved
-            _playlistPageViewModel.PlaylistRemoved += OnPlaylistRemoved;
-        }
-
-        // Phương thức xử lý sự kiện
-        private void OnPlaylistRemoved(object sender, string playlistId)
+        public void RemovePlaylist(string playlistId)
         {
             var playlistToRemove = Playlists.FirstOrDefault(p => p.Id == playlistId);
             if (playlistToRemove != null)
             {
                 Playlists.Remove(playlistToRemove);
-                // Cập nhật SelectedPlaylist nếu playlist bị xóa là playlist đang chọn
-                if (SelectedPlaylist == playlistToRemove)
-                {
-                    SelectedPlaylist = Playlists.FirstOrDefault();
-                }
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

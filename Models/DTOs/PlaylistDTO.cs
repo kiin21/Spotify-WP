@@ -13,6 +13,7 @@ namespace Spotify.Models.DTOs
         public PlaylistDTO() { }
 
         private PlaylistDTO likedSongs;
+
         public PlaylistDTO(PlaylistDTO likedSongs)
         {
             this.likedSongs = likedSongs;

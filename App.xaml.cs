@@ -42,8 +42,9 @@ namespace Spotify
             // Register Services
             services.AddSingleton<SongService>();
             services.AddSingleton<PlaylistService>();
-            //services.AddSingleton<LikedSongService>();
+            services.AddSingleton<LeftSidebarPageViewModel>();
             services.AddSingleton<PlaybackControlService>();
+
             // Register PlaybackControl services
             //services.AddSingleton<IPlaybackControlDAO, MockPlaybackControlDAO>();
             services.AddSingleton<IPlaybackControlService, PlaybackControlService>();
@@ -53,7 +54,6 @@ namespace Spotify
             services.AddSingleton<PlaybackControlService>();
 
             services.AddSingleton<IPlaybackControlDAO, MockPlaybackControlDAO>();  // Add this line
-
 
 
 

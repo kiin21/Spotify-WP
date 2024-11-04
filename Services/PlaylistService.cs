@@ -30,10 +30,14 @@ namespace Spotify.Services
             return _playlistDAO.AddPlaylistAsync(playlist);
         }
 
+        public async Task UpdatePlaylistStatusAsync(string playlistId, bool isDeleted)
+        {
+            await _playlistDAO.UpdatePlaylistStatusAsync(playlistId, isDeleted);
+        }
+
         public async Task RemovePlaylistAsync(string playlistId)
         {
             await _playlistDAO.RemovePlaylistAsync(playlistId);
-            // Không cần trả về gì vì chúng ta sẽ lấy lại danh sách trong ViewModel
         }
     }
 }

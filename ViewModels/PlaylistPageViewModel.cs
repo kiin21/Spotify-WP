@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Spotify.Helpers;
 
 public class PlaylistPageViewModel : INotifyPropertyChanged
 {
@@ -132,20 +133,14 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
         Playlists.Add(newPlaylist);
     }
 
-    public event EventHandler<string> PlaylistRemoved;
-
-    public async Task RemovePlaylistAsync(string playlistId)
+    public async Task RemoveSelectedPlaylist()
     {
-        await _playlistService.RemovePlaylistAsync(playlistId);
-        PlaylistRemoved?.Invoke(this, playlistId); // Thông báo cho các ViewModel khác rằng playlist đã bị xóa
-        var playlistToRemove = Playlists.FirstOrDefault(p => p.Id == playlistId);
-        if (playlistToRemove != null)
+        if (SelectedPlaylist != null)
         {
-            Playlists.Remove(playlistToRemove);
-            if (SelectedPlaylist == playlistToRemove)
-            {
-                SelectedPlaylist = Playlists.FirstOrDefault();
-            }
+            await _playlistService.UpdatePlaylistStatusAsync(SelectedPlaylist.Id, true);
+            SelectedPlaylist = null;
+            PlaylistSongs.Clear();
+            OnPropertyChanged(nameof(SelectedPlaylist));
         }
     }
 

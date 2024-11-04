@@ -64,12 +64,16 @@ public class PlaylistDAO : BaseDAO, IPlaylistDAO
         await _playlists.InsertOneAsync(playlist);
     }
 
+    public async Task UpdatePlaylistStatusAsync(string playlistId, bool isDeleted)
+    {
+        var filter = Builders<PlaylistDTO>.Filter.Eq(p => p.Id, playlistId);
+        var update = Builders<PlaylistDTO>.Update.Set(p => p.IsDeleted, isDeleted);
+        await _playlists.UpdateOneAsync(filter, update);
+    }
+
     public async Task RemovePlaylistAsync(string playlistId)
     {
-        // Không cần chuyển đổi ObjectId, vì Id là kiểu string
-        var filter = Builders<PlaylistDTO>.Filter.Eq(p => p.Id, playlistId);
-        var update = Builders<PlaylistDTO>.Update.Set(p => p.IsDeleted, true);
-        await _playlists.UpdateOneAsync(filter, update);
+        await UpdatePlaylistStatusAsync(playlistId, true);
     }
 
 }
