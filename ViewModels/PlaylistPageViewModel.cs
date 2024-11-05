@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 public class PlaylistPageViewModel : INotifyPropertyChanged
 {
     private readonly PlaylistService _playlistService;
-    private readonly PlaylistSongService _playlistSongService;
+    private readonly PlaylistSongDetailService _playlistSongDetailService;
     private ObservableCollection<PlaylistDTO> _playlists;
-    private ObservableCollection<PlaylistSongDTO> _playlistSongs;
+    private ObservableCollection<PlaylistSongDetailDTO> _playlistSongs;
     private PlaylistDTO _selectedPlaylist;
 
     public ObservableCollection<PlaylistDTO> Playlists
@@ -24,14 +24,14 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
         }
     }
 
-    public ObservableCollection<PlaylistSongDTO> PlaylistSongs
+    public ObservableCollection<PlaylistSongDetailDTO> PlaylistSongs
     {
         get => _playlistSongs;
         set
         {
             _playlistSongs = value;
             OnPropertyChanged(nameof(PlaylistSongs));
-            OnPropertyChanged(nameof(SongCount)); // Notify when PlaylistSongs is updated
+            OnPropertyChanged(nameof(SongCount)); // Notify when Songs is updated
         }
     }
 
@@ -54,13 +54,12 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
 
     public event EventHandler<string> SelectedPlaylistIdChanged;
 
-    public PlaylistPageViewModel(PlaylistService playlistService, PlaylistSongService playlistSongService)
+    public PlaylistPageViewModel(PlaylistService playlistService, PlaylistSongDetailService playlistSongDetailService)
     {
         _playlistService = playlistService;
-        _playlistSongService = playlistSongService;
+        _playlistSongDetailService = playlistSongDetailService;
         _playlists = new ObservableCollection<PlaylistDTO>();
-        _playlistSongs = new ObservableCollection<PlaylistSongDTO>();
-        //_ = LoadPlaylists();
+        _playlistSongs = new ObservableCollection<PlaylistSongDetailDTO>();
     }
 
     private async Task LoadPlaylists()
@@ -78,8 +77,8 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
     {
         if (!string.IsNullOrEmpty(playlistId))
         {
-            var songs = await _playlistSongService.GetSongsForPlaylistAsync(playlistId);
-            PlaylistSongs = new ObservableCollection<PlaylistSongDTO>(songs);
+            var songs = await _playlistSongDetailService.GetPlaylistSongDetailAsync(playlistId);
+            PlaylistSongs = new ObservableCollection<PlaylistSongDetailDTO>(songs);
         }
         else
         {
@@ -92,6 +91,7 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
         SelectedPlaylist = null;
         PlaylistSongs.Clear();
     }
+
     public async Task LoadSelectedPlaylist(string playlistId)
     {
         // Check if the selected playlist is already loaded
@@ -100,19 +100,13 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
 
         ClearSelectedPlaylist();
 
-        // Check if the requested playlist is "Liked Songs" by checking its IsLikedSong property
         var playlist = await _playlistService.GetPlaylistByIdAsync(playlistId);
-        if (playlist != null && playlist.IsLikedSong)
+        if (playlist != null)
         {
             SelectedPlaylist = playlist;
-        }
-        else if (playlist != null)
-        {
-            SelectedPlaylist = playlist;
-
-            // Load the songs for the selected playlist
-            var songs = await _playlistSongService.GetSongsForPlaylistAsync(playlistId);
-            PlaylistSongs = new ObservableCollection<PlaylistSongDTO>(songs);
+            //var songs = await _playlistSongDetailService.GetPlaylistSongDetailAsync(playlistId);
+            //PlaylistSongs = new ObservableCollection<PlaylistSongDetailDTO>(songs);
+            await LoadPlaylistSongs(playlistId);
         }
     }
 
@@ -125,27 +119,25 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
             CreatedAt = DateTime.Now,
             IsLikedSong = false,
             IsDeleted = false,
-            Avatar = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXX6SuxBncRoZdYpU9mt8u7hveYoHzeq9vPg&s"
+            Avatar = "https://example.com/default-cover.jpg"
         };
 
         await _playlistService.AddPlaylistAsync(newPlaylist);
         Playlists.Add(newPlaylist);
     }
 
-    public event EventHandler<string> PlaylistRemoved;
-
-    public async Task RemovePlaylistAsync(string playlistId)
+    public async Task RemoveSelectedPlaylist()
     {
-        await _playlistService.RemovePlaylistAsync(playlistId);
-        PlaylistRemoved?.Invoke(this, playlistId); // Thông báo cho các ViewModel khác rằng playlist đã bị xóa
-        var playlistToRemove = Playlists.FirstOrDefault(p => p.Id == playlistId);
-        if (playlistToRemove != null)
+        if (SelectedPlaylist != null)
         {
-            Playlists.Remove(playlistToRemove);
-            if (SelectedPlaylist == playlistToRemove)
-            {
-                SelectedPlaylist = Playlists.FirstOrDefault();
-            }
+            // Mark the playlist as deleted in the database
+            await _playlistService.UpdatePlaylistStatusAsync(SelectedPlaylist.Id, true);
+
+            // Remove the playlist from local collection
+            Playlists.Remove(SelectedPlaylist);
+
+            // Clear the currently selected playlist
+            ClearSelectedPlaylist();
         }
     }
 
@@ -156,5 +148,4 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-
 }

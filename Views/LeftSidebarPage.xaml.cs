@@ -11,16 +11,19 @@
     public sealed partial class LeftSidebarPage : Page
     {
         public LeftSidebarPageViewModel ViewModel { get; set; }
-
         public LeftSidebarPage()
         {
             this.InitializeComponent();
-            var playlistService = (App.Current as App).Services.GetService<PlaylistService>();
-            var playlistSongService = (App.Current as App).Services.GetService<PlaylistSongService>(); // Khởi tạo playlistSongService
-            var playlistPageViewModel = new PlaylistPageViewModel(playlistService, playlistSongService);
-            ViewModel = new LeftSidebarPageViewModel(playlistService, playlistPageViewModel);
+            // Lấy instance của LeftSidebarPageViewModel từ DI container
+            ViewModel = (App.Current as App).Services.GetRequiredService<LeftSidebarPageViewModel>();
             this.DataContext = ViewModel;
-    }
+        }
+
+        public LeftSidebarPage(LeftSidebarPageViewModel viewModel)
+        {
+            this.InitializeComponent();
+            this.DataContext = viewModel; // Đảm bảo viewModel được truyền vào
+        }
 
         private void OnPlaylistButtonClick(object sender, RoutedEventArgs e)
         {
@@ -40,7 +43,6 @@
                 shellWindow?.GetNavigationService().Navigate(typeof(PlaylistPage), selectedPlaylist.Id);
             }
         }
-
         private void OnArrowButtonClick(object sender, RoutedEventArgs e)
         {
 

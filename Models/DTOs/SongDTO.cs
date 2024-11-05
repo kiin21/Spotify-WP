@@ -6,7 +6,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Spotify.Models.DTOs
 {
-    public class SongDTO
+    public class SongDTO 
     {
         [BsonId]
         public ObjectId Id { get; set; }
@@ -71,5 +71,6 @@ namespace Spotify.Models.DTOs
                 return result;
             }
         }
+
     }
 }
