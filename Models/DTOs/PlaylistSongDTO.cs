@@ -27,5 +27,9 @@ namespace Spotify.Models.DTOs
 
         [BsonElement("avatar")]
         public string Avatar { get; set; }
+
+        [BsonElement("song_id")]
+        public string SongId { get; set; }
+
     }
 }

@@ -7,9 +7,12 @@ namespace Spotify.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value is TimeSpan duration)
+            if (value is int seconds)
             {
-                return duration.ToString(@"mm\:ss");
+                // Chuyển đổi giây thành TimeSpan
+                TimeSpan duration = TimeSpan.FromSeconds(seconds);
+                // Trả về chuỗi định dạng phút:giây
+                return duration.ToString(@"m\:ss");
             }
             return string.Empty;
         }

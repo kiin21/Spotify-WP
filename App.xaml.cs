@@ -38,12 +38,14 @@ namespace Spotify
             services.AddSingleton<ISongDAO, MockSongDAO>();
             services.AddSingleton<IPlaylistDAO, PlaylistDAO>();
             services.AddSingleton<IPlaylistSongDAO, PlaylistSongDAO>();
+            services.AddSingleton<IPlaylistSongDetailDAO, PlaylistSongDetailDAO>();
 
             // Register Services
             services.AddSingleton<SongService>();
             services.AddSingleton<PlaylistService>();
             services.AddSingleton<LeftSidebarPageViewModel>();
             services.AddSingleton<PlaybackControlService>();
+            services.AddSingleton<PlaylistSongDetailService>();
 
             // Register PlaybackControl services
             //services.AddSingleton<IPlaybackControlDAO, MockPlaybackControlDAO>();

@@ -21,11 +21,11 @@ public sealed partial class PlaylistPage : Page
         this.InitializeComponent();
 
         var playlistService = (App.Current as App).Services.GetRequiredService<PlaylistService>();
-        var playlistSongService = (App.Current as App).Services.GetRequiredService<PlaylistSongService>();
-        LeftSidebarPageVM = (App.Current as App).Services.GetRequiredService<LeftSidebarPageViewModel>(); // Khởi tạo LeftSidebarPageVM
+        var playlistSongDetailService = (App.Current as App).Services.GetRequiredService<PlaylistSongDetailService>();
+        LeftSidebarPageVM = (App.Current as App).Services.GetRequiredService<LeftSidebarPageViewModel>();
 
-        PlaylistPageVM = new PlaylistPageViewModel(playlistService, playlistSongService);
-        DataContext = PlaylistPageVM;
+        PlaylistPageVM = new PlaylistPageViewModel(playlistService, playlistSongDetailService);
+        DataContext = PlaylistPageVM;  // Đảm bảo DataContext là PlaylistPageVM
     }
 
     protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -47,21 +47,17 @@ public sealed partial class PlaylistPage : Page
     {
         if (PlaylistPageVM.SelectedPlaylist != null)
         {
-            // Lưu ID của playlist đang chọn
+            // Store the playlist ID to remove and find the current index
             var playlistIdToRemove = PlaylistPageVM.SelectedPlaylist.Id;
+            int currentIndex = LeftSidebarPageVM.Playlists.ToList().FindIndex(p => p.Id == playlistIdToRemove);
 
-            // Tìm vị trí của playlist này dựa trên ID
-            int currentIndex = LeftSidebarPageVM.Playlists
-                .ToList()
-                .FindIndex(p => p.Id == playlistIdToRemove);
-
-            // Xóa playlist trong database và cập nhật trạng thái của PlaylistPage
+            // Remove playlist in database and update PlaylistPage's state
             await PlaylistPageVM.RemoveSelectedPlaylist();
 
-            // Cập nhật giao diện LeftSidebar
+            // Update LeftSidebar's UI
             LeftSidebarPageVM.RemovePlaylist(playlistIdToRemove);
 
-            // Tìm playlist gần nhất còn lại
+            // Determine the closest remaining playlist to navigate to
             PlaylistDTO closestPlaylist = null;
             if (currentIndex >= 0 && LeftSidebarPageVM.Playlists.Count > 0)
             {
@@ -75,7 +71,7 @@ public sealed partial class PlaylistPage : Page
                 }
             }
 
-            // Điều hướng đến playlist gần nhất còn lại
+            // Navigate to the closest playlist
             if (closestPlaylist != null)
             {
                 LeftSidebarPageVM.SelectedPlaylist = closestPlaylist;
@@ -83,5 +79,6 @@ public sealed partial class PlaylistPage : Page
             }
         }
     }
+
 
 }
