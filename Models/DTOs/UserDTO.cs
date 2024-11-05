@@ -12,7 +12,9 @@ namespace Spotify.Models.DTOs
         public string Id { get; set; } // MongoDB ID, auto-generated
 
         [BsonElement("username")]
-        public string Username { get; set; }
+        public string Username { get; set; }       
+        [BsonElement("userAvatar")]
+        public string UserAvatar { get; set; }
 
         [BsonElement("hashedPassword")]
         public string HashedPassword { get; set; }

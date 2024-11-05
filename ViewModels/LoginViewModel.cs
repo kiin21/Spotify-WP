@@ -102,8 +102,11 @@ public class LoginViewModel : INotifyPropertyChanged
                     Debug.WriteLine("Login successfully");
 
                     //// Save current user to local settings
-                    var localSettings = ApplicationData.Current.LocalSettings;
-                    localSettings.Values["currentUser"] = user.Username;
+                    //var localSettings = ApplicationData.Current.LocalSettings;
+                    //localSettings.Values["currentUsername"] = user.Username;
+                    //localSettings.Values["currentUserID"] = user.Id;
+
+                    App.Current.CurrentUser = user;
                     // TODO: Navigate to main window
                     return true;
                 }

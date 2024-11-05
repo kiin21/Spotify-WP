@@ -12,11 +12,13 @@ using Spotify.Views;
 using System.Diagnostics;
 using System.IO;
 using Spotify.DAOs;
+using Spotify.Models.DTOs;
 
 namespace Spotify
 {
     public partial class App : Application
     {
+        public  UserDTO CurrentUser { get; set; }
         internal ShellWindow _shellWindow;
         internal LoginSignupWindow _loginSignupWindow;
         private readonly IServiceProvider _services;
