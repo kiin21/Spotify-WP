@@ -84,7 +84,7 @@ namespace Spotify
 
             // Register ViewModels
             services.AddTransient<HeaderViewModel>();
-            services.AddTransient<MainPanelViewModel>();
+            //services.AddTransient<MainPanelViewModel>();
 
             return services.BuildServiceProvider();
         }

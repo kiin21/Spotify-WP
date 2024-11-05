@@ -1,23 +1,91 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Page
     x:Class="Spotify.Views.MainPanelPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Spotify.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Spotify.Views"
+    xmlns:local1="using:Spotify.Models.DTOs"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="DarkBlue">
+    mc:Ignorable="d">
 
-    <Grid>
+    <Page.Resources>
+        <SolidColorBrush x:Key="PageBackgroundColor" Color="#FF1E1E1E" />
+        <SolidColorBrush x:Key="HeaderForegroundColor" Color="White" />
+        <!-- Example header color -->
+        <SolidColorBrush x:Key="ListViewBackgroundColor" Color="#FF2D2D2D" />
+        <!-- Example ListView background -->
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource PageBackgroundColor}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Liked Songs" FontSize="24" Margin="20"/>
-        <ListView Grid.Row="1" x:Name="SongsListView">
-            <!-- Bind to ViewModel's Songs property -->
+        <TextBlock
+            Margin="20"
+            FontSize="24"
+            Foreground="{ThemeResource HeaderForegroundColor}"
+            Text="Home" />
+
+        <ListView
+            x:Name="SongsListView"
+            Grid.Row="1"
+            Background="{ThemeResource ListViewBackgroundColor}"
+            BorderBrush="{ThemeResource ControlStrongStrokeColorDefaultBrush}"
+            BorderThickness="1"
+            ItemsSource="{Binding Songs}">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="local1:SongDTO">
+                    <Grid Margin="0,12,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" MinWidth="150" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Image
+                            MaxHeight="100"
+                            Source="{x:Bind CoverArtUrl}"
+                            Stretch="Fill" />
+
+                        <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                            <TextBlock
+                                Margin="0,0,0,6"
+                                HorizontalAlignment="Left"
+                                FontSize="18"
+                                FontWeight="SemiBold"
+                                LineHeight="20"
+                                Style="{ThemeResource BaseTextBlockStyle}"
+                                Text="{x:Bind title}" />
+                            <TextBlock
+                                Width="350"
+                                FontFamily="Segoe UI"
+                                FontWeight="Normal"
+                                MaxLines="1"
+                                Style="{ThemeResource BodyTextBlockStyle}"
+                                Text="{x:Bind ArtistName}"
+                                TextTrimming="CharacterEllipsis" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock
+                                    Margin="0,0,0,0"
+                                    HorizontalAlignment="Left"
+                                    Style="{ThemeResource CaptionTextBlockStyle}"
+                                    Text="{x:Bind FormattedDuration}" />
+                                <TextBlock
+                                    HorizontalAlignment="Left"
+                                    Style="{ThemeResource CaptionTextBlockStyle}"
+                                    Text=" ⋅ " />
+                                <TextBlock
+                                    Margin="5,0,0,0"
+                                    HorizontalAlignment="Left"
+                                    Style="{ThemeResource CaptionTextBlockStyle}"
+                                    Text="{x:Bind ReleaseDate}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
         </ListView>
     </Grid>
 </Page>
