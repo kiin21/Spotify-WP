@@ -16,6 +16,6 @@ namespace Spotify.Models.DTOs
         public string Artist { get; set; }
         public DateTime AddedAt { get; set; }
         public string AddedBy { get; set; }
-        public string Duration { get; set; }
+        public int Duration { get; set; }
     }
 }

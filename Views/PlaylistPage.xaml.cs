@@ -7,6 +7,7 @@ using Spotify.Services;
 using System.Linq;
 using System.Diagnostics;
 using Spotify.Models.DTOs;
+using Microsoft.UI.Xaml.Input;
 
 namespace Spotify.Views;
 
@@ -79,6 +80,27 @@ public sealed partial class PlaylistPage : Page
             }
         }
     }
+
+    private async void OnSongTapped(object sender, TappedRoutedEventArgs e)
+    {
+        if (sender is FrameworkElement element && element.DataContext is PlaylistSongDetailDTO songDetail)
+        {
+            // Tìm hoặc tạo đối tượng SongDTO từ songDetail
+            var songId = songDetail.SongId;
+            var songService = (App.Current as App).Services.GetRequiredService<SongService>();
+
+            // Giả sử SongService có phương thức GetSongById để lấy dữ liệu bài hát từ cơ sở dữ liệu
+            SongDTO song = await songService.GetSongByIdAsync(songId);
+
+            if (song != null)
+            {
+                // Điều hướng đến SongDetailPage với thông tin bài hát
+                Frame.Navigate(typeof(SongDetailPage), song);
+            }
+        }
+    }
+
+
 
 
 }

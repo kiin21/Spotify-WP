@@ -20,5 +20,8 @@ namespace Spotify.Services
 
         // Directly return List<SongDTO> instead of using generics
         public Task<List<SongDTO>> GetAllSongs() => _songDAO.GetAllSongs();
+
+        public async Task<SongDTO> GetSongByIdAsync(string songId) =>
+            await _songDAO.GetSongByIdAsync(songId);
     }
 }
