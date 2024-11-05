@@ -1,5 +1,9 @@
-// SongDetailPage.xaml.cs
+﻿// SongDetailPage.xaml.cs
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -15,10 +19,28 @@ public sealed partial class SongDetailPage : Page
     private bool isPlaying = false;
     public SongDetailViewModel ViewModel { get; }
 
+    public PlaybackControlService playbackService = (App.Current as App).Services.GetRequiredService<PlaybackControlService>();
     public SongDetailPage()
     {
         ViewModel = new SongDetailViewModel();
         this.InitializeComponent();
+
+
+        // Đăng ký lắng nghe sự kiện CurrentSongChanged
+        playbackService.CurrentSongChanged += PlaybackService_CurrentSongChanged;
+    }
+    private void PlaybackService_CurrentSongChanged(object sender, SongPlaybackDTO e)
+    {
+        if (e.Id == ViewModel.Id)
+        {
+            isPlaying = true;
+            PlayButtonIcon.Symbol = isPlaying ? Symbol.Pause : Symbol.Play;
+        }
+        else
+        {
+            isPlaying = false;
+            PlayButtonIcon.Symbol = Symbol.Play;
+        }
     }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -43,7 +65,6 @@ public sealed partial class SongDetailPage : Page
         {
             await playbackService.SetPlayPauseAsync(isPlaying);
         }
-        // Otherwise, load and play the new song
         else
         {
             var newSong = new SongPlaybackDTO
@@ -55,8 +76,30 @@ public sealed partial class SongDetailPage : Page
                 ImageUrl = ViewModel.ImageUrl,
                 Duration = TimeSpan.FromSeconds(ViewModel.Duration),
             };
-            await playbackService.AddToHeadOfQueueAsync(newSong);
-            await playbackService.SetPlayPauseAsync(isPlaying);
+            var queueSongs = await playbackService.GetQueueAsync();
+
+            // Kiểm tra xem bài hát đã có trong queue chưa
+            if (queueSongs.Any(song => song.Id == ViewModel.Id))
+            {
+                await playbackService.PlaySongById(ViewModel.Id);
+            }
+            else
+            {
+                // Nếu chưa có, thêm vào queue
+
+
+                try
+                {
+                    // Thêm bài hát vào queue và chuyển đến nó
+                    await playbackService.AddToNextInQueueAsync(newSong);
+                    await playbackService.SetPlayPauseAsync(true);
+                    await playbackService.NextAsync();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error adding song to queue: {ex.Message}");
+                }
+            }
         }
     }
 

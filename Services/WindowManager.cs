@@ -27,7 +27,10 @@ public class WindowManager
         var app = App.Current as App;
 
         // Tạo và hiển thị ShellWindow
-        app._shellWindow = new ShellWindow();
+        if (app._shellWindow == null)
+        {
+            app._shellWindow = new ShellWindow();
+        }
         app._shellWindow.Activate();
 
         // Sau khi ShellWindow được kích hoạt, đóng cửa sổ cũ

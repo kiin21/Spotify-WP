@@ -12,6 +12,7 @@ using System.Linq;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using Spotify.Helpers;
+using System.Diagnostics;
 
 namespace Spotify.Services;
 
@@ -526,20 +527,94 @@ public class PlaybackControlService : IPlaybackControlService
             if (_queue == null)
             {
                 _queue = new List<SongPlaybackDTO>();
+                await _playbackControlDAO.AddToHeadOfQueueAsync(song);
+                _queue = await _playbackControlDAO.GetQueueAsync(); // Refresh queue
             }
+            else
+            {
+                if (song.Id == _queue.First().Id)
+                {
+                    return;
+                }
+                else
+                {
+                    await _playbackControlDAO.AddToHeadOfQueueAsync(song);
+                    _queue = await _playbackControlDAO.GetQueueAsync(); // Refresh queue
+                }
 
-            await _playbackControlDAO.AddToHeadOfQueueAsync(song);
-            _queue = await _playbackControlDAO.GetQueueAsync(); // Refresh queue
-
+            }
             // If no song is currently playing, start playing the added song
             if (_currentSong == null)
             {
+                _currentSong = song;
                 await LoadAndPlaySongAsync(song);
             }
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error adding song to queue: {ex.Message}");
+        }
+    }
+    public async Task AddToNextInQueueAsync(SongPlaybackDTO song)
+    {
+        try
+        {
+            if (_queue == null)
+            {
+                _queue = new List<SongPlaybackDTO>();
+                await _playbackControlDAO.AddToHeadOfQueueAsync(song);
+                _queue = await _playbackControlDAO.GetQueueAsync(); // Refresh queue
+            }
+            else
+            {
+                if (song.Id == _currentSong.Id)
+                {
+                    return;
+                }
+                else
+                {
+                    await _playbackControlDAO.AddToNextInQueueAsync(song);
+                    _queue = await _playbackControlDAO.GetQueueAsync(); // Refresh queue
+                }
+
+            }
+            // If no song is currently playing, start playing the added song
+            if (_currentSong == null)
+            {
+                _currentSong = song;
+                await LoadAndPlaySongAsync(song);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error adding song to queue: {ex.Message}");
+        }
+    }
+    public async Task PlaySongById(string id)
+    {
+        await PauseAsync();
+        var originalIndex = _queue.ToList().FindIndex(song => song.Id == id);
+        var currentIndex = GetCurrentSongIndex().Result;
+        if (originalIndex >= 0)
+        {
+            var skipCount = originalIndex - currentIndex;
+
+            if (skipCount > 0)
+            {
+                for (int i = 0; i < skipCount; i++)
+                {
+                    await NextAsync();
+                }
+            }
+            else
+            {
+                for (int i = 0; i < Math.Abs(skipCount); i++)
+                {
+                    await PreviousAsync();
+                }
+            }
+
+            await SetPlayPauseAsync(true);
         }
     }
 }

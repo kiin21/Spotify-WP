@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Catel.IoC;
 using Catel.MVVM;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;

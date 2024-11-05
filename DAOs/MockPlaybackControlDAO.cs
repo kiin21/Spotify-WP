@@ -37,45 +37,45 @@ public class MockPlaybackControlDAO : IPlaybackControlDAO
                     Id = "1",
                     Title = "Thien Ly Oi",
                     Artist = "J97",
-                    ImageUrl = "../Assets/ThienLyOi_img.png",
+                    ImageUrl = "https://firebasestorage.googleapis.com/v0/b/my-firebase-e3f67.appspot.com/o/image%2FThienLyOi_image.png?alt=media&token=40086374-0835-44b4-8a46-2a614c53d6fe",
                     Duration = TimeSpan.FromSeconds(89),
-                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\ThienLyOi.mp3"
+                    AudioUrl = "https://firebasestorage.googleapis.com/v0/b/my-firebase-e3f67.appspot.com/o/audio%2FThienLyOi.mp3?alt=media&token=d4ac1dc1-089d-4a41-9830-8e8ac96186e5"
                 },
                 new SongPlaybackDTO
                 {
                     Id = "2",
                     Title = "Want You",
                     Artist = "Anonymous",
-                    ImageUrl = "../Assets/want_you_img.png",
+                    ImageUrl = "https://firebasestorage.googleapis.com/v0/b/my-firebase-e3f67.appspot.com/o/image%2Fwant_you_img.png?alt=media&token=60af2195-fe8e-4a5d-b60a-20601b63048a",
                     Duration = TimeSpan.FromSeconds(139),
-                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\Want_You.mp3"
+                    AudioUrl = "https://firebasestorage.googleapis.com/v0/b/my-firebase-e3f67.appspot.com/o/audio%2FWant_You.mp3?alt=media&token=dfd5dc70-4cc0-4d7d-84fa-4fb58ed033de"
                 },
                 new SongPlaybackDTO
                 {
                     Id = "3",
                     Title = "Dong Kiem Em",
                     Artist = "Vu",
-                    ImageUrl = "../Assets/DongKiemEm.png",
+                    ImageUrl = "https://firebasestorage.googleapis.com/v0/b/my-firebase-e3f67.appspot.com/o/image%2FDongKiemEm.png?alt=media&token=5df2dd39-c3c5-48d0-a2f3-dac038402015",
                     Duration = TimeSpan.FromSeconds(246),
-                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\DongKiemEm.mp3"
+                    AudioUrl = "https://firebasestorage.googleapis.com/v0/b/my-firebase-e3f67.appspot.com/o/audio%2FDongKiemEm.mp3?alt=media&token=50fad1ac-d1fb-401c-a103-7b25fa97e84f"
                 },
                 new SongPlaybackDTO
                 {
                     Id = "4",
                     Title = "Cat Bui",
                     Artist = "Khanh Ly",
-                    ImageUrl = "../Assets/CatBui.png",
+                    ImageUrl = "https://firebasestorage.googleapis.com/v0/b/my-firebase-e3f67.appspot.com/o/image%2FCatBui.png?alt=media&token=2dccb349-62b4-41ad-adb1-bce3055becc0",
                     Duration = TimeSpan.FromSeconds(209),
-                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\CatBui.mp3"
+                    AudioUrl = "https://firebasestorage.googleapis.com/v0/b/my-firebase-e3f67.appspot.com/o/audio%2FCatBui.mp3?alt=media&token=6fffef62-1e57-46a6-bcf4-8f2a0f33dcd5"
                 },
                 new SongPlaybackDTO
                 {
                     Id = "5",
                     Title = "Phoi Pha",
                     Artist = "Tuan Ngoc",
-                    ImageUrl = "../Assets/PhoiPha.png",
+                    ImageUrl = "https://firebasestorage.googleapis.com/v0/b/my-firebase-e3f67.appspot.com/o/image%2FPhoiPha.png?alt=media&token=a06f42bf-88c9-4149-8438-fc5fe3bb9ea0",
                     Duration = TimeSpan.FromSeconds(196),
-                    AudioUrl = "C:\\Users\\Khoa\\Downloads\\Music Audio\\PhoiPha.mp3"
+                    AudioUrl = "https://firebasestorage.googleapis.com/v0/b/my-firebase-e3f67.appspot.com/o/audio%2FPhoiPha.mp3?alt=media&token=4e4de9fe-903e-4e19-9561-23a8df47eb60"
                 },
             };
 
@@ -131,7 +131,7 @@ public class MockPlaybackControlDAO : IPlaybackControlDAO
             }
             else if (_currentState.IsRepeatEnabled)
             {
-                _currentIndex = 0;
+                //stay unchanged
             }
             // If neither condition is met, stay on current song
         }
@@ -240,6 +240,11 @@ public class MockPlaybackControlDAO : IPlaybackControlDAO
     public async Task AddToHeadOfQueueAsync(SongPlaybackDTO song)
     {
         _queue.Insert(0, song);
+        await Task.CompletedTask;
+    }
+    public async Task AddToNextInQueueAsync(SongPlaybackDTO song)
+    {
+        _queue.Insert(_currentIndex + 1, song);
         await Task.CompletedTask;
     }
 }

@@ -81,7 +81,6 @@
             </Grid>
 
             <!--  Queue Section  -->
-            <!--  Thay thế StackPanel bằng Grid  -->
             <Grid x:Name="QueueSection" Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />

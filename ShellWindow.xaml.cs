@@ -29,7 +29,6 @@ public sealed partial class ShellWindow : WindowEx
         InitializeComponent();
         AppWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets/App.ico"));
         _navigationService = new NavigationService(MainFrame);
-    //    _navigationService = new NavigationService(RightSidebarFrame);
         InitializePages();
     }
 
@@ -49,4 +48,8 @@ public sealed partial class ShellWindow : WindowEx
     // Method to expose navigation service to other parts of the app
     public INavigationService GetNavigationService() => _navigationService;
 
+    private void Window_Activated(object sender, Microsoft.UI.Xaml.WindowActivatedEventArgs args)
+    {
+
+    }
 }

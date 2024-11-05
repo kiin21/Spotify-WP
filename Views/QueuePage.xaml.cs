@@ -32,11 +32,11 @@ public sealed partial class QueuePage : Page
     public QueueViewModel ViewModel { get; private set; }
     public QueuePage()
     {
-        this.InitializeComponent();
     }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
+        this.InitializeComponent();
         if (e.Parameter is Tuple<ObservableCollection<SongPlaybackDTO>, bool, SongPlaybackDTO, string, string, string, IPlaybackControlService> parameters)
         {
             var queueSongs = parameters.Item1;

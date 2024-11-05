@@ -31,7 +31,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     private readonly DispatcherTimer _playbackTimer;
     private bool _disposed;
     private bool _isFirstPlayClicked = false;
-//    private bool _isUserSeeking; // Add this field to track user-initiated seeking
+    //    private bool _isUserSeeking; // Add this field to track user-initiated seeking
 
 
     [ObservableProperty]
@@ -125,7 +125,6 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             _playbackControlService.PlaybackStateChanged += OnPlaybackStateChanged;
 
             _playbackControlService.CurrentSongChanged += OnCurrentSongChanged;
-
             InitializeFromCurrentState();
         }
         catch (Exception ex)
@@ -154,7 +153,6 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             Artist = currentSong.Artist;
 
             _ = LoadQueueAsync();
-            Console.WriteLine("Initialize successfully!!!");
         }
         catch (Exception ex)
         {
@@ -200,7 +198,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
-   
+
     [SuppressPropertyChangedWarnings]
     partial void OnSelectedSpeedChanged(string value)
     {
@@ -209,7 +207,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         try
         {
             _isProcessingSpeedChange = true;
-            
+
             Task.Run(async () =>
             {
                 try
@@ -272,12 +270,12 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     {
         try
         {
-        
+
             Task.Run(async () =>
             {
                 await _playbackControlService.SeekToPositionAsync(value);
             }).Wait(100); // Small timeout to prevent flooding
-      
+
         }
         catch (Exception ex)
         {
@@ -400,7 +398,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
                 if (Math.Abs((servicePosition - CurrentPosition).TotalSeconds) > thresholdInSeconds)
                 {
                     CurrentPosition = servicePosition;
-                //    OnPropertyChanged(nameof(CurrentPositionSeconds));
+                    //    OnPropertyChanged(nameof(CurrentPositionSeconds));
                 }
 
                 // Check if we've reached the end of the song  
@@ -434,11 +432,11 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         {
             IsPlaying = state.IsPlaying;
             Volume = state.Volume;
-           
+
             UpdateSpeedFromService(state.PlaybackSpeed);
-           
+
             CurrentPosition = FormatTimeSpan(state.CurrentPosition);
-       
+
             SongDuration = FormatTimeSpan(state.Duration);
             IsReplayEnabled = state.IsRepeatEnabled;
 
@@ -494,7 +492,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
-    private async Task LoadQueueAsync()
+    public async Task LoadQueueAsync()
     {
         try
         {
@@ -509,8 +507,6 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
                         if (song == null)
                         {
                             throw new InvalidCastException("Null song in queue");
-                            // Get ShellWindow from App.Current directly
-                            var shellWindow = (App.Current as App).ShellWindow;
                         }
                         return song;
                     })
@@ -523,11 +519,17 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             }
 
             var currentSong = _playbackControlService.GetCurrentSong();
-            var navigationParams = new Tuple<ObservableCollection<SongPlaybackDTO>, bool, SongPlaybackDTO , string, string, string, IPlaybackControlService>(
-    QueueSongs, IsQueueVisible, currentSong, Title, Artist, ImageSource, _playbackControlService);
-            //   var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
-            //var shellWindow = App.Current.Services.GetRequiredService<ShellWindow>();
-            // Get ShellWindow from App.Current directly
+            var navigationParams = 
+                    new Tuple<
+                                ObservableCollection<SongPlaybackDTO>, 
+                                bool, SongPlaybackDTO, 
+                                string, 
+                                string, 
+                                string, 
+                                IPlaybackControlService>(QueueSongs, IsQueueVisible, 
+                                                            currentSong, Title, Artist, ImageSource, _playbackControlService);
+
+
             var shellWindow = (App.Current as App).ShellWindow;
             if (shellWindow != null)
             {
@@ -539,7 +541,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
                 System.Diagnostics.Debug.WriteLine("ShellWindow is not initialized.");
             }
 
-           
+
         }
         catch (Exception ex)
         {

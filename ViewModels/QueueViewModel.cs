@@ -85,6 +85,13 @@ public partial class QueueViewModel : ObservableObject
                         await _playbackControlService.NextAsync();
                     }
                 }
+                else
+                {
+                    for (int i = 0; i < Math.Abs(skipCount); i++)
+                    {
+                        await _playbackControlService.PreviousAsync();
+                    }
+                }
 
                 await _playbackControlService.SetPlayPauseAsync(true);
             }
