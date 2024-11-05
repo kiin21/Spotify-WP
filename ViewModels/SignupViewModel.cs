@@ -15,6 +15,7 @@ using Spotify.Services;
 namespace Spotify.ViewModels;
 public class SignupViewModel : INotifyPropertyChanged
 {
+    private readonly UserService _userService;
     private readonly LocalStorageService _localStorageService;
     public event PropertyChangedEventHandler PropertyChanged;
     public RelayCommand GoToSignIn { get; }
@@ -53,8 +54,9 @@ public class SignupViewModel : INotifyPropertyChanged
         }
     }
 
-    public SignupViewModel()
+    public SignupViewModel(UserService userService)
     {
+        _userService = userService;
         _localStorageService = (App.Current as App).Services.GetRequiredService<LocalStorageService>();
         SignUpCommand = new RelayCommand(async param => await ExecuteSignUpAsync());
         GoToSignIn = new RelayCommand(_ => NavigateToLogin());
@@ -71,7 +73,8 @@ public class SignupViewModel : INotifyPropertyChanged
             }
 
             // Check if username already exists
-            var existingUsers = await _localStorageService.GetUsersAsync();
+            //var existingUsers = await _localStorageService.GetUsersAsync();
+            var existingUsers = await _userService.GetUsersAsync();
             if (existingUsers.Any(u => u.Username.Equals(Username, StringComparison.OrdinalIgnoreCase)))
             {
                 Debug.WriteLine("Username already exists");
@@ -81,14 +84,8 @@ public class SignupViewModel : INotifyPropertyChanged
             // Hash the password
             var (hashedPassword, salt) = PasswordHasher.HashPassword(Password);
 
-            var user = new UserDTO
-            {
-                Username = Username,
-                HashedPassword = hashedPassword,
-                Salt = salt
-            };
-
-            await _localStorageService.SaveUserAsync(user);
+            await _userService.AddUserAsync(Username, Password);
+            //await _localStorageService.SaveUserAsync(user);
             NavigateToLogin();
             return (true, "Sign up successfully!");
         }

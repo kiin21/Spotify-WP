@@ -1,6 +1,7 @@
 //SignupPage.xaml.cs
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Spotify.Services;
 using Spotify.ViewModels;
@@ -28,7 +29,8 @@ public sealed partial class SignupPage : Page
 
         // Initialize NavigationService with the Frame
         var navigationService = new NavigationService(Frame);
-        ViewModel = new SignupViewModel();
+        var userService = (App.Current as App).Services.GetService<UserService>();
+        ViewModel = new SignupViewModel(userService);
     }
 
     private async void OnSignupButtonClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)

@@ -4,6 +4,7 @@ using Spotify.ViewModels;
 using Spotify.Services;
 using System.Threading.Tasks;
 using System;
+using Microsoft.Extensions.DependencyInjection;
 
 
 namespace Spotify.Views;
@@ -14,7 +15,8 @@ public sealed partial class LoginPage : Page
     public LoginPage()
     {
         this.InitializeComponent();
-        ViewModel = new LoginViewModel();
+        var userService = (App.Current as App).Services.GetService<UserService>();
+        ViewModel = new LoginViewModel(userService);
     }
 
     private async void OnLoginButtonClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)

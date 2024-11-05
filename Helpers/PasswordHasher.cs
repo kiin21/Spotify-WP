@@ -1,34 +1,29 @@
 ﻿// PasswordHasher.cs
 using System;
+using System.Diagnostics;
 using System.Security.Cryptography;
 
 namespace Spotify.Helpers;
 
-public class PasswordHasher
+public static class PasswordHasher
 {
-    private const int SaltSize = 16;
-    private const int HashSize = 32;
     private const int Iterations = 10000;
+    private const int HashSize = 32; // 256 bits
 
     public static (string hashedPassword, string salt) HashPassword(string password)
     {
         // Generate a random salt
-        byte[] salt = new byte[SaltSize];
-        using (var rng = RandomNumberGenerator.Create())
-        {
-            rng.GetBytes(salt);
-        }
+        string salt = Guid.NewGuid().ToString();
 
-        // Create the hash using Rfc2898DeriveBytes (PBKDF2)
-        using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, Iterations, HashAlgorithmName.SHA256))
+        // Convert GUID string to bytes
+        byte[] saltBytes = Guid.Parse(salt).ToByteArray();
+
+        // Create hash
+        using (var pbkdf2 = new Rfc2898DeriveBytes(password, saltBytes, Iterations, HashAlgorithmName.SHA256))
         {
             byte[] hash = pbkdf2.GetBytes(HashSize);
-
-            // Convert to base64 for storage
             string hashedPassword = Convert.ToBase64String(hash);
-            string saltString = Convert.ToBase64String(salt);
-
-            return (hashedPassword, saltString);
+            return (hashedPassword, salt);
         }
     }
 
@@ -36,21 +31,21 @@ public class PasswordHasher
     {
         try
         {
-            // Convert the salt from base64 string back to bytes
-            byte[] salt = Convert.FromBase64String(saltString);
+            // Convert the salt from GUID string to bytes
+            byte[] salt = Guid.Parse(saltString).ToByteArray();
 
             // Create the hash using the same parameters
             using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, Iterations, HashAlgorithmName.SHA256))
             {
                 byte[] hash = pbkdf2.GetBytes(HashSize);
                 string newHashedPassword = Convert.ToBase64String(hash);
-
                 // Compare the hashes
                 return newHashedPassword == hashedPassword;
             }
         }
-        catch
+        catch (Exception ex)
         {
+            Debug.WriteLine($"Error verifying password: {ex.Message}");
             return false;
         }
     }

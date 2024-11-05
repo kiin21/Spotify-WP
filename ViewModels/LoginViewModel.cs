@@ -15,7 +15,7 @@ using Spotify.Services;
 namespace Spotify.ViewModels;
 public class LoginViewModel : INotifyPropertyChanged
 {
-    private readonly LocalStorageService _localStorageService;
+    private readonly UserService _userService;
     public event PropertyChangedEventHandler PropertyChanged;
 
     private string _username;
@@ -54,9 +54,9 @@ public class LoginViewModel : INotifyPropertyChanged
     public RelayCommand GoToSignUp { get; }
     public RelayCommand SignInCommand { get; }
 
-    public LoginViewModel()
+    public LoginViewModel(UserService userService)
     {
-        _localStorageService = (App.Current as App).Services.GetRequiredService<LocalStorageService>();
+        _userService = userService;
         GoToSignUp = new RelayCommand(_ => NavigateToSignUp());
         SignInCommand = new RelayCommand(async param => await ExecuteSignInAsync());
 
@@ -81,7 +81,7 @@ public class LoginViewModel : INotifyPropertyChanged
                 RemoveCredential();
             }
 
-            var users = await _localStorageService.GetUsersAsync();
+            var users = await _userService.GetUsersAsync();
 
             // First find user by username only
             var user = users.FirstOrDefault
