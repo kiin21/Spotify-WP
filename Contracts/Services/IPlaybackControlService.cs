@@ -27,5 +27,6 @@ public interface IPlaybackControlService
     Task SetPlaybackSpeedAsync(string speed);
     Task SeekToPositionAsync(TimeSpan position);
     Task AddToQueueAsync(SongPlaybackDTO song);
+    Task AddToHeadOfQueueAsync(SongPlaybackDTO song);
     Task LoadAndPlaySongAsync(SongPlaybackDTO song);
 }

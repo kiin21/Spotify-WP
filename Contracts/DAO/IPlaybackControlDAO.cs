@@ -19,4 +19,5 @@ public interface IPlaybackControlDAO
     Task ShuffleQueueAsync();
     Task SetRepeatStateAsync(bool isRepeatEnabled);
     Task AddToQueueAsync(SongPlaybackDTO song);
+    Task AddToHeadOfQueueAsync(SongPlaybackDTO song);
 }

@@ -55,9 +55,13 @@ public sealed partial class SongDetailPage : Page
                 ImageUrl = ViewModel.ImageUrl,
                 Duration = TimeSpan.FromSeconds(ViewModel.Duration),
             };
-            await playbackService.LoadAndPlaySongAsync(newSong);
+            await playbackService.AddToHeadOfQueueAsync(newSong);
             await playbackService.SetPlayPauseAsync(isPlaying);
         }
     }
 
+    private void BackButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        Frame.GoBack();
+    }
 }

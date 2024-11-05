@@ -403,7 +403,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
                 //    OnPropertyChanged(nameof(CurrentPositionSeconds));
                 }
 
-                // Check if we've reached the end of the song
+                // Check if we've reached the end of the song  
                 if (CurrentPosition >= SongDuration)
                 {
                     if (IsReplayEnabled)

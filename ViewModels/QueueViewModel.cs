@@ -48,7 +48,7 @@ public partial class QueueViewModel : ObservableObject
 
         if (currentSongIndex >= 0)
         {
-            QueueSongs = new ObservableCollection<SongPlaybackDTO>(queueSongs.Skip(currentSongIndex));
+            QueueSongs = new ObservableCollection<SongPlaybackDTO>(queueSongs);
         }
         else
         {
@@ -92,6 +92,13 @@ public partial class QueueViewModel : ObservableObject
         catch (Exception ex)
         {
             Debug.WriteLine($"Error playing selected song: {ex.Message}");
+        }
+    }
+    partial void OnCurrentSongChanged(SongPlaybackDTO oldValue, SongPlaybackDTO newValue)
+    {
+        foreach (var song in QueueSongs)
+        {
+            song.IsCurrentSong = song == newValue;
         }
     }
 }

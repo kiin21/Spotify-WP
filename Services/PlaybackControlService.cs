@@ -374,7 +374,7 @@ public class PlaybackControlService : IPlaybackControlService
                 _currentState.CurrentPosition = TimeSpan.Zero;
                 _currentState.Duration = song.Duration;
 
-                if(_currentState.IsPlaying)
+                if (_currentState.IsPlaying)
                 {
                     _waveOutEvent.Play();
                 }
@@ -505,6 +505,30 @@ public class PlaybackControlService : IPlaybackControlService
             }
 
             await _playbackControlDAO.AddToQueueAsync(song);
+            _queue = await _playbackControlDAO.GetQueueAsync(); // Refresh queue
+
+            // If no song is currently playing, start playing the added song
+            if (_currentSong == null)
+            {
+                await LoadAndPlaySongAsync(song);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error adding song to queue: {ex.Message}");
+        }
+    }
+
+    public async Task AddToHeadOfQueueAsync(SongPlaybackDTO song)
+    {
+        try
+        {
+            if (_queue == null)
+            {
+                _queue = new List<SongPlaybackDTO>();
+            }
+
+            await _playbackControlDAO.AddToHeadOfQueueAsync(song);
             _queue = await _playbackControlDAO.GetQueueAsync(); // Refresh queue
 
             // If no song is currently playing, start playing the added song

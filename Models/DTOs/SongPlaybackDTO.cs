@@ -11,6 +11,7 @@ namespace Spotify.Models.DTOs
         public string ImageUrl { get; set; } = "ms-appx:///Assets/Error.svg";
         public TimeSpan Duration { get; set; } = TimeSpan.Zero;
         public string AudioUrl { get; set; } = string.Empty;
+        public bool IsCurrentSong { get; set; } = false;
 
     }
 }

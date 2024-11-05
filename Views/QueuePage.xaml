@@ -7,12 +7,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Spotify.Views"
     xmlns:local1="using:Spotify.Models.DTOs"
+    xmlns:local2="using:Spotify.Converters"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
     <Page.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <local2:BoolToColorConverter x:Key="BoolToColorConverter" />
         <converters:HeightConverter x:Key="HeightConverter" />
         <converters:AlignmentConverter x:Key="AlignmentConverter" />
         <converters:ImageSizeConverter x:Key="ImageSizeConverter" />
@@ -79,17 +81,32 @@
             </Grid>
 
             <!--  Queue Section  -->
-            <StackPanel x:Name="QueueSection" Grid.Row="1">
+            <!--  Thay thế StackPanel bằng Grid  -->
+            <Grid x:Name="QueueSection" Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <!--  Cho header  -->
+                    <RowDefinition Height="*" />
+                    <!--  Cho ListView  -->
+                </Grid.RowDefinitions>
+
+                <!--  Header  -->
                 <TextBlock
+                    Grid.Row="0"
                     Margin="0,270,0,16"
                     Style="{StaticResource SubtitleTextBlockStyle}"
                     Text="Next in queue" />
+
+                <!--  ListView trong ScrollViewer  -->
                 <ListView
+                    Grid.Row="1"
                     MaxHeight="600"
                     IsItemClickEnabled="True"
                     ItemClick="QueueList_ItemClick"
                     ItemsSource="{x:Bind ViewModel.QueueSongs, Mode=OneWay}"
-                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    ScrollViewer.HorizontalScrollMode="Disabled"
+                    ScrollViewer.VerticalScrollBarVisibility="Visible"
+                    ScrollViewer.VerticalScrollMode="Enabled"
                     SelectionMode="Single">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
@@ -142,7 +159,7 @@
 
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="local1:SongPlaybackDTO">
-                            <Grid>
+                            <Grid x:Name="SongGrid" Background="{Binding IsCurrentSong, Converter={StaticResource BoolToColorConverter}}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
@@ -169,9 +186,10 @@
                                 </StackPanel>
                             </Grid>
                         </DataTemplate>
+
                     </ListView.ItemTemplate>
                 </ListView>
-            </StackPanel>
+            </Grid>
         </Grid>
 
         <VisualStateManager.VisualStateGroups>
@@ -204,3 +222,4 @@
         </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>
+
