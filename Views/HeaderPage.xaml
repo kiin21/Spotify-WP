@@ -18,14 +18,21 @@
             <!--  Account icon  -->
         </Grid.ColumnDefinitions>
 
-        <!--  Logo  -->
-        <Image
-            Grid.Column="0"
-            Width="120"
+        <!--  Home Icon Button  -->
+        <Button
+            Width="40"
             Height="40"
-            Margin="20,0"
-            VerticalAlignment="Center"
-            Source="/Assets/logo.png" />
+            Margin="90,0"
+            Padding="0"
+            Background="Transparent"
+            BorderBrush="Transparent"
+            Click="BackToHomePage_Click"
+            CornerRadius="20">
+            <Image
+                Width="30"
+                Height="30"
+                Source="../Assets/App.ico" />
+        </Button>
 
         <!--  Search Bar with Magnifying Glass Icon  -->
         <Grid
@@ -40,13 +47,6 @@
                 <!--  Search TextBox  -->
             </Grid.ColumnDefinitions>
 
-            <!--  Magnifying Glass Icon  -->
-            <Image
-                Width="20"
-                Height="20"
-                Margin="10,0"
-                VerticalAlignment="Center"
-                Source="/Assets/search_icon.png" />
 
             <!--  Search TextBox  -->
             <TextBox

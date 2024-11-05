@@ -21,7 +21,7 @@ public class PlaybackControlService : IPlaybackControlService
     //    private readonly MediaPlayer _mediaPlayer;
     private WaveOutEvent _waveOutEvent;
     private MediaFoundationReader _mediaFoundationReader;
- //   private IWavePlayer _wavePlayer;
+    //   private IWavePlayer _wavePlayer;
     private VarispeedSampleProvider _varispeedSampleProvider;
     private PlaybackStateDTO _currentState;
     private SongPlaybackDTO _currentSong = new SongPlaybackDTO(); // Initialize to empty song
@@ -38,8 +38,8 @@ public class PlaybackControlService : IPlaybackControlService
     public PlaybackControlService(IPlaybackControlDAO playbackControlDAO)
     {
         _playbackControlDAO = playbackControlDAO;
-    
-        _waveOutEvent = new WaveOutEvent(); 
+
+        _waveOutEvent = new WaveOutEvent();
         _waveOutEvent.PlaybackStopped += WaveOutEvent_PlaybackStopped;
 
         InitializeDefaultState();
@@ -53,7 +53,6 @@ public class PlaybackControlService : IPlaybackControlService
             _currentState = await _playbackControlDAO.GetPlaybackStateAsync();
             _currentSong = await _playbackControlDAO.GetCurrentSongAsync();
             _queue = await _playbackControlDAO.GetQueueAsync();
-
             if (_currentSong != null)
             {
                 await LoadAndPlaySongAsync(_currentSong);
@@ -249,7 +248,7 @@ public class PlaybackControlService : IPlaybackControlService
                     var currentPosition = _mediaFoundationReader.CurrentTime;
                     bool wasPlaying = _currentState.IsPlaying;
 
-                 
+
                     // Stop playback temporarily
                     if (wasPlaying)
                     {
@@ -257,7 +256,7 @@ public class PlaybackControlService : IPlaybackControlService
                     }
 
                     // Update the speed
-                //    _varispeedSampleProvider.PlaybackRate = playbackRate;
+                    //    _varispeedSampleProvider.PlaybackRate = playbackRate;
 
                     // Create a new provider chain with updated speed
                     var sampleProvider = _mediaFoundationReader.ToSampleProvider();
@@ -317,83 +316,83 @@ public class PlaybackControlService : IPlaybackControlService
     }
 
     public async Task LoadAndPlaySongAsync(SongPlaybackDTO song)
-{
-    if (song == null) return;
-    lock (_lockObject)
     {
-        if (_isInitializing) return;
-        _isInitializing = true;
-
-        try
+        if (song == null) return;
+        lock (_lockObject)
         {
-            _currentSong = song;
+            if (_isInitializing) return;
+            _isInitializing = true;
 
-            if (_waveOutEvent != null)
+            try
             {
-                _waveOutEvent.Stop();
+                _currentSong = song;
+
+                if (_waveOutEvent != null)
+                {
+                    _waveOutEvent.Stop();
+                }
+
+                if (_mediaFoundationReader != null)
+                {
+                    _mediaFoundationReader.Dispose();
+                    _mediaFoundationReader = null;
+                }
+
+                _mediaFoundationReader = new MediaFoundationReader(song.AudioUrl);
+                var sampleProvider = _mediaFoundationReader.ToSampleProvider();
+
+                if (sampleProvider.WaveFormat.Channels > 1)
+                {
+                    sampleProvider = sampleProvider.ToMono();
+                }
+
+                float currentSpeed;
+                if (!float.TryParse(_currentState.PlaybackSpeed.TrimEnd('x'), out currentSpeed))
+                {
+                    currentSpeed = 1.0f;
+                }
+
+                _varispeedSampleProvider = new VarispeedSampleProvider(sampleProvider)
+                {
+                    PlaybackRate = currentSpeed
+                };
+
+                _volumeProvider = new VolumeSampleProvider(_varispeedSampleProvider)
+                {
+                    Volume = (float)(_currentState.Volume / 100.0f)
+                };
+
+                // Use a buffered wave provider to smooth out playback
+                var bufferedProvider = new BufferedWaveProvider(_volumeProvider.WaveFormat)
+                {
+                    BufferLength = _volumeProvider.WaveFormat.AverageBytesPerSecond * 2,
+                    DiscardOnBufferOverflow = true
+                };
+
+                _waveOutEvent.Init(_volumeProvider);
+
+                _currentState.CurrentPosition = TimeSpan.Zero;
+                _currentState.Duration = song.Duration;
+
+                if(_currentState.IsPlaying)
+                {
+                    _waveOutEvent.Play();
+                }
+
+                //   await UpdatePlaybackStateAsync();
+                OnCurrentSongChanged(song);
             }
-
-            if (_mediaFoundationReader != null)
+            catch (Exception ex)
             {
-                _mediaFoundationReader.Dispose();
-                _mediaFoundationReader = null;
+                System.Diagnostics.Debug.WriteLine($"Error loading song: {ex.Message}");
             }
-
-            _mediaFoundationReader = new MediaFoundationReader(song.AudioUrl);
-            var sampleProvider = _mediaFoundationReader.ToSampleProvider();
-
-            if (sampleProvider.WaveFormat.Channels > 1)
+            finally
             {
-                sampleProvider = sampleProvider.ToMono();
+                _isInitializing = false;
             }
-
-            float currentSpeed;
-            if (!float.TryParse(_currentState.PlaybackSpeed.TrimEnd('x'), out currentSpeed))
-            {
-                currentSpeed = 1.0f;
-            }
-
-            _varispeedSampleProvider = new VarispeedSampleProvider(sampleProvider)
-            {
-                PlaybackRate = currentSpeed
-            };
-
-            _volumeProvider = new VolumeSampleProvider(_varispeedSampleProvider)
-            {
-                Volume = (float)(_currentState.Volume / 100.0f)
-            };
-
-            // Use a buffered wave provider to smooth out playback
-            var bufferedProvider = new BufferedWaveProvider(_volumeProvider.WaveFormat)
-            {
-                BufferLength = _volumeProvider.WaveFormat.AverageBytesPerSecond * 2,
-                DiscardOnBufferOverflow = true
-            };
-
-            _waveOutEvent.Init(_volumeProvider);
-
-            _currentState.CurrentPosition = TimeSpan.Zero;
-            _currentState.Duration = song.Duration;
-
-            if (_currentState.IsPlaying)
-            {
-                _waveOutEvent.Play();
-            }
-
-            //   await UpdatePlaybackStateAsync();
-            OnCurrentSongChanged(song);
         }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"Error loading song: {ex.Message}");
-        }
-        finally
-        {
-            _isInitializing = false;
-        }
+        await UpdatePlaybackStateAsync();
     }
-    await UpdatePlaybackStateAsync();
-}
 
     private async Task UpdatePlaybackStateAsync()
     {
@@ -470,7 +469,7 @@ public class PlaybackControlService : IPlaybackControlService
                     _waveOutEvent.Play();
                 }
             }
-            }
+        }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error in PlaybackStopped: {ex.Message}");

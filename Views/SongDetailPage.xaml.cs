@@ -56,6 +56,7 @@ public sealed partial class SongDetailPage : Page
                 Duration = TimeSpan.FromSeconds(ViewModel.Duration),
             };
             await playbackService.LoadAndPlaySongAsync(newSong);
+            await playbackService.SetPlayPauseAsync(isPlaying);
         }
     }
 

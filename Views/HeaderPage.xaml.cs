@@ -38,4 +38,10 @@ public sealed partial class HeaderPage : Page
             }
         }
     }
+
+    private void BackToHomePage_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        var shellWindow = App.Current.ShellWindow;
+        shellWindow.GetNavigationService().Navigate(typeof(MainPanelPage));
+    }
 }
