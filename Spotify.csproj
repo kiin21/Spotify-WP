@@ -20,6 +20,7 @@
   <ItemGroup>
     <None Remove=".env" />
     <None Remove=".env.example" />
+    <None Remove="Assets\defaultAvt.jpg" />
     <None Remove="Assets\sample.png" />
     <None Remove="LoginSignupWindow.xaml" />
     <None Remove="ShellWindow.xaml" />
@@ -74,6 +75,9 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <Content Update="Assets\defaultAvt.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Update="Assets\Error.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

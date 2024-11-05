@@ -71,14 +71,11 @@ public class LoginViewModel : INotifyPropertyChanged
             if (!ValidateInput())
                 return false;
 
+            // Remove old credentials
+            RemoveCredential();
             if (RememberMe)
             {
-                // Save credentials securely
-                SaveCredentialsAsync();
-            }
-            else
-            {
-                RemoveCredential();
+                SaveCredentials();
             }
 
             var users = await _userService.GetUsersAsync();
@@ -162,7 +159,7 @@ public class LoginViewModel : INotifyPropertyChanged
         }
         catch { }
     }
-    private void SaveCredentialsAsync()
+    private void SaveCredentials()
     {
         var vault = new Windows.Security.Credentials.PasswordVault();
         try
