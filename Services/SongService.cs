@@ -18,6 +18,10 @@ public class SongService
     public Task<List<SongDTO>> SearchSongs(string query) =>
         _songDAO.SearchSongs(query);
 
-    // Directly return List<SongDTO> instead of using generics
-    public Task<List<SongDTO>> GetAllSongs() => _songDAO.GetAllSongs();
+        // Directly return List<SongDTO> instead of using generics
+        public Task<List<SongDTO>> GetAllSongs() => _songDAO.GetAllSongs();
+
+        public async Task<SongDTO> GetSongByIdAsync(string songId) =>
+            await _songDAO.GetSongByIdAsync(songId);
+    }
 }

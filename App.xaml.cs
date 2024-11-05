@@ -6,7 +6,6 @@ using Spotify.ViewModels;
 using Spotify.Contracts.Services;
 using Spotify.Services;
 using Spotify.Contracts.DAO;
-using Spotify.DAO;
 using DotNetEnv;
 using Spotify.Views;
 using System.Diagnostics;
@@ -67,6 +66,7 @@ namespace Spotify
             var services = new ServiceCollection();
 
             // Register DAOs
+            services.AddSingleton<ISongDAO, SongDAO>();
             services.AddSingleton<ISongDAO, MockSongDAO>();
             services.AddSingleton<IPlaybackControlDAO, MockPlaybackControlDAO>();
             services.AddSingleton<IPlaylistDAO, PlaylistDAO>();

@@ -48,7 +48,7 @@ public class PlaylistSongDetailDAO : BaseDAO, IPlaylistSongDetailDAO
                               Artist = s.ArtistName,
                               AddedAt = ps.AddedAt,
                               AddedBy = ps.AddedBy,
-                              Duration = s.Duration.ToString(),
+                              Duration = s.Duration,
                           }).ToList();
 
         return joinedData;
