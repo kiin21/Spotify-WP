@@ -114,7 +114,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
             _selectedSpeed = SpeedOptions.First();
 
-            PlayPauseGlyph = "\uE768";
+            PlayPauseGlyph = "\uF5B0";
 
             _playbackTimer = new DispatcherTimer
             {
@@ -170,12 +170,12 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             if (value)
             {
                 _playbackTimer.Start();
-                PlayPauseGlyph = "\uE769";
+                PlayPauseGlyph = "\uF8AE";
             }
             else
             {
                 _playbackTimer.Stop();
-                PlayPauseGlyph = "\uE768";
+                PlayPauseGlyph = "\uF5B0";
             }
             OnPropertyChanged(nameof(PlayPauseGlyph));
         }

@@ -10,14 +10,12 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <SolidColorBrush x:Key="PageBackgroundColor" Color="#FF1E1E1E" />
-        <SolidColorBrush x:Key="HeaderForegroundColor" Color="White" />
-        <!-- Example header color -->
-        <SolidColorBrush x:Key="ListViewBackgroundColor" Color="#FF2D2D2D" />
-        <!-- Example ListView background -->
+        <SolidColorBrush x:Key="PageBackgroundColor" Color="#000" />
+        <SolidColorBrush x:Key="HeaderForegroundColor" Color="#fff" />
+        <SolidColorBrush x:Key="ListViewBackgroundColor" Color="#000" />
     </Page.Resources>
 
-    <Grid Background="{ThemeResource PageBackgroundColor}">
+    <Grid Background="{StaticResource PageBackgroundColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -26,15 +24,16 @@
         <TextBlock
             Margin="20"
             FontSize="24"
-            Foreground="{ThemeResource HeaderForegroundColor}"
+            Foreground="{StaticResource HeaderForegroundColor}"
             Text="Home" />
 
         <ListView
             x:Name="SongsListView"
             Grid.Row="1"
-            Background="{ThemeResource ListViewBackgroundColor}"
-            BorderBrush="{ThemeResource ControlStrongStrokeColorDefaultBrush}"
+            Background="{StaticResource ListViewBackgroundColor}"
             BorderThickness="1"
+            IsItemClickEnabled="True"
+            ItemClick="Item_Selected"
             ItemsSource="{Binding Songs}">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="local1:SongDTO">
@@ -45,6 +44,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Image
+                            MaxWidth="100"
                             MaxHeight="100"
                             Source="{x:Bind CoverArtUrl}"
                             Stretch="Fill" />
@@ -60,6 +60,7 @@
                                 Text="{x:Bind title}" />
                             <TextBlock
                                 Width="350"
+                                HorizontalAlignment="Left"
                                 FontFamily="Segoe UI"
                                 FontWeight="Normal"
                                 MaxLines="1"

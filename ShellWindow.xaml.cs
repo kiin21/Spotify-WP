@@ -48,8 +48,4 @@ public sealed partial class ShellWindow : WindowEx
     // Method to expose navigation service to other parts of the app
     public INavigationService GetNavigationService() => _navigationService;
 
-    private void Window_Activated(object sender, Microsoft.UI.Xaml.WindowActivatedEventArgs args)
-    {
-
-    }
 }

@@ -8,7 +8,6 @@
     xmlns:windowex="using:WinUIEx"
     MinWidth="800"
     MinHeight="600"
-    Activated="Window_Activated"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
@@ -24,18 +23,36 @@
         </Grid.ColumnDefinitions>
 
         <!--  Header Page  -->
-        <Frame x:Name="HeaderFrame" Grid.Row="0" Grid.ColumnSpan="3" />
+        <Frame
+            x:Name="HeaderFrame"
+            Grid.Row="0"
+            Grid.ColumnSpan="3" />
 
         <!--  Left Sidebar  -->
-        <Frame x:Name="LeftSidebarFrame" Grid.Row="1" Grid.Column="0" />
+        <Frame
+            x:Name="LeftSidebarFrame"
+            Grid.Row="1"
+            Grid.Column="0" />
 
         <!--  Main Content  -->
-        <Frame x:Name="MainFrame" Grid.Row="1" Grid.Column="1" />
+        <Frame
+            x:Name="MainFrame"
+            Grid.Row="1"
+            Grid.Column="1" />
 
         <!--  Right Sidebar  -->
-        <Frame x:Name="RightSidebarFrame" Grid.Row="1" Grid.Column="2" />
+        <Frame
+            x:Name="RightSidebarFrame"
+            Grid.Row="1"
+            Grid.Column="2" />
 
         <!--  Playback Controls  -->
-        <Frame x:Name="PlaybackControlsFrame" Grid.Row="2" Grid.ColumnSpan="3" />
+        <Frame
+            x:Name="PlaybackControlsFrame"
+            Grid.Row="2"
+            Grid.ColumnSpan="3" />
     </Grid>
+    <Window.SystemBackdrop>
+        <DesktopAcrylicBackdrop />
+    </Window.SystemBackdrop>
 </windowex:WindowEx>

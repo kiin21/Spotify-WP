@@ -2,15 +2,9 @@ using Spotify.ViewModels;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Spotify.Services;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using Spotify.Models.DTOs;
 
 namespace Spotify.Views;
-
-/// <summary>
-/// An empty page that can be used on its own or navigated to within a Frame.
-/// </summary>
 public sealed partial class MainPanelPage : Page
 {
     public MainPanelViewModel ViewModel { get; set; }
@@ -20,5 +14,13 @@ public sealed partial class MainPanelPage : Page
         var songService = (App.Current as App).Services.GetRequiredService<SongService>();
         ViewModel = new MainPanelViewModel(songService);
         this.DataContext = ViewModel;
+    }
+
+    private void Item_Selected(object sender, ItemClickEventArgs e)
+    {
+        if (e.ClickedItem is SongDTO song)
+        {
+            Frame.Navigate(typeof(SongDetailPage), song);
+        }
     }
 }
