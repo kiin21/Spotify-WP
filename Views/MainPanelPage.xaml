@@ -13,6 +13,7 @@
         <SolidColorBrush x:Key="PageBackgroundColor" Color="#000" />
         <SolidColorBrush x:Key="HeaderForegroundColor" Color="#fff" />
         <SolidColorBrush x:Key="ListViewBackgroundColor" Color="#000" />
+        <SolidColorBrush x:Key="ListViewForegroundColor" Color="#fff" />
     </Page.Resources>
 
     <Grid Background="{StaticResource PageBackgroundColor}">
@@ -31,7 +32,9 @@
             x:Name="SongsListView"
             Grid.Row="1"
             Background="{StaticResource ListViewBackgroundColor}"
+            BorderBrush="{StaticResource ListViewForegroundColor}"
             BorderThickness="1"
+            Foreground="{StaticResource ListViewForegroundColor}"
             IsItemClickEnabled="True"
             ItemClick="Item_Selected"
             ItemsSource="{Binding Songs}">
@@ -56,6 +59,7 @@
                                 FontSize="18"
                                 FontWeight="SemiBold"
                                 LineHeight="20"
+                                Foreground="{StaticResource ListViewForegroundColor}"
                                 Style="{ThemeResource BaseTextBlockStyle}"
                                 Text="{x:Bind title}" />
                             <TextBlock
@@ -63,6 +67,7 @@
                                 HorizontalAlignment="Left"
                                 FontFamily="Segoe UI"
                                 FontWeight="Normal"
+                                Foreground="{StaticResource ListViewForegroundColor}"
                                 MaxLines="1"
                                 Style="{ThemeResource BodyTextBlockStyle}"
                                 Text="{x:Bind ArtistName}"
@@ -71,15 +76,18 @@
                                 <TextBlock
                                     Margin="0,0,0,0"
                                     HorizontalAlignment="Left"
+                                    Foreground="{StaticResource ListViewForegroundColor}"
                                     Style="{ThemeResource CaptionTextBlockStyle}"
                                     Text="{x:Bind FormattedDuration}" />
                                 <TextBlock
                                     HorizontalAlignment="Left"
+                                    Foreground="{StaticResource ListViewForegroundColor}"
                                     Style="{ThemeResource CaptionTextBlockStyle}"
                                     Text=" ⋅ " />
                                 <TextBlock
                                     Margin="5,0,0,0"
                                     HorizontalAlignment="Left"
+                                    Foreground="{StaticResource ListViewForegroundColor}"
                                     Style="{ThemeResource CaptionTextBlockStyle}"
                                     Text="{x:Bind ReleaseDate}" />
                             </StackPanel>
