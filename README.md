@@ -23,45 +23,47 @@
 
 - [Link demo youtube](https://www.youtube.com/watch?v=mV57ojbW5mU)
   
+- [Link github](https://github.com/kiin21/Spotify-WP) 
 
 # Mô tả chi tiết quá trình làm
 ## Tạo cấu trúc project
+![s21295211062024](https://a.okmd.dev/md/672b7d624b238.png)
 Tạo cấu trúc project theo mô hình MVVM, với các folder chính
-- Models:
+- **Models:**
 	- Chứa các class model đại diện cho dữ liệu
 	- Định nghĩa cấu trúc dữ liệu cơ bản của ứng dụng
-- ViewModels
+- **ViewModels**
 	- Chứa các class ViewModel, đóng vai trò trung gian giữa View và Model
 	- Xử lý logic hiển thị và tương tác với người dùng
 	- Chứa các Command để xử lý các action từ UI
-- Views
+- **Views**
 	- Chứa các file .xaml định nghĩa giao diện người dùng
 	- Chỉ chứa code liên quan đến UI, code xử lý bắt sự kiện
-Ngoài ra còn có các folder hỗ trợ cho việc xử lý logic
-- Contracts/DAO
+- **Ngoài ra còn có các folder hỗ trợ cho việc xử lý logic**
+  - Contracts/DAO
 	- Chứa các interface định nghĩa contract cho DAO (Data Access Object)
 	- Định nghĩa các phương thức truy xuất dữ liệu
-- Converter
+  - Converter
 	- Chứa các class converter để chuyển đổi dữ liệu
-- DAOs
+  - DAOs
 	- Chứa các class implement interface từ Contracts/DAO
 	- Xử lý truy xuất dữ liệu trực tiếp từ database
-- Helpers
+  - Helpers
 	- Chứa các utility class và helper method
 	- Các function dùng chung trong ứng dụng
-- Services
+  - Services
 	- Chứa các service class cung cấp chức năng cho ứng dụng
 Có các file .xaml và .xaml.cs
-- App.xaml & App.xaml.cs
+  - App.xaml & App.xaml.cs
 	- Entry point của ứng dụng
-	- Khởi tạo resources và dependency injection
+	- Khởi tạo resources và **dependency injection**
 	- Cấu hình routing và navigation
--  ShellWindow.xaml & ShellWindow.xaml.cs
+  - ShellWindow.xaml & ShellWindow.xaml.cs
 	- Cửa sổ chính của ứng dụng
 	- Định nghĩa layout chung (menu, navigation, status bar...)
 	- Container cho các view khác
-Các file khác
-- .env
+- **Các file khác**
+  - .env
 	- Chứa các biến môi trường 
 
 
@@ -73,9 +75,9 @@ Các file khác
 ![s21130211062024](https://a.okmd.dev/md/672b7970efe21.png)
 
 Đến đây sẽ phân công công việc
-Hưng: Làm phần trình phát nhạc (thanh dưới cùng) và phần queue
-Khánh: Tạo playlist ở phần main bên trái, và xử lý sự kiện khi click 
-Khoa: Làm phần search bài hát và giao diện chính hiển thị bài hát
+**Hưng:** Làm phần trình phát nhạc (thanh dưới cùng) và phần queue
+**Khánh:** Tạo playlist ở phần main bên trái, và xử lý sự kiện khi click 
+**Khoa:** Làm phần search bài hát và giao diện chính hiển thị bài hát
 ### 22120120 - Đặng Phúc Hưng
 - **Trình phát nhạc**: play, pause, next, previous, shuffle, loop, speed, volume, time
 ![s20595311062024](https://a.okmd.dev/md/672b765baeea5.png)
