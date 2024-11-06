@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Spotify (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Spotify (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

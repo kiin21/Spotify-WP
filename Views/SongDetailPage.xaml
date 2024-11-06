@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="Spotify.Views.SongDetailPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Spotify.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d">
+
+    <Grid Background="#2a2a2a">
+        <!-- Back Button at the top left -->
+        <Button
+            Width="40"
+            Height="40"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Left"
+            Background="Transparent"
+            Margin="10"
+            Click="BackButton_Click">
+            <FontIcon
+                FontFamily="Segoe MDL2 Assets"
+                FontSize="20"
+                Glyph="&#xE76B;" />
+        </Button>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" Margin="0,60,0,0">
+            <Grid Margin="20,0,20,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Cover Art -->
+                <Image
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Width="150"
+                    Height="150"
+                    Margin="0,20,20,0"
+                    Source="{x:Bind ViewModel.ImageUrl, Mode=OneWay}"
+                    Stretch="UniformToFill" />
+
+                <!-- Song Information -->
+                <StackPanel
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="0,20,20,0"
+                    VerticalAlignment="Center"
+                    Spacing="5">
+                    <TextBlock
+                        FontSize="48"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Text="{x:Bind ViewModel.Title, Mode=OneWay}" />
+
+                    <TextBlock
+                        FontSize="16"
+                        Foreground="LightGray"
+                        Text="{x:Bind ViewModel.MoreInfo, Mode=OneWay}" />
+                </StackPanel>
+
+                <!-- Playback Controls and Lyrics -->
+                <StackPanel
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Margin="0,20,0,0">
+                    <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,0,0,20">
+                        <!-- Play Button -->
+                        <Button
+                            x:Name="PlayButton"
+                            Width="50"
+                            Height="50"
+                            Background="Green"
+                            Click="PlayButton_Click"
+                            CornerRadius="25">
+                            <SymbolIcon x:Name="PlayButtonIcon" Symbol="Play" />
+                        </Button>
+
+                        <!-- Like and More info Icons -->
+                        <Button Width="50" Height="50" Background="Transparent">
+                            <SymbolIcon Symbol="Like" />
+                        </Button>
+                        <Button Width="50" Height="50" Background="Transparent">
+                            <SymbolIcon Symbol="More" />
+                        </Button>
+                    </StackPanel>
+
+                    <!-- Lyrics -->
+                    <TextBlock
+                        Margin="10"
+                        FontSize="14"
+                        Foreground="White"
+                        Text="{x:Bind ViewModel.Lyrics, Mode=OneWay}"
+                        TextWrapping="Wrap" />
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Page>

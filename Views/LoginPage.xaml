@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Spotify.Views.LoginPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Spotify.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="#FF121212">
+        <Border
+            Width="400"
+            Height="500"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Background="#FF282828"
+            CornerRadius="8">
+            <StackPanel Margin="40">
+                <Image
+                    Width="140"
+                    Height="44"
+                    Margin="0,0,0,20"
+                    HorizontalAlignment="Center"
+                    RenderTransformOrigin="0.5,0.5">
+                    <Image.RenderTransform>
+                        <TranslateTransform X="50" />
+                    </Image.RenderTransform>
+                    <Image.Source>
+                        <BitmapImage UriSource="ms-appx:///Assets/SpotifyLogo.png" />
+                    </Image.Source>
+                </Image>
+                <TextBlock
+                    Margin="0,0,0,20"
+                    HorizontalAlignment="Center"
+                    FontSize="24"
+                    FontWeight="SemiBold"
+                    Text="Log in to Spotify" />
+                <TextBox
+                    Margin="0,0,0,10"
+                    PlaceholderText="Username"
+                    Text="{x:Bind ViewModel.Username, Mode=TwoWay}" />
+                <PasswordBox
+                    Margin="0,0,0,10"
+                    Password="{x:Bind ViewModel.Password, Mode=TwoWay}"
+                    PlaceholderText="Password" />
+                <CheckBox 
+                    Margin="0,0,0,10"
+                    Content="Remember me"
+                    Foreground="#FFB3B3B3"
+                    IsChecked="{x:Bind ViewModel.RememberMe, Mode=TwoWay}"/>
+                <Button
+                    Height="40"
+                    HorizontalAlignment="Stretch"
+                    Background="#FF1DB954"
+                    Click="OnLoginButtonClick"
+                    Content="Log in"
+                    CornerRadius="20"
+                    Foreground="White" />
+                <StackPanel
+                    Margin="0,20,0,0"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+                    <TextBlock Foreground="#FFB3B3B3" Text="Don't have an account?" />
+                    <HyperlinkButton
+                        Margin="5,0,0,0"
+                        Command="{x:Bind ViewModel.GoToSignUp}"
+                        Content="Sign up for Spotify"
+                        Foreground="#FF1DB954" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>
