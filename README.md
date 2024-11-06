@@ -23,7 +23,9 @@
 
 - [Link demo youtube](https://www.youtube.com/watch?v=mV57ojbW5mU)
   
-- [Link github](https://github.com/kiin21/Spotify-WP) 
+- [Link github](https://github.com/kiin21/Spotify-WP)
+
+- [Link Project Proposal](https://docs.google.com/document/d/1GUuwiBjEMCA0-htyOsCtCUVEv3k0X6tHqeOWFXf3WpI/edit?tab=t.0)
 
 # Mô tả chi tiết quá trình làm
 ## Tạo cấu trúc project
