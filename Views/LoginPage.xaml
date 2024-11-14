@@ -61,9 +61,10 @@
                     Margin="0,20,0,0"
                     HorizontalAlignment="Center"
                     Orientation="Horizontal">
-                    <TextBlock Foreground="#FFB3B3B3" Text="Don't have an account?" />
+                    <TextBlock Foreground="#FFB3B3B3" Text="Don't have an account?" Margin="0"/>
                     <HyperlinkButton
                         Margin="5,0,0,0"
+                        Padding="0"
                         Command="{x:Bind ViewModel.GoToSignUp}"
                         Content="Sign up for Spotify"
                         Foreground="#FF1DB954" />
