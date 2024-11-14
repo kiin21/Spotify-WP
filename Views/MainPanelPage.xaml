@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <Page
     x:Class="Spotify.Views.MainPanelPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -10,9 +9,26 @@
     mc:Ignorable="d">
 
     <Page.Resources>
+        <!-- Background and foreground colors -->
         <SolidColorBrush x:Key="PageBackgroundColor" Color="#000" />
-        <SolidColorBrush x:Key="HeaderForegroundColor" Color="#fff" />
+        <SolidColorBrush x:Key="HeaderForegroundColor" Color="#FFF" />
         <SolidColorBrush x:Key="ListViewBackgroundColor" Color="#000" />
+
+        <!-- Custom text colors for dark background -->
+        <Style x:Key="CustomHeaderTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFF" />
+            <Setter Property="FontSize" Value="24" />
+        </Style>
+
+        <Style x:Key="CustomTitleTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFF" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+
+        <Style x:Key="CustomCaptionTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#B3B3B3" />
+        </Style>
     </Page.Resources>
 
     <Grid Background="{StaticResource PageBackgroundColor}">
@@ -21,12 +37,13 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
+        <!-- Header Text -->
         <TextBlock
             Margin="20"
-            FontSize="24"
-            Foreground="{StaticResource HeaderForegroundColor}"
-            Text="Home" />
+            Text="Home"
+            Style="{StaticResource CustomHeaderTextBlockStyle}" />
 
+        <!-- ListView for Songs -->
         <ListView
             x:Name="SongsListView"
             Grid.Row="1"
@@ -43,20 +60,19 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
+                        <!-- Song Cover Art -->
                         <Image
                             MaxWidth="100"
                             MaxHeight="100"
                             Source="{x:Bind CoverArtUrl}"
                             Stretch="Fill" />
 
+                        <!-- Song Info -->
                         <StackPanel Grid.Column="1" Margin="12,0,0,0">
                             <TextBlock
                                 Margin="0,0,0,6"
                                 HorizontalAlignment="Left"
-                                FontSize="18"
-                                FontWeight="SemiBold"
-                                LineHeight="20"
-                                Style="{ThemeResource BaseTextBlockStyle}"
+                                Style="{StaticResource CustomTitleTextBlockStyle}"
                                 Text="{x:Bind title}" />
                             <TextBlock
                                 Width="350"
@@ -64,23 +80,22 @@
                                 FontFamily="Segoe UI"
                                 FontWeight="Normal"
                                 MaxLines="1"
-                                Style="{ThemeResource BodyTextBlockStyle}"
+                                Foreground="#B3B3B3"
                                 Text="{x:Bind ArtistName}"
                                 TextTrimming="CharacterEllipsis" />
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock
-                                    Margin="0,0,0,0"
                                     HorizontalAlignment="Left"
-                                    Style="{ThemeResource CaptionTextBlockStyle}"
+                                    Style="{StaticResource CustomCaptionTextBlockStyle}"
                                     Text="{x:Bind FormattedDuration}" />
                                 <TextBlock
                                     HorizontalAlignment="Left"
-                                    Style="{ThemeResource CaptionTextBlockStyle}"
+                                    Style="{StaticResource CustomCaptionTextBlockStyle}"
                                     Text=" ⋅ " />
                                 <TextBlock
                                     Margin="5,0,0,0"
                                     HorizontalAlignment="Left"
-                                    Style="{ThemeResource CaptionTextBlockStyle}"
+                                    Style="{StaticResource CustomCaptionTextBlockStyle}"
                                     Text="{x:Bind ReleaseDate}" />
                             </StackPanel>
                         </StackPanel>
