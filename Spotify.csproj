@@ -28,6 +28,7 @@
     <None Remove="Views\HeaderPage.xaml" />
     <None Remove="Views\LeftSidebarPage.xaml" />
     <None Remove="Views\LoginPage.xaml" />
+    <None Remove="Views\LyricPage.xaml" />
     <None Remove="Views\MainPanelPage.xaml" />
     <None Remove="Views\PlaybackControlPage.xaml" />
     <None Remove="Views\PlaylistPage.xaml" />
@@ -88,6 +89,9 @@
     <None Update="Assets\App.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\LyricPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="LoginSignupWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

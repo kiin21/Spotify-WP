@@ -19,8 +19,8 @@ public partial class HeaderViewModel : INotifyPropertyChanged
     private string _searchQuery;
     private readonly SongService _songService;
     private ObservableCollection<SongDTO> _searchResults;
-    public string UserAvatar { get; set; } = App.Current.CurrentUser.UserAvatar;
-    //public string UserAvatar { get; set; } = "../Assets/defaultAvt.jpg";
+    //public string UserAvatar { get; set; } = App.Current.CurrentUser.UserAvatar;
+    public string UserAvatar { get; set; } = "../Assets/defaultAvt.jpg";
 
     public ObservableCollection<SongDTO> SearchResults
     {

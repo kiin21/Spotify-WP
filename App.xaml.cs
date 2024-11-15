@@ -106,11 +106,11 @@ namespace Spotify
             try
             {
                 //// Create ShellWindow first
-                //_shellWindow = new ShellWindow();
-                //_shellWindow.Activate();
+                _shellWindow = new ShellWindow();
+                _shellWindow.Activate();
 
-                _loginSignupWindow = new LoginSignupWindow();
-                _loginSignupWindow.Activate();
+                //_loginSignupWindow = new LoginSignupWindow();
+                //_loginSignupWindow.Activate();
             }
             catch (Exception ex)
             {

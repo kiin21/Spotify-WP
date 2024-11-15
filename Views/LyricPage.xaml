@@ -7,9 +7,65 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="#546E63">
 
     <Grid>
+        <!-- Back Button -->
+        <Button x:Name="BackButton"
+                Click="BackButton_Click"
+                Style="{StaticResource TransparentButtonStyle}"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Left"
+                Margin="20,20,0,0">
+            <FontIcon FontFamily="Segoe MDL2 Assets" 
+                     Glyph="&#xE72B;"
+                     FontSize="20"
+                     Foreground="White"/>
+        </Button>
 
+        <Grid Margin="40,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Song Title -->
+            <TextBlock Text="{x:Bind ViewModel.Song.title}" 
+                     Foreground="White"
+                     FontSize="32"
+                     FontWeight="Bold"
+                     Margin="0,40,0,8"/>
+
+            <!-- Artist Name -->
+            <TextBlock Grid.Row="1" 
+                     Text="{x:Bind ViewModel.Song.ArtistName}"
+                     Foreground="LightGray"
+                     FontSize="24"
+                     Margin="0,0,0,20"/>
+
+            <!-- Lyrics -->
+            <ListView Grid.Row="2"
+                     ItemsSource="{x:Bind ViewModel.LyricLines, Mode=OneWay}"
+                     SelectionMode="None"
+                     IsItemClickEnabled="False"
+                     ScrollViewer.VerticalScrollMode="Auto">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <TextBlock Text="{x:Bind}"
+                                 Foreground="White"
+                                 FontSize="24"
+                                 FontWeight="SemiBold"
+                                 TextWrapping="Wrap"
+                                 Margin="0,8"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Spacing="4"/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+            </ListView>
+        </Grid>
     </Grid>
 </Page>
