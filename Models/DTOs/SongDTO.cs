@@ -71,6 +71,7 @@ namespace Spotify.Models.DTOs
                 return result;
             }
         }
-
+        // Thêm thuộc tính Index để đánh số thứ tự
+        public int Index { get; set; }
     }
 }

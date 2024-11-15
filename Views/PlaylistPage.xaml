@@ -242,6 +242,7 @@
                                         Grid.Column="2"
                                         VerticalAlignment="Center"
                                         Foreground="#B3B3B3"
+                                        Tapped="OnArtistTapped"
                                         Text="{x:Bind Artist}" />
 
                                     <!--  Date Added  -->

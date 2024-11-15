@@ -71,6 +71,7 @@ namespace Spotify
             services.AddSingleton<IPlaylistDAO, PlaylistDAO>();
             services.AddSingleton<IPlaylistSongDAO, PlaylistSongDAO>();
             services.AddSingleton<IPlaylistSongDetailDAO, PlaylistSongDetailDAO>();
+            services.AddSingleton<IArtistDAO, ArtistDAO>();
             services.AddScoped<IUserDAO, UserDAO>();
 
             // Register Services
@@ -89,6 +90,8 @@ namespace Spotify
             services.AddSingleton<IPlaybackControlDAO, MockPlaybackControlDAO>();  
             services.AddSingleton<PlaylistSongService>();
             services.AddSingleton<PlaybackControlService>();
+            services.AddSingleton<PlaylistSongDetailService>();
+            services.AddSingleton<ArtistService>();
 
             services.AddSingleton<IPlaybackControlDAO, MockPlaybackControlDAO>();  // Add this line
 
@@ -96,6 +99,7 @@ namespace Spotify
 
             // Register ViewModels
             services.AddTransient<HeaderViewModel>();
+            services.AddTransient<ArtistViewModel>();
             //services.AddTransient<MainPanelViewModel>();
 
             return services.BuildServiceProvider();

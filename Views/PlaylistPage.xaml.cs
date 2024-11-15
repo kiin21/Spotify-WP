@@ -100,7 +100,19 @@ public sealed partial class PlaylistPage : Page
         }
     }
 
+    private async void OnArtistTapped(object sender, TappedRoutedEventArgs e)
+    {
+        if (sender is FrameworkElement element && element.DataContext is PlaylistSongDetailDTO songDetail)
+        {
+            var artistName = songDetail.Artist;
+            var artistService = (App.Current as App).Services.GetRequiredService<ArtistService>();
 
+            ArtistDTO artist = await artistService.GetArtistByNameAsync(artistName);
 
-
+            if (artist != null)
+            {
+                Frame.Navigate(typeof(ArtistPage), artist);
+            }
+        }
+    }
 }
