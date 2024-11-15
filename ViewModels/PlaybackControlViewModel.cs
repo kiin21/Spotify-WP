@@ -318,6 +318,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         {
             _ = LoadQueueAsync();
             _isFirstPlayClicked = true;
+            await Console.Out.WriteLineAsync("First play clicked");
         }
     }
 

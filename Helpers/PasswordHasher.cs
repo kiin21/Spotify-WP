@@ -7,7 +7,8 @@ namespace Spotify.Helpers;
 
 public static class PasswordHasher
 {
-    private const int Iterations = 10000;
+    //private const int Iterations = 10000;
+    private const int Iterations = 10;
     private const int HashSize = 32; // 256 bits
 
     public static (string hashedPassword, string salt) HashPassword(string password)

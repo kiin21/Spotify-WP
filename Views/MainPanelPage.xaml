@@ -9,12 +9,12 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <!-- Background and foreground colors -->
+        <!--  Background and foreground colors  -->
         <SolidColorBrush x:Key="PageBackgroundColor" Color="#000" />
         <SolidColorBrush x:Key="HeaderForegroundColor" Color="#FFF" />
         <SolidColorBrush x:Key="ListViewBackgroundColor" Color="#000" />
 
-        <!-- Custom text colors for dark background -->
+        <!--  Custom text colors  -->
         <Style x:Key="CustomHeaderTextBlockStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="#FFF" />
             <Setter Property="FontSize" Value="24" />
@@ -37,13 +37,13 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- Header Text -->
+        <!--  Header Text  -->
         <TextBlock
             Margin="20"
-            Text="Home"
-            Style="{StaticResource CustomHeaderTextBlockStyle}" />
+            Style="{StaticResource CustomHeaderTextBlockStyle}"
+            Text="Home" />
 
-        <!-- ListView for Songs -->
+        <!--  ListView for Songs  -->
         <ListView
             x:Name="SongsListView"
             Grid.Row="1"
@@ -60,14 +60,14 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <!-- Song Cover Art -->
+                        <!--  Song Cover Art  -->
                         <Image
                             MaxWidth="100"
                             MaxHeight="100"
                             Source="{x:Bind CoverArtUrl}"
                             Stretch="Fill" />
 
-                        <!-- Song Info -->
+                        <!--  Song Info  -->
                         <StackPanel Grid.Column="1" Margin="12,0,0,0">
                             <TextBlock
                                 Margin="0,0,0,6"
@@ -79,8 +79,8 @@
                                 HorizontalAlignment="Left"
                                 FontFamily="Segoe UI"
                                 FontWeight="Normal"
-                                MaxLines="1"
                                 Foreground="#B3B3B3"
+                                MaxLines="1"
                                 Text="{x:Bind ArtistName}"
                                 TextTrimming="CharacterEllipsis" />
                             <StackPanel Orientation="Horizontal">
