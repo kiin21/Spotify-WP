@@ -63,6 +63,7 @@
                     <TextBlock Foreground="#FFB3B3B3" Text="Already have an account?" />
                     <HyperlinkButton
                         Margin="5,0,0,0"
+                        Padding="0"
                         Command="{x:Bind ViewModel.GoToSignIn}"
                         Content="Sign in"
                         Foreground="#FF1DB954" />

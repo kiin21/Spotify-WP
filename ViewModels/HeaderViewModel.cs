@@ -20,6 +20,7 @@ public partial class HeaderViewModel : INotifyPropertyChanged
     private readonly SongService _songService;
     private ObservableCollection<SongDTO> _searchResults;
     public string UserAvatar { get; set; } = App.Current.CurrentUser.UserAvatar;
+    //public string UserAvatar { get; set; } = "../Assets/defaultAvt.jpg";
 
     public ObservableCollection<SongDTO> SearchResults
     {
@@ -65,11 +66,8 @@ public partial class HeaderViewModel : INotifyPropertyChanged
             SearchResults = new ObservableCollection<SongDTO>(results);
         }
 
-        //   var shellWindow = (App.Current as App).ShellWindow as ShellWindow;
-        // Get ShellWindow from App.Current directly
         var shellWindow = (App.Current as App).ShellWindow;
         var mainFrame = shellWindow.getMainFrame();
-        //shellWindow.NavigateToPage(typeof(SearchResultsPage), mainFrame, SearchResults);
         shellWindow.GetNavigationService().Navigate(typeof(SearchResultsPage), SearchResults);
     }
 
