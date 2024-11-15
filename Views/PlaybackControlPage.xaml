@@ -9,44 +9,6 @@
     Background="Black"
     mc:Ignorable="d">
 
-    <!--<Page.Resources>
-        <Style x:Key="TransparentButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="0"/>
-        </Style>
-    -->
-    <!--  Declare your TimeSpan to mm:ss converter  -->
-    <!--
-        <local1:TimeSpanToFormattedTimeConverter x:Key="timeConverter"/>
-    </Page.Resources>-->
-
-    <!--<Page.Resources>
-        <Style x:Key="SpotifyToggleButtonStyle" TargetType="ToggleButton">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ToggleButton">
-                        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
-                            <ContentPresenter x:Name="ContentPresenter"
-                                    Content="{TemplateBinding Content}"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"/>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="TransparentButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="0"/>
-        </Style>
-
-        <local1:BoolToColorConverter x:Key="BoolToColorConverter"/>
-        <local1:TimeSpanToFormattedTimeConverter x:Key="timeConverter"/>
-    </Page.Resources>-->
-
     <Page.Resources>
         <Style x:Key="SpotifyToggleButtonStyle" TargetType="ToggleButton">
             <Setter Property="Background" Value="Transparent" />
@@ -162,15 +124,6 @@
                 HorizontalAlignment="Center"
                 Orientation="Horizontal">
 
-                <!--<ToggleButton
-                     Style="{StaticResource SpotifyToggleButtonStyle}"
-                     Width="40" Height="40"
-                     Margin="8,0"
-                     Command="{x:Bind ViewModel.ShuffleCommand}"
-                     >
-                    <FontIcon Glyph="&#xE14B;"
-                            Foreground="White"/>
-                </ToggleButton>-->
                 <ToggleButton
                     Width="40"
                     Height="40"
@@ -191,16 +144,6 @@
                     Style="{StaticResource TransparentButtonStyle}">
                     <FontIcon Glyph="&#xE892;" />
                 </Button>
-                <!--<ToggleButton
-                    Style="{StaticResource SpotifyToggleButtonStyle}"
-                    Width="48" Height="48"
-                    Margin="8,0"
-                    Command="{x:Bind ViewModel.PlayPauseCommand}"
-                    >
-                    <FontIcon Glyph="{x:Bind ViewModel.PlayPauseGlyph, Mode=OneWay}"
-                    FontSize="20"
-                    Foreground="White"/>
-                </ToggleButton>-->
                 <ToggleButton
                     Width="50"
                     Height="50"
@@ -217,15 +160,6 @@
                     Style="{StaticResource TransparentButtonStyle}">
                     <FontIcon Glyph="&#xE893;" />
                 </Button>
-                <!--<ToggleButton
-                    Style="{StaticResource SpotifyToggleButtonStyle}"
-                    Width="Auto" Height="Auto"
-                    Margin="8,0"
-                    Command="{x:Bind ViewModel.ToggleReplayCommand}"
-                    >
-                    <FontIcon Glyph="&#xE8EE;"
-                            Foreground="White"/>
-                </ToggleButton>-->
                 <ToggleButton
                     Width="Auto"
                     Height="Auto"
@@ -280,15 +214,20 @@
             <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
 
                 <!--  Lyrics Icon  -->
-                <!--<Button
+                <ToggleButton
                     Width="Auto"
                     Height="Auto"
-                    Margin="0,5,0,0"
+                    Margin="0,5,30,0"
                     Background="Transparent"
                     BorderThickness="0"
-                    Command="{x:Bind ViewModel.ToggleLyricsCommand}">
-                    <FontIcon Glyph="&#xE7F7;" />
-                </Button>-->
+                    Command="{x:Bind ViewModel.ToggleLyricsCommand}"
+                    Style="{StaticResource SpotifyToggleButtonStyle}">
+                    <FontIcon Glyph="&#xED1E;">
+                        <ToolTipService.ToolTip>
+                            <ToolTip Content="Lyric" />
+                        </ToolTipService.ToolTip>
+                    </FontIcon>
+                </ToggleButton>
 
                 <!--  Queue Icon  -->
                 <ToggleButton

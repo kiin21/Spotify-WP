@@ -22,6 +22,7 @@
     <None Remove=".env.example" />
     <None Remove="Assets\defaultAvt.jpg" />
     <None Remove="Assets\sample.png" />
+    <None Remove="Assets\Shape of You.mp3" />
     <None Remove="LoginSignupWindow.xaml" />
     <None Remove="ShellWindow.xaml" />
     <None Remove="Views\AddPlaylistDialog.xaml" />
@@ -84,6 +85,9 @@
     </Content>
     <Content Update="Assets\OMG_NewJeans.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Shape of You.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>

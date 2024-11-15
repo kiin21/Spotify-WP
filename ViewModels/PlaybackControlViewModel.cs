@@ -352,6 +352,19 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     private void ToggleLyrics()
     {
         IsLyricsVisible = !IsLyricsVisible;
+
+        var currentSong = _playbackControlService.GetCurrentSong();
+      
+        var shellWindow = (App.Current as App).ShellWindow;
+        if (shellWindow != null)
+        {
+            var mainFrame = shellWindow.getMainFrame();
+            shellWindow.GetNavigationService().Navigate(typeof(LyricPage), mainFrame, currentSong);
+        }
+        else
+        {
+            System.Diagnostics.Debug.WriteLine("ShellWindow is not initialized.");
+        }
     }
 
     [RelayCommand]
