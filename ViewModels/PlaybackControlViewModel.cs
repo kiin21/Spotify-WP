@@ -326,7 +326,6 @@ namespace Spotify.ViewModels
             SongDuration = FormatTimeSpan(song.Duration);
             SelectedSpeed = "1.0x";
             _mediaPlayer.Source = MediaSource.CreateFromUri(new Uri(song.AudioUrl));
-            _mediaPlayer.Volume = Volume / 100;
             _ = LoadQueueAsync();
         }
 

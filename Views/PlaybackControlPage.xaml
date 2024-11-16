@@ -23,18 +23,18 @@
             VerticalAlignment="Center"
             Spacing="10">
             <Image
-                Source="YourImageSourceHere"
+                Source="{x:Bind ViewModel.ImageSource, Mode=OneWay}"
                 Width="60"
                 Height="60"
                 Margin="0,0,10,0" />
             <StackPanel VerticalAlignment="Center">
                 <TextBlock
-                    Text="Vì Anh Đâu Có Biết"
+                    Text="{x:Bind ViewModel.Title, Mode=OneWay}"
                     FontWeight="Bold"
                     Foreground="White"
                     FontSize="14" />
                 <TextBlock
-                    Text="Madihu, Vũ."
+                    Text="{x:Bind ViewModel.Artist, Mode=OneWay}"
                     Foreground="Gray"
                     FontSize="12" />
             </StackPanel>
@@ -55,19 +55,19 @@
             Orientation="Vertical"
             Spacing="10">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
-                <Button Background="Transparent" BorderThickness="0" Foreground="White">
+                <Button Command="{x:Bind ViewModel.ShuffleCommand}" Background="Transparent" BorderThickness="0" Foreground="White">
                     <FontIcon Glyph="&#xE8B1;" /> <!-- Shuffle -->
                 </Button>
-                <Button Background="Transparent" BorderThickness="0" Foreground="White">
+                <Button Command="{x:Bind ViewModel.PreviousCommand}" Background="Transparent" BorderThickness="0" Foreground="White">
                     <FontIcon Glyph="&#xE892;" /> <!-- Previous -->
                 </Button>
                 <Button Command="{x:Bind ViewModel.PlayPauseCommand}" Background="Transparent" BorderThickness="0" Foreground="White">
                     <FontIcon Glyph="{x:Bind ViewModel.PlayPauseGlyph}" />
                 </Button>
-                <Button Background="Transparent" BorderThickness="0" Foreground="White">
+                <Button Command="{x:Bind ViewModel.NextCommand}" Background="Transparent" BorderThickness="0" Foreground="White">
                     <FontIcon Glyph="&#xE893;" /> <!-- Next -->
                 </Button>
-                <Button Background="Transparent" BorderThickness="0" Foreground="White">
+                <Button Command="{x:Bind ViewModel.ToggleReplayCommand}" Background="Transparent" BorderThickness="0" Foreground="White">
                     <FontIcon Glyph="&#xE8ED;" /> <!-- Repeat -->
                 </Button>
             </StackPanel>
@@ -112,7 +112,7 @@
             VerticalAlignment="Center"
             HorizontalAlignment="Right"
             Spacing="10">
-            <Button Background="Transparent" BorderThickness="0" Foreground="White">
+            <Button Command="{x:Bind ViewModel.ToggleLyricsCommand}" Background="Transparent" BorderThickness="0" Foreground="White">
                 <FontIcon Glyph="&#xE8A5;" /> <!-- Lyrics -->
             </Button>
             <Slider
