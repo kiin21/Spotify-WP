@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Dispatching;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Spotify.Contracts.Services;
 using Spotify.Models.DTOs;
-using Windows.Media.Playback;
-using Windows.Media.Core;
+using Spotify.Engine;
 using System.Windows.Threading;
 using PropertyChanged;
 using Spotify.Views;
@@ -23,7 +20,7 @@ namespace Spotify.ViewModels
     {
         private readonly IPlaybackControlService _playbackControlService;
         private readonly DispatcherTimer _playbackTimer;
-        private readonly MediaPlayer _mediaPlayer;
+        private readonly MusicEngine _musicEngine;
         private bool _disposed;
         private bool _isFirstPlayClicked = false;
 
@@ -93,8 +90,8 @@ namespace Spotify.ViewModels
         public PlaybackControlViewModel(IPlaybackControlService playbackControlService)
         {
             _playbackControlService = playbackControlService;
-            _mediaPlayer = new MediaPlayer();
-            _mediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
+            _musicEngine = new MusicEngine();
+            _musicEngine.MediaEnded += MediaPlayer_MediaEnded;
 
             _selectedSpeed = SpeedOptions.First();
             PlayPauseGlyph = "\uE102"; // Default to play glyph
@@ -126,19 +123,19 @@ namespace Spotify.ViewModels
             Title = currentSong.Title;
             Artist = currentSong.Artist;
 
-            _mediaPlayer.Source = MediaSource.CreateFromUri(new Uri(currentSong.AudioUrl));
-            _mediaPlayer.Volume = Volume / 100;
-            _mediaPlayer.PlaybackSession.Position = CurrentPosition;
+            _musicEngine.SetSource(new Uri(currentSong.AudioUrl));
+            _musicEngine.SetVolume(Volume);
+            _musicEngine.SetPosition(CurrentPosition);
 
             _ = LoadQueueAsync();
         }
 
-        private void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
+        private void MediaPlayer_MediaEnded(object sender, EventArgs e)
         {
             if (IsReplayEnabled)
             {
-                _mediaPlayer.PlaybackSession.Position = TimeSpan.Zero;
-                _mediaPlayer.Play();
+                _musicEngine.SetPosition(TimeSpan.Zero);
+                _musicEngine.Play();
             }
             else
             {
@@ -151,13 +148,13 @@ namespace Spotify.ViewModels
         {
             if (value)
             {
-                _mediaPlayer.Play();
+                _musicEngine.Play();
                 _playbackTimer.Start();
                 PlayPauseGlyph = "\uE103"; // Pause glyph
             }
             else
             {
-                _mediaPlayer.Pause();
+                _musicEngine.Pause();
                 _playbackTimer.Stop();
                 PlayPauseGlyph = "\uE102"; // Play glyph
             }
@@ -167,7 +164,7 @@ namespace Spotify.ViewModels
         [SuppressPropertyChangedWarnings]
         partial void OnVolumeChanged(double value)
         {
-            _mediaPlayer.Volume = value / 100;
+            _musicEngine.SetVolume(value);
         }
 
         [SuppressPropertyChangedWarnings]
@@ -177,7 +174,7 @@ namespace Spotify.ViewModels
 
             _isProcessingSpeedChange = true;
             var speedValue = double.Parse(value.TrimEnd('x'));
-            _mediaPlayer.PlaybackSession.PlaybackRate = speedValue;
+            _musicEngine.SetPlaybackRate(speedValue);
             _isProcessingSpeedChange = false;
         }
 
@@ -195,7 +192,7 @@ namespace Spotify.ViewModels
         [SuppressPropertyChangedWarnings]
         partial void OnCurrentPositionChanged(TimeSpan value)
         {
-            _mediaPlayer.PlaybackSession.Position = value;
+            _musicEngine.SetPosition(value);
         }
 
         public void BeginSeeking()
@@ -282,7 +279,7 @@ namespace Spotify.ViewModels
         {
             if (IsPlaying)
             {
-                CurrentPosition = _mediaPlayer.PlaybackSession.Position;
+                CurrentPosition = _musicEngine.GetPosition();
                 if (CurrentPosition >= SongDuration)
                 {
                     if (IsReplayEnabled)
@@ -325,7 +322,7 @@ namespace Spotify.ViewModels
             Artist = song.Artist;
             SongDuration = FormatTimeSpan(song.Duration);
             SelectedSpeed = "1.0x";
-            _mediaPlayer.Source = MediaSource.CreateFromUri(new Uri(song.AudioUrl));
+            _musicEngine.SetSource(new Uri(song.AudioUrl));
             _ = LoadQueueAsync();
         }
 
@@ -367,7 +364,7 @@ namespace Spotify.ViewModels
                     _playbackTimer.Tick -= PlaybackTimer_Tick;
                     _playbackControlService.PlaybackStateChanged -= OnPlaybackStateChanged;
                     _playbackControlService.CurrentSongChanged -= OnCurrentSongChanged;
-                    _mediaPlayer.Dispose();
+                    _musicEngine.Dispose();
                 }
                 _disposed = true;
             }
