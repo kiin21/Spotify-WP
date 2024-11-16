@@ -8,6 +8,7 @@ using System.Linq;
 using System.Diagnostics;
 using Spotify.Models.DTOs;
 using Microsoft.UI.Xaml.Input;
+using System.Threading.Tasks;
 
 namespace Spotify.Views
 {
@@ -19,9 +20,14 @@ namespace Spotify.Views
         {
             var artistService = (App.Current as App).Services.GetRequiredService<ArtistService>();
             var songService = (App.Current as App).Services.GetRequiredService<SongService>();
+            var userService = (App.Current as App).Services.GetRequiredService<UserService>();
+
             ViewModel = new ArtistViewModel(artistService, songService);
             this.InitializeComponent();
             this.DataContext = ViewModel;
+
+            // Đăng ký sự kiện ArtistFollowStatusChanged
+            userService.ArtistFollowStatusChanged += OnArtistFollowStatusChanged;
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -29,14 +35,31 @@ namespace Spotify.Views
             base.OnNavigatedTo(e);
             if (e.Parameter is ArtistDTO artist)
             {
-                // Await InitializeAsync to load artist and songs
                 await ViewModel.InitializeAsync(artist.Id.ToString());
+                ViewModel.Artist = artist;
+
+                var currentUser = (App.Current as App).CurrentUser;
+                FollowButton.Content = currentUser.FollowArtist.Contains(artist.Id.ToString()) ? "Followed" : "Follow";
             }
         }
 
-        private void OnPlayClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        private void OnArtistFollowStatusChanged(object sender, string artistId)
         {
-            // Logic to play the song or handle play button click
+            if (ViewModel.Artist != null && ViewModel.Artist.Id.ToString() == artistId)
+            {
+                var currentUser = (App.Current as App).CurrentUser;
+                FollowButton.Content = currentUser.FollowArtist.Contains(artistId) ? "Followed" : "Follow";
+            }
+        }
+
+        private async void OnFollowClick(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.Artist != null)
+            {
+                var userService = (App.Current as App).Services.GetRequiredService<UserService>();
+                await userService.ToggleFollowArtistAsync(ViewModel.Artist.Id.ToString());
+                // Nút tự động cập nhật khi sự kiện được kích hoạt
+            }
         }
 
         private async void OnSongTapped(object sender, TappedRoutedEventArgs e)
@@ -53,6 +76,11 @@ namespace Spotify.Views
                     Frame.Navigate(typeof(SongDetailPage), songDetails);
                 }
             }
+        }
+
+        private void OnPlayClick(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

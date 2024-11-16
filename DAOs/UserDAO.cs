@@ -51,6 +51,7 @@ namespace Spotify.DAOs
                 .Set(u => u.Username, updatedUser.Username)
                 .Set(u => u.HashedPassword, updatedUser.HashedPassword)
                 .Set(u => u.Salt, updatedUser.Salt)
+                .Set(u => u.FollowArtist, updatedUser.FollowArtist)
                 .Set(u => u.UpdatedAt, DateTime.UtcNow);
 
             await _userCollection.UpdateOneAsync(filter, update);

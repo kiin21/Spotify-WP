@@ -13,6 +13,7 @@ namespace Spotify.Services;
 public class UserService
 {
     private readonly IUserDAO _userDAO;
+    public event EventHandler<string> ArtistFollowStatusChanged;
 
     public UserService(IUserDAO userDAO)
     {
@@ -108,4 +109,36 @@ public class UserService
     {
         return _userDAO.GetUsersAsync();
     }
+
+    public async Task<bool> ToggleFollowArtistAsync(string artistId)
+    {
+        if (string.IsNullOrEmpty(artistId))
+            throw new ArgumentException("Artist ID cannot be null or empty", nameof(artistId));
+
+        var currentUser = (App.Current as App).CurrentUser;
+
+        if (currentUser == null)
+            throw new InvalidOperationException("User not found");
+
+        bool isFollowed;
+        if (currentUser.FollowArtist.Contains(artistId))
+        {
+            currentUser.FollowArtist.Remove(artistId);
+            isFollowed = false; // Đã bỏ theo dõi
+        }
+        else
+        {
+            currentUser.FollowArtist.Add(artistId);
+            isFollowed = true; // Đã theo dõi
+        }
+
+        // Cập nhật thông tin người dùng
+        await _userDAO.UpdateUserAsync(currentUser.Id, currentUser);
+
+        // Kích hoạt sự kiện thông báo thay đổi
+        ArtistFollowStatusChanged?.Invoke(this, artistId);
+
+        return isFollowed;
+    }
+
 }

@@ -2,6 +2,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
+using System.Collections.Generic;
 
 namespace Spotify.Models.DTOs
 {
@@ -27,5 +28,8 @@ namespace Spotify.Models.DTOs
 
         [BsonElement("updatedAt")]
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        [BsonElement("followArtist")]
+        public List<string> FollowArtist { get; set; } = new List<string>();
     }
 }

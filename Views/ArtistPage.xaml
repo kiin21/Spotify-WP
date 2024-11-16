@@ -73,6 +73,15 @@
                             FontSize="16"
                             Glyph="&#xE768;" />
                     </Button>
+                    <Button
+                        x:Name="FollowButton"
+                        Content="Follow"
+                        Background="Transparent"
+                        Foreground="White"
+                        FontSize="14"
+                        Click="OnFollowClick"
+                        BorderThickness="1"
+                        BorderBrush="White" />
                 </StackPanel>
             </Grid>
 
