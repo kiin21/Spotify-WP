@@ -62,7 +62,7 @@
                     <FontIcon Glyph="&#xE892;" /> <!-- Previous -->
                 </Button>
                 <Button Command="{x:Bind ViewModel.PlayPauseCommand}" Background="Transparent" BorderThickness="0" Foreground="White">
-                    <FontIcon Glyph="{x:Bind ViewModel.PlayPauseGlyph}" />
+                    <FontIcon Glyph="{x:Bind ViewModel.PlayPauseGlyph, Mode=OneWay}" />
                 </Button>
                 <Button Command="{x:Bind ViewModel.NextCommand}" Background="Transparent" BorderThickness="0" Foreground="White">
                     <FontIcon Glyph="&#xE893;" /> <!-- Next -->
