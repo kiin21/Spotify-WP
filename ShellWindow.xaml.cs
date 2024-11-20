@@ -7,12 +7,15 @@ using Spotify.Services;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
+using Spotify.Contracts.DAO;
+using Spotify.Models.DTOs;
+using System.Collections.Generic;
 
 namespace Spotify;
 
 public sealed partial class ShellWindow : WindowEx
 {
-    
+
     public Frame getMainFrame()
     {
         return MainFrame;
@@ -24,6 +27,7 @@ public sealed partial class ShellWindow : WindowEx
     }
 
     private readonly INavigationService _navigationService;
+
     public ShellWindow()
     {
         InitializeComponent();
@@ -32,9 +36,19 @@ public sealed partial class ShellWindow : WindowEx
         InitializePages();
     }
 
-    private void InitializePages()
+    private async void InitializePages()
     {
-        // No need for Initialize method, just use navigation directly
+        // Get the queue after the user logs in
+        QueueService _queueService = new QueueService(
+               App.Current.Services.GetRequiredService<IQueueDAO>(),
+               App.Current.Services.GetRequiredService<ISongDAO>());
+
+        // TODO: Replace with the actual user ID
+        string userID = "1234567";
+        App.Current.Queue = await _queueService.GetQueueById(userID);
+
+
+        // Navigation directly
         _navigationService.Navigate(typeof(MainPanelPage), MainFrame);
         _navigationService.Navigate(typeof(HeaderPage), HeaderFrame);
         _navigationService.Navigate(typeof(LeftSidebarPage), LeftSidebarFrame);

@@ -52,7 +52,7 @@
                     Background="Transparent"
                     BorderThickness="0"
                     Command="{x:Bind ViewModel.ShuffleCommand}"
-                    Foreground="White">
+                    Foreground="{x:Bind ViewModel.ShuffleButtonColor, Mode=OneWay}">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8B1;" />
                 </Button>
                 <Button

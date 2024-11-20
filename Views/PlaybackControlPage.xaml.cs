@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Spotify.Services;
@@ -12,8 +13,8 @@ public sealed partial class PlaybackControlPage : Page
 
     public PlaybackControlPage()
     {
-        this.InitializeComponent();
 
+        this.InitializeComponent();
         // Initialize the service with the dispatcher from UI thread
         PlaybackControlService.Initialize(Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread());
 
@@ -23,14 +24,27 @@ public sealed partial class PlaybackControlPage : Page
 
     private void Slider_PointerPressed(object sender, PointerRoutedEventArgs e)
     {
-        // Chuyển vào trạng thái đang tìm kiếm (seeking)
+        if (ViewModel.CurrentSong == null || ViewModel.TotalDurationSeconds <= 0)
+        {
+            Debug.WriteLine("Cannot seek: No song playing or invalid duration");
+            return;
+        }
         ViewModel.OnSliderDragStarted();
     }
 
     private void Slider_PointerReleased(object sender, PointerRoutedEventArgs e)
     {
-        var slider = (Slider)sender;
-        ViewModel.CurrentPosition = TimeSpan.FromSeconds(slider.Value);
-        ViewModel.OnSliderDragCompleted();
+        if (ViewModel.CurrentSong == null || ViewModel.TotalDurationSeconds <= 0)
+        {
+            Debug.WriteLine("Cannot seek: No song playing or invalid duration");
+            return;
+        }
+
+        var slider = sender as Slider;
+        if (slider != null)
+        {
+            ViewModel.CurrentPosition = TimeSpan.FromSeconds(slider.Value);
+            ViewModel.OnSliderDragCompleted();
+        }
     }
 }

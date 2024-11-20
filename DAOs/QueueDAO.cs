@@ -16,14 +16,15 @@ public class QueueDAO : BaseDAO, IQueueDAO
         _queues = database.GetCollection<QueueDTO>("Queue");
     }
 
-    public async Task<List<QueueDTO>> GetQueueAsync()
-    {
-        return await _queues.Find(q => true).ToListAsync();
-    }
+    //public async Task<List<QueueDTO>> GetQueueAsync()
+    //{
+    //    return await _queues.Find(q => true).ToListAsync();
+    //}
 
     public async Task<QueueDTO> GetQueueByIdAsync(string id)
     {
-        return await _queues.Find(q => q.Id.ToString() == id).FirstOrDefaultAsync();
+        var res = await _queues.Find(q => q.UserId.ToString() == id).FirstOrDefaultAsync();
+        return res;
     }
 
     public async Task AddQueueAsync(QueueDTO queue)
@@ -34,6 +35,7 @@ public class QueueDAO : BaseDAO, IQueueDAO
 
     public async Task UpdateQueueAsync(string id, QueueDTO updatedQueue)
     {
+        //TODO: Implement this method
         throw new NotImplementedException();
         //var filter = Builders<QueueDTO>.Filter.Eq(q => q.Id, id);
         //var options = new FindOneAndReplaceOptions<QueueDTO> { ReturnDocument = ReturnDocument.After };
@@ -42,6 +44,7 @@ public class QueueDAO : BaseDAO, IQueueDAO
 
     public async Task DeleteQueueAsync(string id)
     {
+        //TODO : Implement this method
         throw new NotImplementedException();
         //var filter = Builders<QueueDTO>.Filter.Eq(q => q.Id, id);
         //await _queues.DeleteOneAsync(filter);

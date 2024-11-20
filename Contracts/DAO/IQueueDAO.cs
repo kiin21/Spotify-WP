@@ -10,7 +10,7 @@ namespace Spotify.Contracts.DAO
 {
     public interface IQueueDAO : IDAO
     {
-        Task<List<QueueDTO>> GetQueueAsync();
+        //Task<List<QueueDTO>> GetQueueAsync();
         Task<QueueDTO> GetQueueByIdAsync(string id);
         Task AddQueueAsync(QueueDTO queue);
         Task UpdateQueueAsync(string id, QueueDTO updatedQueue);

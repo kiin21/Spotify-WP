@@ -1,4 +1,4 @@
-// App.xaml.cs
+﻿// App.xaml.cs
 using System;
 using Microsoft.UI.Xaml;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.IO;
 using Spotify.DAOs;
 using Spotify.Models.DTOs;
+using System.Collections.Generic;
 
 namespace Spotify
 {
@@ -26,6 +27,8 @@ namespace Spotify
         public ShellWindow ShellWindow => _shellWindow;
         public LoginSignupWindow LoginSignupWindow => _loginSignupWindow;
         public static new App Current => Application.Current as App;
+
+        public List<SongDTO> Queue { get; set; }
 
         public App()
         {
@@ -67,6 +70,7 @@ namespace Spotify
 
             // Register DAOs
             services.AddSingleton<ISongDAO, SongDAO>();
+            services.AddSingleton<IQueueDAO, QueueDAO>();
             services.AddSingleton<IPlaylistDAO, PlaylistDAO>();
             services.AddSingleton<IPlaylistSongDAO, PlaylistSongDAO>();
             services.AddSingleton<IPlaylistSongDetailDAO, PlaylistSongDetailDAO>();
@@ -101,9 +105,12 @@ namespace Spotify
         {
             try
             {
-                //// Create ShellWindow first
-                _shellWindow = new ShellWindow();
-                _shellWindow.Activate();
+                ////// Create ShellWindow first
+                //_shellWindow = new ShellWindow();
+                //_shellWindow.Activate();
+
+                // Sử dụng WindowManager để chuyển đổi sang ShellWindow
+                Spotify.Services.WindowManager.Instance.SwitchToShellWindow();
 
                 //_loginSignupWindow = new LoginSignupWindow();
                 //_loginSignupWindow.Activate();

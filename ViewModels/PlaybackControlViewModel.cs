@@ -1,19 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using Catel.IoC;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using Spotify.Models.DTOs;
 using Spotify.Services;
+using Spotify.Contracts.DAO;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Spotify.ViewModels;
 
 public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 {
     private readonly PlaybackControlService _playbackService;
-    private readonly List<SongDTO> _playlist;
+    private List<SongDTO> _playlist = new();
     private readonly List<SongDTO> _shuffledPlaylist = new();
     private int _currentIndex;
+    private readonly Microsoft.UI.Dispatching.DispatcherQueue _dispatcherQueue;
 
     // State fields
     private SongDTO _currentSong;
@@ -39,40 +45,16 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
     #endregion
 
+    // Queue service
+    private readonly QueueService _queueService;
+
     public PlaybackControlViewModel()
     {
+        _dispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+        _queueService = new QueueService(
+            App.Current.Services.GetRequiredService<IQueueDAO>(),
+            App.Current.Services.GetRequiredService<ISongDAO>());
         _playbackService = PlaybackControlService.Instance;
-
-        // Initialize mock playlist
-        _playlist = new List<SongDTO>
-        {
-            new SongDTO
-            {
-                title = "Memories",
-                ArtistName = "Maroon 5",
-                CoverArtUrl = "https://i.scdn.co/image/ab67616d0000b2735dbaecd8dfa2c325da65245c",
-                Duration = 195,
-                audio_url = "https://firebasestorage.googleapis.com/v0/b/my-firebase-e3f67.appspot.com/o/audio%2FMaroon%205%20-%20Memories%20(Official%20Video).mp3?alt=media&token=cf9ba411-5edf-4e6c-bc5c-a170f71e2c4e",
-            },
-            new SongDTO
-            {
-                title = "On My Way",
-                ArtistName = "Alan Walker",
-                CoverArtUrl = "https://i.scdn.co/image/ab67616d0000b273d2aaf635815c265aa1ecdecc",
-                Duration = 194,
-                audio_url = "https://firebasestorage.googleapis.com/v0/b/my-firebase-e3f67.appspot.com/o/audio%2FAlan%20Walker%2C%20Sabrina%20Carpenter%20%26%20Farruko%20-%20On%20My%20Way.mp3?alt=media&token=adb6f047-4aae-4a32-9829-52e7c72a310d"
-            }
-            // Add more mock songs as needed
-        };
-
-        // Play the first song on initialization
-        CurrentSong = _playlist[0];
-        UpdateShuffledPlaylist();
-
-        // Subscribe to service events
-        _playbackService.PlaybackStateChanged += OnPlaybackStateChanged;
-        _playbackService.PositionChanged += OnPositionChanged;
-        _playbackService.MediaEnded += OnMediaEnded;
 
         // Initialize commands
         PlayPauseCommand = new RelayCommand(TogglePlayPause);
@@ -80,6 +62,43 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         PreviousCommand = new RelayCommand(Previous);
         ShuffleCommand = new RelayCommand(ToggleShuffle);
         RepeatCommand = new RelayCommand(ToggleRepeat);
+
+        // Initialize the playlist 
+        try
+        {
+            _playlist = App.Current.Queue;
+
+            if (_playlist?.Count > 0)
+            {
+                _dispatcherQueue.TryEnqueue(() =>
+                {
+                    CurrentSong = _playlist[0];
+                    UpdateShuffledPlaylist();
+                });
+            }
+
+            // Subscribe to service events
+            _playbackService.PlaybackStateChanged += OnPlaybackStateChanged;
+            _playbackService.PositionChanged += OnPositionChanged;
+            _playbackService.MediaEnded += OnMediaEnded;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error initializing playlist: {ex.Message}");
+            Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+            // Handle error (e.g., show a message to the user)
+        }
+
+    }
+
+    private async Task<List<SongDTO>> InitializeQueue()
+    {
+        List<SongDTO> queue = await _queueService.GetQueueById("1234567");
+        foreach (SongDTO song in queue)
+        {
+            Debug.WriteLine(song);
+        }
+        return queue;
     }
 
     #region Properties
@@ -223,14 +242,23 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
     private void ToggleShuffle()
     {
+        // Business logic
         _isShuffleEnabled = !_isShuffleEnabled;
-        //_playbackService.SetShuffle(_isShuffleEnabled);
         UpdateShuffledPlaylist();
         OnPropertyChanged(nameof(ShuffleButtonColor));
+        
+        // Turn off repeat mode
+        _repeatMode = RepeatMode.None;
+        OnPropertyChanged(nameof(RepeatButtonColor));
     }
 
     private void ToggleRepeat()
     {
+        // Turn off shuffle
+        _isShuffleEnabled = false;
+        OnPropertyChanged(nameof(ShuffleButtonColor));
+
+        // Business logic
         _repeatMode = _repeatMode switch
         {
             RepeatMode.None => RepeatMode.One,
@@ -275,10 +303,13 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         // Check if we should update the position
         if (!_isDraggingSlider && Math.Abs(_currentPosition.TotalSeconds - position.TotalSeconds) > 0.5)
         {
-            _currentPosition = position;
-            OnPropertyChanged(nameof(CurrentPosition));
-            OnPropertyChanged(nameof(CurrentPositionSeconds));
-            OnPropertyChanged(nameof(CurrentPositionDisplay));
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                _currentPosition = position;
+                OnPropertyChanged(nameof(CurrentPosition));
+                OnPropertyChanged(nameof(CurrentPositionSeconds));
+                OnPropertyChanged(nameof(CurrentPositionDisplay));
+            });
         }
     }
 
