@@ -29,6 +29,16 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     // Constants
     private readonly string[] _speedOptions = new[] { "0.5x", "0.75x", "1.0x", "1.25x", "1.5x", "2.0x" };
 
+    #region Commands
+
+    public IRelayCommand PlayPauseCommand { get; }
+    public IRelayCommand NextCommand { get; }
+    public IRelayCommand PreviousCommand { get; }
+    public IRelayCommand ShuffleCommand { get; }
+    public IRelayCommand RepeatCommand { get; }
+
+    #endregion
+
     public PlaybackControlViewModel()
     {
         _playbackService = PlaybackControlService.Instance;
@@ -166,16 +176,6 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     public string RepeatButtonColor => _repeatMode != RepeatMode.None ? "#1DB954" : "White";
 
     public string ShuffleButtonColor => _isShuffleEnabled ? "#1DB954" : "White";
-
-    #endregion
-
-    #region Commands
-
-    public IRelayCommand PlayPauseCommand { get; }
-    public IRelayCommand NextCommand { get; }
-    public IRelayCommand PreviousCommand { get; }
-    public IRelayCommand ShuffleCommand { get; }
-    public IRelayCommand RepeatCommand { get; }
 
     #endregion
 

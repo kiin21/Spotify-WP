@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Spotify.Engine;
 using Spotify;
+using Spotify.Contracts.Services;
 
 namespace Spotify.Services;
 
-public class PlaybackControlService : IDisposable
+public class PlaybackControlService : IDisposable, IPlaybackControlService
 {
     private readonly MusicEngine _musicEngine;
     private readonly Random _random = new();
@@ -16,8 +17,6 @@ public class PlaybackControlService : IDisposable
     private double _volume = 50;
     private double _playbackRate = 1.0;
     private bool _isPlaying;
-    //private bool _isShuffleEnabled;
-    //private RepeatMode _repeatMode = RepeatMode.None;
 
     public static PlaybackControlService Instance { get; private set; }
 
@@ -53,8 +52,6 @@ public class PlaybackControlService : IDisposable
     }
 
     public bool IsPlaying => _isPlaying;
-    //public bool IsShuffleEnabled => _isShuffleEnabled;
-    //public RepeatMode RepeatMode => _repeatMode;
 
     public event EventHandler<bool> PlaybackStateChanged;
     public event EventHandler<TimeSpan> PositionChanged;
