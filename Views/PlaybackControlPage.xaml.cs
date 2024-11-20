@@ -1,33 +1,36 @@
-using Microsoft.Extensions.DependencyInjection;
+﻿using System;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Spotify.Services;
 using Spotify.ViewModels;
 
-namespace Spotify.Views
+namespace Spotify.Views;
+
+public sealed partial class PlaybackControlPage : Page
 {
-    public sealed partial class PlaybackControlPage : Page
+    public PlaybackControlViewModel ViewModel { get; }
+
+    public PlaybackControlPage()
     {
-        public PlaybackControlViewModel ViewModel { get; }
+        this.InitializeComponent();
 
-        public PlaybackControlPage()
-        {
-            this.InitializeComponent();
-            var playbackControlService = (App.Current as App).Services.GetRequiredService<PlaybackControlService>();
-            ViewModel = new PlaybackControlViewModel(playbackControlService);
-            DataContext = ViewModel;
-        }
+        // Initialize the service with the dispatcher from UI thread
+        PlaybackControlService.Initialize(Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread());
 
-        private void Slider_PointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            var vm = (PlaybackControlViewModel)DataContext;
-            vm.BeginSeeking();
-        }
+        ViewModel = new PlaybackControlViewModel();
+        DataContext = ViewModel;
+    }
 
-        private void Slider_PointerReleased(object sender, PointerRoutedEventArgs e)
-        {
-            var vm = (PlaybackControlViewModel)DataContext;
-            vm.EndSeeking();
-        }
+    private void Slider_PointerPressed(object sender, PointerRoutedEventArgs e)
+    {
+        // Chuyển vào trạng thái đang tìm kiếm (seeking)
+        ViewModel.OnSliderDragStarted();
+    }
+
+    private void Slider_PointerReleased(object sender, PointerRoutedEventArgs e)
+    {
+        var slider = (Slider)sender;
+        ViewModel.CurrentPosition = TimeSpan.FromSeconds(slider.Value);
+        ViewModel.OnSliderDragCompleted();
     }
 }
