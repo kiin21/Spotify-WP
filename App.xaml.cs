@@ -13,12 +13,13 @@ using System.IO;
 using Spotify.DAOs;
 using Spotify.Models.DTOs;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Spotify
 {
     public partial class App : Application
     {
-        public  UserDTO CurrentUser { get; set; }
+        public  UserDTO CurrentUser { get; set; } = new UserDTO();
         internal ShellWindow _shellWindow;
         internal LoginSignupWindow _loginSignupWindow;
         private readonly IServiceProvider _services;
@@ -28,10 +29,12 @@ namespace Spotify
         public LoginSignupWindow LoginSignupWindow => _loginSignupWindow;
         public static new App Current => Application.Current as App;
 
-        public List<SongDTO> Queue { get; set; }
-
         public App()
         {
+            // TODO: fix later
+            CurrentUser.Id = "1234567";
+
+
             InitializeComponent();
             LoadEnvironmentVariables();
             _services = ConfigureServices();
@@ -88,12 +91,15 @@ namespace Spotify
 
             services.AddSingleton<PlaylistSongService>();
             services.AddSingleton<PlaylistSongDetailService>();
+            services.AddSingleton<QueueService>();
             services.AddSingleton<ArtistService>();
 
 
 
 
             // Register ViewModels
+            services.AddSingleton<PlaybackControlViewModel>();
+
             services.AddTransient<HeaderViewModel>();
             services.AddTransient<ArtistViewModel>();
             //services.AddTransient<MainPanelViewModel>();

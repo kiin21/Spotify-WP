@@ -10,6 +10,7 @@
     MinHeight="600"
     mc:Ignorable="d">
     <Grid>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -38,13 +39,13 @@
         <Frame
             x:Name="MainFrame"
             Grid.Row="1"
-            Grid.Column="1" />
+            Grid.Column="1"/>
 
         <!--  Right Sidebar  -->
         <Frame
             x:Name="RightSidebarFrame"
             Grid.Row="1"
-            Grid.Column="2" />
+            Grid.Column="2"/>
 
         <!--  Playback Controls  -->
         <Frame

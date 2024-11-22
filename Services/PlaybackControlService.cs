@@ -5,6 +5,7 @@ using System.Linq;
 using Spotify.Engine;
 using Spotify;
 using Spotify.Contracts.Services;
+using Spotify.Models.DTOs;
 
 namespace Spotify.Services;
 
@@ -20,7 +21,6 @@ public class PlaybackControlService : IDisposable, IPlaybackControlService
 
     public static PlaybackControlService Instance { get; private set; }
 
-    // Add method to initialize the service with dispatcher
     public static void Initialize(Microsoft.UI.Dispatching.DispatcherQueue dispatcher)
     {
         if (Instance == null)
@@ -57,6 +57,12 @@ public class PlaybackControlService : IDisposable, IPlaybackControlService
     public event EventHandler<TimeSpan> PositionChanged;
     public event EventHandler MediaEnded;
 
+    public void AddCurrentSong(SongDTO song)
+    {
+        _musicEngine.SetSource(new Uri(song.audio_url));
+        _musicEngine.SetVolume(_volume / 100.0);
+        _musicEngine.SetPlaybackRate(_playbackRate);
+    }
     public void Play(Uri audioUrl)
     {
         _musicEngine.SetSource(audioUrl);

@@ -13,7 +13,7 @@ namespace Spotify.Views;
 public sealed partial class LyricPage : Page
 {
     public LyricViewModel ViewModel { get; private set; }
-    private double _playbackRate = 2.0;
+    private double _playbackRate = 1.0;
     public LyricPage()
     {
         InitializeComponent();

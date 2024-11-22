@@ -23,17 +23,18 @@
     <None Remove="Assets\defaultAvt.jpg" />
     <None Remove="Assets\sample.png" />
     <None Remove="LoginSignupWindow.xaml" />
-    <None Remove="ShellWindow.xaml" />
     <None Remove="Views\AddPlaylistDialog.xaml" />
     <None Remove="Views\ArtistPage.xaml" />
+    <None Remove="Views\Controls\QueueListUserControl.xaml" />
     <None Remove="Views\HeaderPage.xaml" />
     <None Remove="Views\LeftSidebarPage.xaml" />
     <None Remove="Views\LoginPage.xaml" />
     <None Remove="Views\LyricPage.xaml" />
     <None Remove="Views\MainPanelPage.xaml" />
+    <None Remove="Views\NowPlayingPreviewUserControl.xaml" />
     <None Remove="Views\PlaybackControlPage.xaml" />
     <None Remove="Views\PlaylistPage.xaml" />
-    <None Remove="Views\QueuePage.xaml" />
+    <None Remove="Views\QueueUserControl.xaml" />
     <None Remove="Views\SearchResultsPage.xaml" />
     <None Remove="Views\SignupPage.xaml" />
     <None Remove="Views\SongDetailPage.xaml" />
@@ -90,6 +91,18 @@
     <None Update="Assets\App.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\Controls\QueueListUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="ShellWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\QueueUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\NowPlayingPreviewUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\LyricPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -126,7 +139,7 @@
     <Page Update="Views\PlaybackControlPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Views\QueuePage.xaml">
+    <Page Update="Views\RightSideBarPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\MainPanelPage.xaml">
@@ -135,14 +148,6 @@
     <Page Update="Views\LeftSidebarPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="ShellWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Converter\" />
   </ItemGroup>
 
   <!--

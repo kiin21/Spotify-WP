@@ -10,16 +10,17 @@ using Spotify.Services;
 using Spotify.Contracts.DAO;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using Catel.Collections;
 
 namespace Spotify.ViewModels;
 
 public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 {
     private readonly PlaybackControlService _playbackService;
-    private List<SongDTO> _playlist = new();
-    private readonly List<SongDTO> _shuffledPlaylist = new();
+    private ObservableCollection<SongDTO> _playbacklist = new();
+    private readonly ObservableCollection<SongDTO> _shuffledPlaylist = new();
     private int _currentIndex;
-    private readonly Microsoft.UI.Dispatching.DispatcherQueue _dispatcherQueue;
 
     // State fields
     private SongDTO _currentSong;
@@ -42,18 +43,15 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     public IRelayCommand PreviousCommand { get; }
     public IRelayCommand ShuffleCommand { get; }
     public IRelayCommand RepeatCommand { get; }
+    public IRelayCommand ToggleQueueCommand { get; }
+    public IRelayCommand ShowLyricCommand { get; }
 
     #endregion
 
-    // Queue service
-    private readonly QueueService _queueService;
+
 
     public PlaybackControlViewModel()
     {
-        _dispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
-        _queueService = new QueueService(
-            App.Current.Services.GetRequiredService<IQueueDAO>(),
-            App.Current.Services.GetRequiredService<ISongDAO>());
         _playbackService = PlaybackControlService.Instance;
 
         // Initialize commands
@@ -62,19 +60,21 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         PreviousCommand = new RelayCommand(Previous);
         ShuffleCommand = new RelayCommand(ToggleShuffle);
         RepeatCommand = new RelayCommand(ToggleRepeat);
+        ToggleQueueCommand = new RelayCommand(ToggleQueue);
+        ShowLyricCommand = new RelayCommand(ShowLyricControl);
 
         // Initialize the playlist 
         try
         {
-            _playlist = App.Current.Queue;
 
-            if (_playlist?.Count > 0)
+            // Get the playlist from the app
+            _playbacklist = App.Current.ShellWindow.Queue;
+
+            if (_playbacklist?.Count > 0)
             {
-                _dispatcherQueue.TryEnqueue(() =>
-                {
-                    CurrentSong = _playlist[0];
-                    UpdateShuffledPlaylist();
-                });
+                CurrentSong = _playbacklist[0];
+                UpdateShuffledPlaylist();
+
             }
 
             // Subscribe to service events
@@ -91,16 +91,6 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
     }
 
-    private async Task<List<SongDTO>> InitializeQueue()
-    {
-        List<SongDTO> queue = await _queueService.GetQueueById("1234567");
-        foreach (SongDTO song in queue)
-        {
-            Debug.WriteLine(song);
-        }
-        return queue;
-    }
-
     #region Properties
 
     // Current Song Properties
@@ -113,11 +103,13 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             {
                 // Update total duration
                 _totalDuration = TimeSpan.FromSeconds(CurrentSongDurationInSeconds);
+                _playbackService.AddCurrentSong(value);
 
                 OnPropertyChanged(nameof(CurrentSongTitle));
                 OnPropertyChanged(nameof(CurrentArtistName));
                 OnPropertyChanged(nameof(CurrentCoverArtUrl));
                 OnPropertyChanged(nameof(TotalDurationDisplay));
+                OnPropertyChanged(nameof(TotalDurationSeconds));
             }
         }
     }
@@ -137,8 +129,32 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             {
                 _playbackService.SetVolume(value);
             }
+            OnPropertyChanged(nameof(VolumeIcon)); // Update icon when volume changes
         }
     }
+    public string VolumeIcon
+    {
+        get
+        {
+            if (Volume == 0)
+            {
+                return "\uE74F"; // Muted icon
+            }
+            else if (Volume < 25)
+            {
+                return "\uE993"; // Low volume icon
+            }
+            else if (Volume < 50)
+            {
+                return "\uE994"; // Low volume icon
+            }
+            else
+            {
+                return "\uE995"; // High volume icon
+            }
+        }
+    }
+
 
     // Playback Speed
     public string[] SpeedOptions => _speedOptions;
@@ -214,6 +230,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             }
             else
             {
+                // This does not work as I expected, :)
                 _playbackService.Resume();
             }
         }
@@ -221,7 +238,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
     private void Next()
     {
-        var playlist = _isShuffleEnabled ? _shuffledPlaylist : _playlist;
+        var playlist = _isShuffleEnabled ? _shuffledPlaylist : _playbacklist;
         if (playlist.Count == 0) return;
 
         _currentIndex = (_currentIndex + 1) % playlist.Count;
@@ -232,7 +249,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
     private void Previous()
     {
-        var playlist = _isShuffleEnabled ? _shuffledPlaylist : _playlist;
+        var playlist = _isShuffleEnabled ? _shuffledPlaylist : _playbacklist;
         if (playlist.Count == 0) return;
 
         _currentIndex = (_currentIndex - 1 + playlist.Count) % playlist.Count;
@@ -246,7 +263,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         _isShuffleEnabled = !_isShuffleEnabled;
         UpdateShuffledPlaylist();
         OnPropertyChanged(nameof(ShuffleButtonColor));
-        
+
         // Turn off repeat mode
         _repeatMode = RepeatMode.None;
         OnPropertyChanged(nameof(RepeatButtonColor));
@@ -268,15 +285,30 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         };
         OnPropertyChanged(nameof(RepeatButtonColor));
     }
+    private void ToggleQueue()
+    {
+        // Show or hide the queue
+        // This is a placeholder method
+        Debug.WriteLine("Toggle queue");
+    }
+    private void ShowLyricControl()
+    {
+        // Show or hide the lyric control
+        // This is a placeholder method
+        Debug.WriteLine("Show lyric control");
+    }
 
     #endregion
 
     #region Private Helper Methods
-
     private void UpdateShuffledPlaylist()
     {
         _shuffledPlaylist.Clear();
-        _shuffledPlaylist.AddRange(_playlist);
+
+        foreach (var song in _playbacklist)
+        {
+            _shuffledPlaylist.Add(song);
+        }
 
         if (_isShuffleEnabled)
         {
@@ -287,6 +319,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             }
         }
     }
+
 
     #endregion
 
@@ -303,13 +336,10 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         // Check if we should update the position
         if (!_isDraggingSlider && Math.Abs(_currentPosition.TotalSeconds - position.TotalSeconds) > 0.5)
         {
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                _currentPosition = position;
-                OnPropertyChanged(nameof(CurrentPosition));
-                OnPropertyChanged(nameof(CurrentPositionSeconds));
-                OnPropertyChanged(nameof(CurrentPositionDisplay));
-            });
+            _currentPosition = position;
+            OnPropertyChanged(nameof(CurrentPosition));
+            OnPropertyChanged(nameof(CurrentPositionSeconds));
+            OnPropertyChanged(nameof(CurrentPositionDisplay));
         }
     }
 
@@ -327,7 +357,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             //    break;
 
             case RepeatMode.None:
-                var playlist = _isShuffleEnabled ? _shuffledPlaylist : _playlist;
+                var playlist = _isShuffleEnabled ? _shuffledPlaylist : _playbacklist;
                 if (_currentIndex < playlist.Count - 1)
                 {
                     Next();

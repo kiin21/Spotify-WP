@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Spotify.Services;
@@ -15,10 +16,11 @@ public sealed partial class PlaybackControlPage : Page
     {
 
         this.InitializeComponent();
-        // Initialize the service with the dispatcher from UI thread
-        PlaybackControlService.Initialize(Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread());
+        //// Initialize the service with the dispatcher from UI thread
+        //PlaybackControlService.Initialize(Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread());
 
-        ViewModel = new PlaybackControlViewModel();
+        //ViewModel = new PlaybackControlViewModel();
+        ViewModel = App.Current.Services.GetRequiredService<PlaybackControlViewModel>();
         DataContext = ViewModel;
     }
 
@@ -46,5 +48,15 @@ public sealed partial class PlaybackControlPage : Page
             ViewModel.CurrentPosition = TimeSpan.FromSeconds(slider.Value);
             ViewModel.OnSliderDragCompleted();
         }
+    }
+
+    private void Slider_Tapped(object sender, TappedRoutedEventArgs e)
+    {
+
+    }
+
+    private void Slider_Tapped_1(object sender, TappedRoutedEventArgs e)
+    {
+
     }
 }
