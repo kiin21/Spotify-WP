@@ -5,36 +5,44 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <Grid
+        x:Name="NowPlayingGrid"
+        Margin="0,0,0,24"
+        Padding="16"
+        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+        BorderThickness="1"
+        CornerRadius="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-    <Grid Padding="10" Background="#1E1E1E" CornerRadius="10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-
-        <!-- Song Cover -->
+        <!--  Cover Art  -->
         <Image
-            Grid.Column="0"
-            Width="80"
-            Height="80"
-            Margin="0,0,10,0"
-            Source="{x:Bind ViewModel.CurrentCoverArtUrl, Mode=OneWay}" />
+            x:Name="AlbumArt"
+            Grid.Row="0"
+            Width="200"
+            Height="200"
+            Source="{x:Bind ViewModel.CurrentCoverArtUrl, Mode=OneWay}"
+            Stretch="UniformToFill" />
 
-        <!-- Song Info -->
-        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+        <!--  Song Info  -->
+        <StackPanel
+            Grid.Row="1"
+            Margin="50,20,10,40">
             <TextBlock
+                Foreground="Wheat"
+                Style="{StaticResource SubtitleTextBlockStyle}"
                 Text="{x:Bind ViewModel.CurrentSongTitle, Mode=OneWay}"
-                FontSize="16"
-                FontWeight="Bold"
-                Foreground="White" />
+                TextWrapping="Wrap" />
             <TextBlock
-                Text="{x:Bind ViewModel.CurrentArtistName, Mode=OneWay}"
-                FontSize="14"
-                Foreground="Gray" />
+                Margin="0,5,0,0"
+                Foreground="Wheat"
+                Opacity="0.7"
+                Style="{StaticResource BodyTextBlockStyle}"
+                Text="{x:Bind ViewModel.CurrentArtistName, Mode=OneWay}" />
             <TextBlock
-                Text="{x:Bind ViewModel.TotalDurationDisplay, Mode=OneWay}"
-                FontSize="12"
-                Foreground="Gray" />
+                Text="{Binding plainLyrics}"/>
         </StackPanel>
     </Grid>
 </UserControl>

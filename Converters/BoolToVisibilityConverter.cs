@@ -3,7 +3,7 @@ using Microsoft.UI.Xaml.Data;
 using System;
 
 
-namespace Spotify.Converter
+namespace Spotify.Converters
 {
     public class BoolToVisibilityConverter : IValueConverter
     {

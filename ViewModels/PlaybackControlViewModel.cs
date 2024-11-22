@@ -21,6 +21,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     private ObservableCollection<SongDTO> _playbacklist = new();
     private readonly ObservableCollection<SongDTO> _shuffledPlaylist = new();
     private int _currentIndex;
+    private bool _isQueueVisible = true;
 
     // State fields
     private SongDTO _currentSong;
@@ -67,7 +68,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         try
         {
 
-            // Get the playlist from the app
+            // Get the queue from the app and assign it to the playbacklist on initialization
             _playbacklist = App.Current.ShellWindow.Queue;
 
             if (_playbacklist?.Count > 0)
@@ -93,17 +94,39 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
     #region Properties
 
+    public ObservableCollection<SongDTO> PlaybackList
+    {
+        get => _playbacklist;
+        private set
+        {
+            if (SetProperty(ref _playbacklist, value))
+            {
+                OnPropertyChanged(nameof(PlaybackList));
+            }
+        }
+    }
     // Current Song Properties
     public SongDTO CurrentSong
     {
         get => _currentSong;
-        private set
+        set
         {
             if (SetProperty(ref _currentSong, value))
             {
                 // Update total duration
                 _totalDuration = TimeSpan.FromSeconds(CurrentSongDurationInSeconds);
                 _playbackService.AddCurrentSong(value);
+                foreach (var song in _playbacklist)
+                {
+                    if (song == value)
+                    {
+                        song.IsCurrentSong = true;
+                    }
+                    else
+                    {
+                        song.IsCurrentSong = false;
+                    }
+                }
 
                 OnPropertyChanged(nameof(CurrentSongTitle));
                 OnPropertyChanged(nameof(CurrentArtistName));
@@ -155,6 +178,14 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
+    public bool IsQueueVisible
+    {
+        get => _isQueueVisible;
+        set
+        {
+            SetProperty(ref _isQueueVisible, value);
+        }
+    }
 
     // Playback Speed
     public string[] SpeedOptions => _speedOptions;
@@ -236,6 +267,20 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
+    public void Play(SongDTO song)
+    {
+        if (_playbacklist.Contains(song))
+        {
+            //Do nothing
+        }
+        else
+        {
+            _playbacklist.Insert(_currentIndex, song);
+        }
+        CurrentSong = song;
+        _playbackService.Play(new Uri(song.audio_url));
+    }
+
     private void Next()
     {
         var playlist = _isShuffleEnabled ? _shuffledPlaylist : _playbacklist;
@@ -287,8 +332,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     }
     private void ToggleQueue()
     {
-        // Show or hide the queue
-        // This is a placeholder method
+        IsQueueVisible = !IsQueueVisible;
         Debug.WriteLine("Toggle queue");
     }
     private void ShowLyricControl()
