@@ -14,7 +14,9 @@
         CornerRadius="8">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <!--  Allow the ScrollViewer to expand  -->
         </Grid.RowDefinitions>
 
         <!--  Cover Art  -->
@@ -27,9 +29,7 @@
             Stretch="UniformToFill" />
 
         <!--  Song Info  -->
-        <StackPanel
-            Grid.Row="1"
-            Margin="50,20,10,40">
+        <StackPanel Grid.Row="1" Margin="50,20,10,40">
             <TextBlock
                 Foreground="Wheat"
                 Style="{StaticResource SubtitleTextBlockStyle}"
@@ -41,8 +41,20 @@
                 Opacity="0.7"
                 Style="{StaticResource BodyTextBlockStyle}"
                 Text="{x:Bind ViewModel.CurrentArtistName, Mode=OneWay}" />
-            <TextBlock
-                Text="{Binding plainLyrics}"/>
         </StackPanel>
+
+        <!--  Add ScrollViewer inside Row 1  -->
+        <ScrollViewer
+            Grid.Row="2"
+            Margin="10"
+            Foreground="Wheat"
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Auto">
+            <TextBlock
+                FontSize="16"
+                Text="{x:Bind ViewModel.CurrentSong.plainLyrics}"
+                TextWrapping="Wrap" />
+        </ScrollViewer>
     </Grid>
+
 </UserControl>
