@@ -283,23 +283,61 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
     private void Next()
     {
-        var playlist = _isShuffleEnabled ? _shuffledPlaylist : _playbacklist;
+        var playlist = new ObservableCollection<SongDTO>();
+        if (_isShuffleEnabled)
+        {
+            playlist = _shuffledPlaylist;
+            UpdateShuffledPlaylist();   
+        }
+        else
+        {
+            playlist = _playbacklist;
+        }
         if (playlist.Count == 0) return;
 
-        _currentIndex = (_currentIndex + 1) % playlist.Count;
+        if (_isShuffleEnabled)
+        {
+            while (CurrentSong == playlist[_currentIndex])
+            {
+                _currentIndex = Random.Shared.Next(playlist.Count);
+            }
+        }
+        else
+        {
+            _currentIndex = (_currentIndex + 1) % playlist.Count;
+        }
         CurrentSong = playlist[_currentIndex];
 
-        _playbackService.Play(new Uri(CurrentSong.audio_url));
+        Play(CurrentSong);
     }
 
     private void Previous()
     {
-        var playlist = _isShuffleEnabled ? _shuffledPlaylist : _playbacklist;
+        var playlist = new ObservableCollection<SongDTO>();
+        if (_isShuffleEnabled)
+        {
+            playlist = _shuffledPlaylist;
+            UpdateShuffledPlaylist();
+        }
+        else
+        {
+            playlist = _playbacklist;
+        }
         if (playlist.Count == 0) return;
 
-        _currentIndex = (_currentIndex - 1 + playlist.Count) % playlist.Count;
+        if (_isShuffleEnabled)
+        {
+            while (CurrentSong == playlist[_currentIndex])
+            {
+                _currentIndex = Random.Shared.Next(playlist.Count);
+            }
+        }
+        else
+        {
+            _currentIndex = (_currentIndex - 1 + playlist.Count) % playlist.Count;
+        }
         CurrentSong = playlist[_currentIndex];
-        _playbackService.Play(new Uri(CurrentSong.audio_url));
+        Play(CurrentSong);
     }
 
     private void ToggleShuffle()
