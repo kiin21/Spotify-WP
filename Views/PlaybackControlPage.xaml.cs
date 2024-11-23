@@ -19,8 +19,8 @@ public sealed partial class PlaybackControlPage : Page
         //// Initialize the service with the dispatcher from UI thread
         //PlaybackControlService.Initialize(Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread());
 
-        //ViewModel = new PlaybackControlViewModel();
-        ViewModel = App.Current.Services.GetRequiredService<PlaybackControlViewModel>();
+        PlaybackControlViewModel.Initialize();
+        ViewModel = PlaybackControlViewModel.Instance;
         DataContext = ViewModel;
     }
 

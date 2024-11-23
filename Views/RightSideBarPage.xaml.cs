@@ -6,10 +6,11 @@ namespace Spotify.Views;
 
 public sealed partial class RightSideBarPage : Page
 {
-    public PlaybackControlViewModel ViewModel = new PlaybackControlViewModel();
+    public PlaybackControlViewModel ViewModel;
     public RightSideBarPage()
     {
-        ViewModel = App.Current.Services.GetRequiredService<PlaybackControlViewModel>();
+        PlaybackControlViewModel.Initialize();
+        ViewModel = PlaybackControlViewModel.Instance;
         this.InitializeComponent();
         DataContext = ViewModel;
     }

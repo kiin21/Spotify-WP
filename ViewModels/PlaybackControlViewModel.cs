@@ -17,6 +17,17 @@ namespace Spotify.ViewModels;
 
 public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 {
+
+    public static PlaybackControlViewModel Instance { get; private set; }
+
+    public static void Initialize()
+    {
+        if (Instance == null)
+        {
+            Instance = new PlaybackControlViewModel();
+        }
+    }
+
     private readonly PlaybackControlService _playbackService;
     private ObservableCollection<SongDTO> _playbacklist = new();
     private readonly ObservableCollection<SongDTO> _shuffledPlaylist = new();
@@ -30,7 +41,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     private TimeSpan _totalDuration = TimeSpan.Zero;
     private bool _isPlaying;
     private bool _isShuffleEnabled;
-    private RepeatMode _repeatMode = RepeatMode.None;
+    private RepeatMode _repeatMode = RepeatMode.One;
     private string _selectedSpeed = "1.0x";
     private bool _isDraggingSlider;
 
@@ -50,8 +61,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     #endregion
 
 
-
-    public PlaybackControlViewModel()
+    private PlaybackControlViewModel()
     {
         _playbackService = PlaybackControlService.Instance;
 

@@ -11,7 +11,8 @@ public sealed partial class NowPlayingPreviewUserControl : UserControl
 
     public NowPlayingPreviewUserControl()
     {
-        ViewModel = App.Current.Services.GetRequiredService<PlaybackControlViewModel>();
+        PlaybackControlViewModel.Initialize();
+        ViewModel = PlaybackControlViewModel.Instance;
         this.InitializeComponent();
         DataContext = ViewModel;
     }

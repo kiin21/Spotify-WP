@@ -14,7 +14,8 @@ public sealed partial class QueueListUserControl : UserControl
     public QueueListUserControl()
     {
         this.InitializeComponent();
-        ViewModel = App.Current.Services.GetRequiredService<PlaybackControlViewModel>();
+        PlaybackControlViewModel.Initialize();
+        ViewModel = PlaybackControlViewModel.Instance;
         DataContext = ViewModel;
     }
 
