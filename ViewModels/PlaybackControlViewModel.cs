@@ -306,9 +306,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         {
             _currentIndex = (_currentIndex + 1) % playlist.Count;
         }
-        CurrentSong = playlist[_currentIndex];
-
-        Play(CurrentSong);
+        Play(playlist[_currentIndex]);
     }
 
     private void Previous()
@@ -336,8 +334,8 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         {
             _currentIndex = (_currentIndex - 1 + playlist.Count) % playlist.Count;
         }
-        CurrentSong = playlist[_currentIndex];
-        Play(CurrentSong);
+
+        Play(playlist[_currentIndex]);
     }
 
     private void ToggleShuffle()
@@ -359,13 +357,14 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         OnPropertyChanged(nameof(ShuffleButtonColor));
 
         // Business logic
-        _repeatMode = _repeatMode switch
+        if(_repeatMode==RepeatMode.None)
         {
-            RepeatMode.None => RepeatMode.One,
-            RepeatMode.One => RepeatMode.None,
-            // All other cases
-            _ => RepeatMode.None
-        };
+            _repeatMode = RepeatMode.One;
+        }
+        else
+        {
+            _repeatMode = RepeatMode.None;
+        }
         OnPropertyChanged(nameof(RepeatButtonColor));
     }
     private void ToggleQueue()
@@ -427,28 +426,16 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
     private void OnMediaEnded(object sender, EventArgs e)
     {
-        switch (_repeatMode)
+        switch (this._repeatMode)
         {
             case RepeatMode.One:
                 _playbackService.Seek(TimeSpan.Zero);
                 _playbackService.Resume();
                 break;
 
-            //case RepeatMode.All:
-            //    Next();
-            //    break;
-
             case RepeatMode.None:
-                var playlist = _isShuffleEnabled ? _shuffledPlaylist : _playbacklist;
-                if (_currentIndex < playlist.Count - 1)
-                {
-                    Next();
-                }
-                else
-                {
-                    _isPlaying = false;
-                    OnPropertyChanged(nameof(PlayPauseIcon));
-                }
+                Next();
+
                 break;
 
             default:
