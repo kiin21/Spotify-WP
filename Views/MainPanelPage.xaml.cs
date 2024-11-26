@@ -20,8 +20,7 @@ public sealed partial class MainPanelPage : Page
     {
         if (e.ClickedItem is SongDTO song)
         {
-            //Frame.Navigate(typeof(SongDetailPage), song);
-            Frame.Navigate(typeof(LyricPage), song);
+            Frame.Navigate(typeof(SongDetailPage), song);
         }
     }
 }

@@ -1,42 +1,75 @@
-﻿// SongDetailViewModel.cs
-using System.Data.Common;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Spotify.Models.DTOs;
+using Spotify.ViewModels;
+using System.ComponentModel;
+using Windows.Services.Maps;
 
-namespace Spotify.ViewModels;
-
-public partial class SongDetailViewModel : ObservableObject
+namespace Spotify.ViewModels
 {
-    [ObservableProperty]
-    private string id = string.Empty;  
-    [ObservableProperty]
-    private string title = string.Empty;
-
-    [ObservableProperty]
-    private string moreInfo = string.Empty;
-
-    [ObservableProperty]
-    private string lyrics = string.Empty;
-
-    [ObservableProperty]
-    private string artistInfo = string.Empty;
-
-    [ObservableProperty]
-    private string imageUrl = string.Empty;
-    [ObservableProperty]
-    private string audioUrl = string.Empty;
-    [ObservableProperty]
-    private int duration = 0;
-
-    public void Initialize(SongDTO songInfo)
+    public partial class SongDetailViewModel : ObservableObject
     {
-        Id = songInfo.Id.ToString();
-        Title = songInfo.title;
-        Lyrics = songInfo.plainLyrics;
-        MoreInfo = $"{songInfo.ArtistName} • {songInfo.ReleaseDate} • {songInfo.Duration}";
-        ArtistInfo = $"{songInfo.ArtistName}";
-        AudioUrl = songInfo.audio_url;
-        Duration = songInfo.Duration;
-        ImageUrl = songInfo.CoverArtUrl ?? "ms-appx:///Assets/Image1.jpg";
+        private readonly PlaybackControlViewModel _playbackViewModel;
+
+        [ObservableProperty]
+        private SongDTO _song;
+
+        [ObservableProperty]
+        private string _playPauseGlyph;
+        public IRelayCommand PlayPauseCommand { get; }
+        public SongDetailViewModel(SongDTO song)
+        {
+            PlayPauseCommand = new RelayCommand(TogglePlayPause);
+            _playbackViewModel = PlaybackControlViewModel.Instance;
+            _playbackViewModel.CurrentSong = song;
+            // Initialize with passed song details
+            Song = song;
+            Song.plainLyrics = song.plainLyrics ?? "No lyrics available";
+
+            // Subscribe to playback view model events
+            _playbackViewModel.PropertyChanged += PlaybackViewModel_PropertyChanged;
+
+            _playbackViewModel.IsPlaying = false;
+            // Set the initial play/pause glyph
+            PlayPauseGlyph = _playbackViewModel.IsPlaying ? "\uE769" : "\uE768"; // Play or Pause
+        }
+
+        private void PlaybackViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            // Check for changes in CurrentSong or PlaybackState
+            if (e.PropertyName == nameof(PlaybackControlViewModel.CurrentSong))
+            {
+                // Update details if the current song changes
+                if (Song != _playbackViewModel.CurrentSong)
+                {
+                    PlayPauseGlyph = "\uE768"; // Pause
+                }
+            }
+            else if(e.PropertyName == nameof(PlaybackControlViewModel.PlayPauseIcon))
+            {
+                // Update details if the current song changes
+                if (Song != _playbackViewModel.CurrentSong)
+                {
+                    PlayPauseGlyph = "\uE768"; // Pause
+                }
+                else
+                {
+                    PlayPauseGlyph = _playbackViewModel.IsPlaying ? "\uE769" : "\uE768"; // Play or Pause
+                }
+            }
+        }
+
+        private void TogglePlayPause()
+        {
+            if (Song == _playbackViewModel.CurrentSong)
+            {
+                _playbackViewModel.PlayPauseCommand.Execute(null);
+            }
+            else
+            {
+                _playbackViewModel.Play(Song);
+            }
+            PlayPauseGlyph = _playbackViewModel.IsPlaying ? "\uE769" : "\uE768"; // Play or Pause
+        }
     }
 }

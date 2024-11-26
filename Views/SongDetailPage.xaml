@@ -10,14 +10,14 @@
     mc:Ignorable="d">
 
     <Grid Background="#2a2a2a">
-        <!-- Back Button at the top left -->
+        <!--  Back Button at the top left  -->
         <Button
             Width="40"
             Height="40"
-            VerticalAlignment="Top"
-            HorizontalAlignment="Left"
-            Background="Transparent"
             Margin="10"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Background="Transparent"
             Click="BackButton_Click">
             <FontIcon
                 FontFamily="Segoe MDL2 Assets"
@@ -25,7 +25,10 @@
                 Glyph="&#xE76B;" />
         </Button>
 
-        <ScrollViewer VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" Margin="0,60,0,0">
+        <ScrollViewer
+            Margin="0,60,0,0"
+            VerticalScrollBarVisibility="Auto"
+            VerticalScrollMode="Auto">
             <Grid Margin="20,0,20,20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -36,17 +39,17 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <!-- Cover Art -->
+                <!--  Cover Art  -->
                 <Image
                     Grid.Row="0"
                     Grid.Column="0"
                     Width="150"
                     Height="150"
                     Margin="0,20,20,0"
-                    Source="{x:Bind ViewModel.ImageUrl, Mode=OneWay}"
+                    Source="{x:Bind ViewModel.Song.CoverArtUrl, Mode=OneWay}"
                     Stretch="UniformToFill" />
 
-                <!-- Song Information -->
+                <!--  Song Information  -->
                 <StackPanel
                     Grid.Row="0"
                     Grid.Column="1"
@@ -57,47 +60,56 @@
                         FontSize="48"
                         FontWeight="Bold"
                         Foreground="White"
-                        Text="{x:Bind ViewModel.Title, Mode=OneWay}" />
+                        Text="{x:Bind ViewModel.Song.title, Mode=OneWay}" />
 
                     <TextBlock
                         FontSize="16"
                         Foreground="LightGray"
-                        Text="{x:Bind ViewModel.MoreInfo, Mode=OneWay}" />
+                        Text="{x:Bind ViewModel.Song.ArtistName, Mode=OneWay}" />
                 </StackPanel>
 
-                <!-- Playback Controls and Lyrics -->
+                <!--  Playback Controls and Lyrics  -->
                 <StackPanel
                     Grid.Row="1"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
                     Margin="0,20,0,0">
-                    <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,0,0,20">
-                        <!-- Play Button -->
+                    <StackPanel
+                        Margin="0,0,0,20"
+                        Orientation="Horizontal"
+                        Spacing="10">
+                        <!--  Play Button  -->
                         <Button
                             x:Name="PlayButton"
                             Width="50"
                             Height="50"
                             Background="Green"
-                            Click="PlayButton_Click"
+                            Command="{x:Bind ViewModel.PlayPauseCommand}"
                             CornerRadius="25">
-                            <SymbolIcon x:Name="PlayButtonIcon" Symbol="Play" />
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="{x:Bind ViewModel.PlayPauseGlyph, Mode=OneWay}" />
                         </Button>
 
-                        <!-- Like and More info Icons -->
-                        <Button Width="50" Height="50" Background="Transparent">
+                        <!--  Like and More info Icons  -->
+                        <Button
+                            Width="50"
+                            Height="50"
+                            Background="Transparent">
                             <SymbolIcon Symbol="Like" />
                         </Button>
-                        <Button Width="50" Height="50" Background="Transparent">
+                        <Button
+                            Width="50"
+                            Height="50"
+                            Background="Transparent">
                             <SymbolIcon Symbol="More" />
                         </Button>
                     </StackPanel>
 
-                    <!-- Lyrics -->
+                    <!--  Lyrics  -->
                     <TextBlock
                         Margin="10"
                         FontSize="14"
                         Foreground="White"
-                        Text="{x:Bind ViewModel.Lyrics, Mode=OneWay}"
+                        Text="{x:Bind ViewModel.Song.plainLyrics, Mode=OneWay}"
                         TextWrapping="Wrap" />
                 </StackPanel>
             </Grid>

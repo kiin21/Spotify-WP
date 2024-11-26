@@ -41,7 +41,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     private TimeSpan _totalDuration = TimeSpan.Zero;
     private bool _isPlaying;
     private bool _isShuffleEnabled;
-    private RepeatMode _repeatMode = RepeatMode.One;
+    private RepeatMode _repeatMode = RepeatMode.None;
     private string _selectedSpeed = "1.0x";
     private bool _isDraggingSlider;
 
@@ -107,7 +107,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     public ObservableCollection<SongDTO> PlaybackList
     {
         get => _playbacklist;
-        private set
+        set
         {
             if (SetProperty(ref _playbacklist, value))
             {
@@ -146,7 +146,17 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             }
         }
     }
-
+    public bool IsPlaying
+    {
+        get => _isPlaying;
+        set
+        {
+            if (SetProperty(ref _isPlaying, value))
+            {
+                OnPropertyChanged(nameof(PlayPauseIcon));
+            }
+        }
+    }
     public string CurrentSongTitle => CurrentSong?.title ?? "No song playing";
     public string CurrentArtistName => CurrentSong?.ArtistName ?? "Unknown artist";
     public string CurrentCoverArtUrl => CurrentSong?.CoverArtUrl ?? "default_cover.jpg";
@@ -247,7 +257,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     public string TotalDurationDisplay => _totalDuration.ToString(@"mm\:ss");
 
     // Playback State
-    public string PlayPauseIcon => _isPlaying ? "\uE769" : "\uE768"; // Pause : Play
+    public string PlayPauseIcon => _isPlaying ? "\uE769" : "\uE768"; // Play : Pause 
 
     public string RepeatButtonColor => _repeatMode != RepeatMode.None ? "#1DB954" : "White";
 
@@ -271,7 +281,6 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             }
             else
             {
-                // This does not work as I expected, :)
                 _playbackService.Resume();
             }
         }

@@ -12,7 +12,6 @@ namespace Spotify.Services;
 public class PlaybackControlService : IDisposable, IPlaybackControlService
 {
     private readonly MusicEngine _musicEngine;
-    private readonly Random _random = new();
     private readonly System.Timers.Timer _positionUpdateTimer;
     private readonly Microsoft.UI.Dispatching.DispatcherQueue _dispatcherQueue;
     private double _volume = 50;
