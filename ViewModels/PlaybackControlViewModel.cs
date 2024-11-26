@@ -12,6 +12,8 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using Catel.Collections;
+using Microsoft.UI.Xaml.Controls;
+using Spotify.Views;
 
 namespace Spotify.ViewModels;
 
@@ -393,9 +395,9 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     }
     private void ShowLyricControl()
     {
-        // Show or hide the lyric control
-        // This is a placeholder method
-        Debug.WriteLine("Show lyric control");
+        var shellWindow = App.Current.ShellWindow;
+        Frame mainFrame = shellWindow.getMainFrame();
+        mainFrame.Navigate(typeof(LyricPage), CurrentSong);
     }
 
     #endregion

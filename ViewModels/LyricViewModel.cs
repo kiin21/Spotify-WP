@@ -23,10 +23,10 @@ public class LyricViewModel : INotifyPropertyChanged
         }
     }
 
-    private ObservableCollection<string> _lyricLines;
+    private ObservableCollection<string> _lyricLines = new ObservableCollection<string>(new[] { "No lyrics available" });
     public ObservableCollection<string> LyricLines
     {
-        get => _lyricLines;
+        get => _lyricLines ?? _lyricLines;
         private set
         {
             if (_lyricLines != value)
