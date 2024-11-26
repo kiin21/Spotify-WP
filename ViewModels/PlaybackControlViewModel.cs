@@ -46,6 +46,8 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     private RepeatMode _repeatMode = RepeatMode.None;
     private string _selectedSpeed = "1.0x";
     private bool _isDraggingSlider;
+    private bool _isShowingLyricPage = false;
+
 
     // Constants
     private readonly string[] _speedOptions = new[] { "0.5x", "0.75x", "1.0x", "1.25x", "1.5x", "2.0x" };
@@ -208,6 +210,14 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             SetProperty(ref _isQueueVisible, value);
         }
     }
+    public bool IsShowingLyricPage
+    {
+        get => _isShowingLyricPage;
+        set
+        {
+            SetProperty(ref _isShowingLyricPage, value);
+        }
+    }
 
     // Playback Speed
     public string[] SpeedOptions => _speedOptions;
@@ -308,7 +318,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         if (_isShuffleEnabled)
         {
             playlist = _shuffledPlaylist;
-            UpdateShuffledPlaylist();   
+            UpdateShuffledPlaylist();
         }
         else
         {
@@ -378,7 +388,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         OnPropertyChanged(nameof(ShuffleButtonColor));
 
         // Business logic
-        if(_repeatMode==RepeatMode.None)
+        if (_repeatMode == RepeatMode.None)
         {
             _repeatMode = RepeatMode.One;
         }
@@ -395,9 +405,20 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     }
     private void ShowLyricControl()
     {
+        IsShowingLyricPage = !IsShowingLyricPage;
         var shellWindow = App.Current.ShellWindow;
         Frame mainFrame = shellWindow.getMainFrame();
-        mainFrame.Navigate(typeof(LyricPage), CurrentSong);
+
+        
+        if (IsShowingLyricPage) // If we aren't showing the lyric page, navigate to it
+        {
+            mainFrame.Navigate(typeof(LyricPage), CurrentSong);
+        }
+        else // Otherwise, go back to the previous page
+        {
+            if(mainFrame.CanGoBack)
+                mainFrame.GoBack();
+        }
     }
 
     #endregion

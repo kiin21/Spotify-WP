@@ -5,27 +5,18 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Spotify.Views"
+    xmlns:helper="using:Spotify.Helpers"
+    xmlns:converter="using:Spotify.Converters"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Background="#546E63"
     mc:Ignorable="d">
 
+    <Page.Resources>
+        <!--  BoolToColorConverter  -->
+        <converter:BoolToHighlightedLyricConverter x:Key="BoolToHighlightedLyricConverter" />
+    </Page.Resources>
+
     <Grid>
-        <!--  Back Button  -->
-
-        <Button
-            x:Name="BackButton"
-            Margin="20,20,0,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Click="BackButton_Click"
-            Style="{StaticResource TransparentButtonStyle}">
-            <FontIcon
-                FontFamily="Segoe MDL2 Assets"
-                FontSize="20"
-                Foreground="White"
-                Glyph="&#xE72B;" />
-        </Button>
-
         <Grid Margin="40,20">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -33,9 +24,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-
             <!--  Song Title  -->
-
             <TextBlock
                 Margin="0,40,0,8"
                 FontSize="32"
@@ -45,7 +34,6 @@
 
 
             <!--  Artist Name  -->
-
             <TextBlock
                 Grid.Row="1"
                 Margin="0,0,0,20"
@@ -55,7 +43,6 @@
 
 
             <!--  Lyrics  -->
-
             <ListView
                 Grid.Row="2"
                 IsItemClickEnabled="False"
@@ -63,14 +50,15 @@
                 ScrollViewer.VerticalScrollMode="Auto"
                 SelectionMode="None">
                 <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="x:String">
+                    <DataTemplate x:DataType="helper:LyricLine">
                         <TextBlock
                             Margin="0,8"
                             FontSize="24"
                             FontWeight="SemiBold"
                             Foreground="White"
-                            Text="{x:Bind}"
-                            TextWrapping="Wrap" />
+                            Text="{x:Bind Text}"
+                            TextWrapping="Wrap">
+                        </TextBlock>
                     </DataTemplate>
                 </ListView.ItemTemplate>
                 <ListView.ItemsPanel>

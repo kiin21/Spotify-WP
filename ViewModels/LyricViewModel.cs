@@ -1,9 +1,13 @@
 ﻿//LyricViewModel.cs
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Spotify.Models.DTOs;
+using Spotify.Helpers;
+using System.Diagnostics;
+using Windows.Networking.Sockets;
 
 namespace Spotify.ViewModels;
 
@@ -22,11 +26,12 @@ public class LyricViewModel : INotifyPropertyChanged
             }
         }
     }
+    private readonly PlaybackControlViewModel _playbackViewModel;
 
-    private ObservableCollection<string> _lyricLines = new ObservableCollection<string>(new[] { "No lyrics available" });
-    public ObservableCollection<string> LyricLines
+    private ObservableCollection<LyricLine> _lyricLines = new ObservableCollection<LyricLine>();
+    public ObservableCollection<LyricLine> LyricLines
     {
-        get => _lyricLines ?? _lyricLines;
+        get => _lyricLines;
         private set
         {
             if (_lyricLines != value)
@@ -39,26 +44,47 @@ public class LyricViewModel : INotifyPropertyChanged
 
     public LyricViewModel(SongDTO song)
     {
-        Song = song ?? throw new ArgumentNullException(nameof(song));
-        _lyricLines = new ObservableCollection<string>();
+        Song = song;
+        _playbackViewModel = PlaybackControlViewModel.Instance;
+        _playbackViewModel.PropertyChanged += PlaybackViewModel_PropertyChanged;
+    }
+    private void PlaybackViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        //if (e.PropertyName == nameof(PlaybackControlViewModel.CurrentPositionSeconds))
+        //{
+        //    TimeSpan current_time = TimeSpan.FromSeconds(_playbackViewModel.CurrentPositionSeconds);
+        //    List<(TimeSpan Timestamp, string Text)> map = Song.ParsedSyncedLyrics;
+
+        //    for (int i = 0; i < map.Count; i++)
+        //    {
+        //        if (current_time < map[i].Timestamp)
+        //        {
+        //            // Update highlighted states
+        //            for (int j = 0; j < LyricLines.Count; j++)
+        //            {
+        //                LyricLines[j].IsHighlighted = (j == i - 1);
+        //            }
+        //            break;
+        //        }
+        //    }
+        //}
     }
 
     public void LoadLyrics()
     {
         LyricLines.Clear();
 
-        // If synced lyrics are available, use those
         if (!string.IsNullOrEmpty(Song.syncedLyrics))
         {
             foreach (var (_, text) in Song.ParsedSyncedLyrics)
             {
                 if (!string.IsNullOrWhiteSpace(text))
                 {
-                    LyricLines.Add(text);
+                    // Modify latter part of this project
+                    LyricLines.Add(new LyricLine(text, true));
                 }
             }
         }
-        // Fall back to plain lyrics if available
         else if (!string.IsNullOrEmpty(Song.plainLyrics))
         {
             var lines = Song.plainLyrics.Split('\n', StringSplitOptions.RemoveEmptyEntries);
@@ -66,10 +92,13 @@ public class LyricViewModel : INotifyPropertyChanged
             {
                 if (!string.IsNullOrWhiteSpace(line))
                 {
-                    LyricLines.Add(line.Trim());
+
+                    // Modify latter part of this project
+                    LyricLines.Add(new LyricLine(line.Trim(), true));
                 }
             }
         }
+        Debug.WriteLine($"LyricLines.Count: {LyricLines.Count}");
     }
 
     public event PropertyChangedEventHandler PropertyChanged;
@@ -79,3 +108,5 @@ public class LyricViewModel : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
+
+

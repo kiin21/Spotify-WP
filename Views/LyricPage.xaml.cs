@@ -13,7 +13,6 @@ namespace Spotify.Views;
 public sealed partial class LyricPage : Page
 {
     public LyricViewModel ViewModel { get; private set; }
-    private double _playbackRate = 1.0;
     public LyricPage()
     {
         InitializeComponent();
@@ -29,13 +28,4 @@ public sealed partial class LyricPage : Page
             ViewModel.LoadLyrics();
         }
     }
-
-    private void BackButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-    {
-        if (Frame.CanGoBack)
-        {
-            Frame.GoBack();
-        }
-    }
-
 }

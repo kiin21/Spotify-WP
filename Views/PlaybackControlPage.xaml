@@ -164,7 +164,7 @@
 
             <!--  Lyric button  -->
             <Button Command="{x:Bind ViewModel.ShowLyricCommand}" Style="{StaticResource PlayerButtonStyle}">
-                <FontIcon Foreground="White" Glyph="&#xE90B;" />
+                <FontIcon Foreground="{Binding IsShowingLyricPage, Converter={StaticResource BoolToColorConverter}}" Glyph="&#xE90B;" />
             </Button>
 
             <!--  Show queue button  -->

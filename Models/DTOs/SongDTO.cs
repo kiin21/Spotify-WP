@@ -34,7 +34,7 @@ public class SongDTO : INotifyPropertyChanged
     [BsonElement("coverArt_url")]
     public string CoverArtUrl { get; set; }
 
-    public string syncedLyrics { get; set; }  // Changed to string
+    public string syncedLyrics { get; set; } 
 
     public string plainLyrics { get; set; }
 
@@ -44,7 +44,6 @@ public class SongDTO : INotifyPropertyChanged
     [BsonElement("release_date")]
     public string ReleaseDate { get; set; }
 
-    // Optional: Add helper method to parse synced lyrics if needed
     [BsonIgnore]
     public List<(TimeSpan Timestamp, string Text)> ParsedSyncedLyrics
     {
