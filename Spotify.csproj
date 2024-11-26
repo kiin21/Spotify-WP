@@ -34,7 +34,6 @@
     <None Remove="Views\NowPlayingPreviewUserControl.xaml" />
     <None Remove="Views\PlaybackControlPage.xaml" />
     <None Remove="Views\PlaylistPage.xaml" />
-    <None Remove="Views\QueueUserControl.xaml" />
     <None Remove="Views\SearchResultsPage.xaml" />
     <None Remove="Views\SignupPage.xaml" />
     <None Remove="Views\SongDetailPage.xaml" />
@@ -95,9 +94,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="ShellWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Views\QueueUserControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\NowPlayingPreviewUserControl.xaml">
