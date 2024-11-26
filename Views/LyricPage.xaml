@@ -13,7 +13,7 @@
 
     <Page.Resources>
         <!--  BoolToColorConverter  -->
-        <converter:BoolToHighlightedLyricConverter x:Key="BoolToHighlightedLyricConverter" />
+        <converter:BoolToHighlightedLyricConverter x:Key="BoolToHighlightedLyricConverter"/>
     </Page.Resources>
 
     <Grid>
@@ -30,7 +30,7 @@
                 FontSize="32"
                 FontWeight="Bold"
                 Foreground="White"
-                Text="{x:Bind ViewModel.Song.title}" />
+                Text="{x:Bind ViewModel.Song.title, Mode=OneWay}" />
 
 
             <!--  Artist Name  -->
@@ -39,11 +39,12 @@
                 Margin="0,0,0,20"
                 FontSize="24"
                 Foreground="LightGray"
-                Text="{x:Bind ViewModel.Song.ArtistName}" />
+                Text="{x:Bind ViewModel.Song.ArtistName, Mode=OneWay}" />
 
 
             <!--  Lyrics  -->
             <ListView
+                x:Name="LyricListView"
                 Grid.Row="2"
                 IsItemClickEnabled="False"
                 ItemsSource="{x:Bind ViewModel.LyricLines, Mode=OneWay}"
@@ -55,7 +56,7 @@
                             Margin="0,8"
                             FontSize="24"
                             FontWeight="SemiBold"
-                            Foreground="White"
+                            Foreground="{x:Bind IsHighlighted, Mode=OneWay, Converter={StaticResource BoolToHighlightedLyricConverter}}"
                             Text="{x:Bind Text}"
                             TextWrapping="Wrap">
                         </TextBlock>

@@ -12,7 +12,7 @@ namespace Spotify.Helpers;
 public class LyricLine : INotifyPropertyChanged
 {
     private string _text;
-    private bool _isHighlighted = true;
+    private bool _isHighlighted = false;
 
     public string Text
     {

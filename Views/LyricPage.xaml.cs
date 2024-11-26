@@ -3,6 +3,7 @@ using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Spotify.Helpers;
 using Spotify.Models.DTOs;
 using Spotify.ViewModels;
 using Windows.Media.Core;
@@ -26,6 +27,14 @@ public sealed partial class LyricPage : Page
         {
             ViewModel = new LyricViewModel(song);
             ViewModel.LoadLyrics();
+            ViewModel.HighlightedLyricChanged += OnHighlightedLyricChanged;
+        }
+    }
+    private void OnHighlightedLyricChanged(object sender, LyricLine highlightedLyric)
+    {
+        if (highlightedLyric != null)
+        {
+            LyricListView.ScrollIntoView(highlightedLyric, ScrollIntoViewAlignment.Default);
         }
     }
 }
