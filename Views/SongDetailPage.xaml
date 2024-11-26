@@ -86,7 +86,7 @@
                             Background="Green"
                             Command="{x:Bind ViewModel.PlayPauseCommand}"
                             CornerRadius="25">
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="{x:Bind ViewModel.PlayPauseGlyph, Mode=OneWay}" />
+                            <FontIcon Foreground="White" Glyph="{x:Bind ViewModel.PlayPauseGlyph, Mode=OneWay}" />
                         </Button>
 
                         <!--  Like and More info Icons  -->
