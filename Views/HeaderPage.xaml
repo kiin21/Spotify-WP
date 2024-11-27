@@ -4,9 +4,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Spotify.Views"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:converters="using:Spotify.Converter"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </Page.Resources>
 
     <Grid Background="#1E1E1E">
         <Grid.ColumnDefinitions>
@@ -71,12 +75,51 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Center"
             Orientation="Horizontal">
-            <!--  Notification  -->
-            <FontIcon Margin="50,0,90,0" Glyph="&#xEA8F;">
-                <ToolTipService.ToolTip>
-                    <ToolTip Content="Notifications" />
-                </ToolTipService.ToolTip>
-            </FontIcon>
+            <!-- Notification Icon with Red Dot -->
+            <Grid Margin="50,0,90,0">
+                <Button
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    Click="NotificationButton_Click">
+                    <Button.Flyout>
+                        <Flyout Placement="Bottom">
+                            <StackPanel Padding="10">
+                                <TextBlock Text="Notifications" FontWeight="Bold" FontSize="16" />
+                                <ListView 
+                                    ItemsSource="{Binding Notifications, Mode=OneWay}"
+                                    ItemClick="NotificationList_ItemClick"
+                                    IsItemClickEnabled="True">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Vertical">
+                                                <TextBlock Text="{Binding Message}" FontWeight="SemiBold" />
+                                                <TextBlock Text="{Binding Timestamp}" 
+                                                           Foreground="Gray" 
+                                                           FontSize="12" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                    <FontIcon Glyph="&#xEA8F;" FontSize="20" Foreground="White">
+                        <ToolTipService.ToolTip>
+                            <ToolTip Content="Notifications" />
+                        </ToolTipService.ToolTip>
+                    </FontIcon>
+                </Button>
+                <!-- Red Dot -->
+                <Ellipse
+                    x:Name="NotificationDot"
+                    Width="8"
+                    Height="8"
+                    Fill="Red"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Margin="24,0,0,24"
+                    Visibility="{Binding HasNotification, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+            </Grid>
             <!--  Account Icon Button  -->
             <Button
                 x:Name="AccountButton"
