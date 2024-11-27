@@ -192,17 +192,18 @@ public partial class HeaderViewModel : INotifyPropertyChanged
         else
         {
             // Xóa thông báo mặc định nếu có
-            var noUpdateNotification = Notifications.FirstOrDefault(n => n.Message == "No new updates");
+            var noUpdateNotification = Notifications.FirstOrDefault(n => n.Message == "No messages");
             if (noUpdateNotification != null)
             {
                 Notifications.Remove(noUpdateNotification);
             }
 
-            // Thêm các thông báo mới
+            // Thêm các thông báo mới vào đầu danh sách
             foreach (var notification in newNotifications.Reverse())
             {
-                Notifications.Add(notification);
+                Notifications.Insert(0, notification);
             }
+
         }
 
         HasNotification = hasNewSongs;
