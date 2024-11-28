@@ -32,7 +32,7 @@ namespace Spotify
         public App()
         {
             // TODO: fix later
-            CurrentUser.Id = "1234567";
+            CurrentUser.Id = "672b819bc41bd6f54582046e";
 
 
             InitializeComponent();
