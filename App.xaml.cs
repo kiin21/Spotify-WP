@@ -93,6 +93,8 @@ namespace Spotify
             services.AddSingleton<PlaylistSongDetailService>();
             services.AddSingleton<QueueService>();
             services.AddSingleton<ArtistService>();
+            services.AddSingleton<PlaylistSongDetailService>();
+            services.AddSingleton<ArtistService>();
 
 
 

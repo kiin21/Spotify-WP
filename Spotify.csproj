@@ -25,6 +25,7 @@
     <None Remove="LoginSignupWindow.xaml" />
     <None Remove="Views\AddPlaylistDialog.xaml" />
     <None Remove="Views\ArtistPage.xaml" />
+    <None Remove="Views\ArtistPage.xaml" />
     <None Remove="Views\Controls\QueueListUserControl.xaml" />
     <None Remove="Views\HeaderPage.xaml" />
     <None Remove="Views\LeftSidebarPage.xaml" />
