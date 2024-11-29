@@ -42,6 +42,12 @@ public class QueueService
     public async Task<ObservableCollection<SongDTO>> GetQueue()
     {
         QueueDTO queue = await _queueDAO.GetQueueByIdAsync(_user.Id);
+        
+        if(queue == null)
+        {
+            return new ObservableCollection<SongDTO>();
+        }
+
         ObservableCollection<SongDTO> songs = new ObservableCollection<SongDTO>();
 
         foreach (string songId in queue.SongIds)

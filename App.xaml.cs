@@ -31,10 +31,6 @@ namespace Spotify
 
         public App()
         {
-            // TODO: fix later
-            CurrentUser.Id = "672b819bc41bd6f54582046e";
-
-
             InitializeComponent();
             LoadEnvironmentVariables();
             _services = ConfigureServices();
@@ -118,10 +114,10 @@ namespace Spotify
                 //_shellWindow.Activate();
 
                 // Sử dụng WindowManager để chuyển đổi sang ShellWindow
-                Spotify.Services.WindowManager.Instance.SwitchToShellWindow();
+                //Spotify.Services.WindowManager.Instance.SwitchToShellWindow();
 
-                //_loginSignupWindow = new LoginSignupWindow();
-                //_loginSignupWindow.Activate();
+                _loginSignupWindow = new LoginSignupWindow();
+                _loginSignupWindow.Activate();
             }
             catch (Exception ex)
             {
