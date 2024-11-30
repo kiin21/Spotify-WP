@@ -21,8 +21,8 @@ namespace Spotify.Services
         public Task<PlaylistDTO> GetPlaylistByIdAsync(string id) =>
             _playlistDAO.GetPlaylistByIdAsync(id);
 
-        public async Task<PlaylistDTO> GetLikedSongsPlaylistAsync() =>
-            await _playlistDAO.GetLikedSongsPlaylistAsync();
+        public Task<PlaylistDTO> GetLikedSongsPlaylistAsync(string userId) =>
+            _playlistDAO.GetLikedSongsPlaylistAsync(userId);
 
         public Task AddPlaylistAsync(PlaylistDTO playlist)
         {
@@ -38,6 +38,38 @@ namespace Spotify.Services
         public async Task RemovePlaylistAsync(string playlistId)
         {
             await _playlistDAO.RemovePlaylistAsync(playlistId);
+        }
+
+        public async Task<List<PlaylistDTO>> GetPlaylistsByUserIdAsync(string userId)
+        {
+            return await _playlistDAO.GetPlaylistsByUserIdAsync(userId);
+        }
+
+        public async Task<PlaylistDTO> EnsureLikedSongsPlaylistAsync(string userId, string username)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(username))
+                throw new ArgumentNullException("UserId or Username is null.");
+
+            var likedSongsPlaylist = await _playlistDAO.GetLikedSongsPlaylistAsync(userId);
+
+            if (likedSongsPlaylist == null)
+            {
+                // Tạo mới playlist "Liked Songs"
+                likedSongsPlaylist = new PlaylistDTO
+                {
+                    Title = "Liked Songs",
+                    CreatedBy = username,
+                    CreatedAt = DateTime.Now,
+                    OwnerId = userId,
+                    IsLikedSong = true,
+                    IsDeleted = false,
+                    Avatar = "https://i1.sndcdn.com/artworks-4Lu85Xrs7UjJ4wVq-vuI2zg-t500x500.jpg"
+                };
+
+                await _playlistDAO.AddPlaylistAsync(likedSongsPlaylist);
+            }
+
+            return likedSongsPlaylist;
         }
     }
 }

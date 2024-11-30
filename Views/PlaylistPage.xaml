@@ -142,9 +142,10 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="200" />
-                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="150" />
                         <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="50" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -156,6 +157,7 @@
                         Grid.Column="0"
                         FontSize="14"
                         Foreground="Gray"
+                        HorizontalAlignment="Center"
                         Text="#" />
                     <TextBlock
                         Grid.Row="0"
@@ -186,7 +188,7 @@
                     <!--  Songs ListView  -->
                     <ListView
                         Grid.Row="1"
-                        Grid.ColumnSpan="5"
+                        Grid.ColumnSpan="6"
                         Margin="0,12,0,0"
                         Padding="0"
                         HorizontalAlignment="Stretch"
@@ -197,27 +199,66 @@
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                                 <Setter Property="Padding" Value="0" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListViewItem">
+                                            <Grid>
+                                                <!-- Background for hover or selection -->
+                                                <Rectangle x:Name="BackgroundRectangle" Fill="Transparent" />
+
+                                                <!-- Content Presenter -->
+                                                <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+
+                                                <!-- VisualStateManager -->
+                                                <VisualStateManager.VisualStateGroups>
+                                                    <VisualStateGroup>
+                                                        <!-- Normal State -->
+                                                        <VisualState x:Name="Normal">
+                                                            <Storyboard>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundRectangle" Storyboard.TargetProperty="Fill">
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent" />
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                            </Storyboard>
+                                                        </VisualState>
+
+                                                        <!-- Pointer Over State -->
+                                                        <VisualState x:Name="PointerOver">
+                                                            <Storyboard>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundRectangle" Storyboard.TargetProperty="Fill">
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="#1A1A1A" />
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                            </Storyboard>
+                                                        </VisualState>
+                                                    </VisualStateGroup>
+                                                </VisualStateManager.VisualStateGroups>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
                             </Style>
                         </ListView.ItemContainerStyle>
+
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="models:PlaylistSongDetailDTO">
-                                <Grid Height="56">
+                                <Grid Height="56" Margin="0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="50" />
                                         <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="200" />
-                                        <ColumnDefinition Width="200" />
+                                        <ColumnDefinition Width="150" />
+                                        <ColumnDefinition Width="150" />
                                         <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="50" />
                                     </Grid.ColumnDefinitions>
 
-                                    <!--  Position  -->
+                                    <!-- Position -->
                                     <TextBlock
                                         Grid.Column="0"
                                         VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
                                         Foreground="#B3B3B3"
-                                        Text="{x:Bind Position}" />
+                                        Text="{x:Bind Index}" />
 
-                                    <!--  Title with Image Placeholder  -->
+                                    <!-- Title with Image Placeholder -->
                                     <StackPanel
                                         Grid.Column="1"
                                         Margin="12,0,0,0"
@@ -237,7 +278,7 @@
                                             Text="{x:Bind SongTitle}" />
                                     </StackPanel>
 
-                                    <!--  Artist Placeholder  -->
+                                    <!-- Artist -->
                                     <TextBlock
                                         Grid.Column="2"
                                         VerticalAlignment="Center"
@@ -245,14 +286,14 @@
                                         Tapped="OnArtistTapped"
                                         Text="{x:Bind Artist}" />
 
-                                    <!--  Date Added  -->
+                                    <!-- Date Added -->
                                     <TextBlock
                                         Grid.Column="3"
                                         VerticalAlignment="Center"
                                         Foreground="#B3B3B3"
                                         Text="{x:Bind AddedAt, Converter={StaticResource DateConverter}}" />
 
-                                    <!--  Duration Placeholder  -->
+                                    <!-- Duration -->
                                     <TextBlock
                                         Grid.Column="4"
                                         MinWidth="40"
@@ -260,6 +301,26 @@
                                         Foreground="#B3B3B3"
                                         Text="{x:Bind Duration, Converter={StaticResource DurationConverter}}"
                                         TextAlignment="Center" />
+
+                                    <!-- More Options Button -->
+                                    <Button
+                                        x:Name="MoreOptionsButton"
+                                        Grid.Column="5"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Content="⋮"
+                                        Foreground="White"
+                                        Background="Transparent"
+                                        Visibility="Visible">
+                                        <Button.Flyout>
+                                            <MenuFlyout>
+                                                <MenuFlyoutItem Text="Remove from playlist"
+                                                                Click="OnRemoveFromPlaylistClick" />
+                                                <MenuFlyoutItem Text="Add to Liked Songs"
+                                                                Click="OnAddToLikedSongsClick" />
+                                            </MenuFlyout>
+                                        </Button.Flyout>
+                                    </Button>
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>

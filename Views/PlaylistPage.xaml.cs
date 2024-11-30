@@ -39,11 +39,6 @@ public sealed partial class PlaylistPage : Page
         }
     }
 
-    private void OnPlayClick(object sender, RoutedEventArgs e)
-    {
-        // TODO: Thêm logic nút Play
-    }
-
     private async void OnRemovePlaylistClick(object sender, RoutedEventArgs e)
     {
         if (PlaylistPageVM.SelectedPlaylist != null)
@@ -113,6 +108,78 @@ public sealed partial class PlaylistPage : Page
             {
                 Frame.Navigate(typeof(ArtistPage), artist);
             }
+        }
+    }
+
+    private void OnPlayClick(object sender, RoutedEventArgs e)
+    {
+        // TODO: Thêm logic nút Play
+    }
+
+    private void OnMoreOptionsClicked(object sender, RoutedEventArgs e)
+    {
+        var button = sender as Button;
+        if (button != null)
+        {
+            var selectedSong = button.DataContext as PlaylistSongDetailDTO;
+            if (selectedSong != null)
+            {
+                // Hiển thị menu hoặc thực hiện các hành động khác
+                ShowMoreOptionsMenu(selectedSong);
+            }
+        }
+    }
+
+    private void ShowMoreOptionsMenu(PlaylistSongDetailDTO song)
+    {
+
+        Debug.WriteLine($"More options for: {song.SongTitle}");
+    }
+
+    private void OnItemPointerEntered(object sender, PointerRoutedEventArgs e)
+    {
+        if (sender is FrameworkElement element &&
+            element.FindName("MoreOptionsButton") is Button moreOptionsButton)
+        {
+            moreOptionsButton.Visibility = Visibility.Visible;
+        }
+    }
+
+    private void OnItemPointerExited(object sender, PointerRoutedEventArgs e)
+    {
+        if (sender is FrameworkElement element &&
+            element.FindName("MoreOptionsButton") is Button moreOptionsButton)
+        {
+            moreOptionsButton.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    private async void OnRemoveFromPlaylistClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuFlyoutItem menuFlyoutItem &&
+            menuFlyoutItem.DataContext is PlaylistSongDetailDTO songDetail)
+        {
+            //// Gọi service để xóa bài hát khỏi playlist
+            //await PlaylistPageVM.RemoveSongFromPlaylist(songDetail);
+
+            //// Cập nhật danh sách bài hát trong playlist
+            //await PlaylistPageVM.LoadSelectedPlaylist(PlaylistPageVM.SelectedPlaylist.Id);
+
+            Debug.WriteLine($"Removed {songDetail.SongTitle} from playlist.");
+        }
+    }
+
+    private async void OnAddToLikedSongsClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuFlyoutItem menuFlyoutItem &&
+            menuFlyoutItem.DataContext is PlaylistSongDetailDTO songDetail)
+        {
+            //var likedSongsService = (App.Current as App).Services.GetRequiredService<LikedSongsService>();
+
+            //// Gọi service để thêm bài hát vào danh sách yêu thích
+            //await likedSongsService.AddToLikedSongsAsync(songDetail.SongId);
+
+            Debug.WriteLine($"Added {songDetail.SongTitle} to Liked Songs.");
         }
     }
 }

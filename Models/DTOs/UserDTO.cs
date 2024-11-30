@@ -31,5 +31,6 @@ namespace Spotify.Models.DTOs
 
         [BsonElement("followArtist")]
         public List<string> FollowArtist { get; set; } = new List<string>();
+
     }
 }

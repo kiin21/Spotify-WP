@@ -40,7 +40,6 @@ public class PlaylistSongDetailDAO : BaseDAO, IPlaylistSongDetailDAO
                           join s in songs on ps.SongId equals s.Id.ToString()
                           select new PlaylistSongDetailDTO
                           {
-                              Position = ps.Position,
                               PlaylistSongId = ps.Id.ToString(),
                               SongId = s.Id.ToString(),
                               SongTitle = s.title,

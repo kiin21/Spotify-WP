@@ -8,7 +8,6 @@ namespace Spotify.Models.DTOs
 {
     public class PlaylistSongDetailDTO
     {
-        public int Position { get; set; }
         public string PlaylistSongId { get; set; }
         public string SongId { get; set; }
         public string SongTitle { get; set; }
@@ -17,5 +16,7 @@ namespace Spotify.Models.DTOs
         public DateTime AddedAt { get; set; }
         public string AddedBy { get; set; }
         public int Duration { get; set; }
+
+        public int Index { get; set; }
     }
 }
