@@ -47,5 +47,7 @@ namespace Spotify.Models.DTOs
         [BsonElement("is_deleted")]
         public bool IsDeleted { get; set; }
 
+        [BsonElement("owner_id")]
+        public string OwnerId { get; set; }
     }
 }
