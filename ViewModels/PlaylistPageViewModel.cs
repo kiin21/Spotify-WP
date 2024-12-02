@@ -1,4 +1,5 @@
-﻿using Spotify.Models.DTOs;
+﻿using Spotify;
+using Spotify.Models.DTOs;
 using Spotify.Services;
 using System;
 using System.Collections.ObjectModel;
@@ -62,22 +63,17 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
         _playlistSongs = new ObservableCollection<PlaylistSongDetailDTO>();
     }
 
-    private async Task LoadPlaylists()
-    {
-        var playlists = await _playlistService.GetPlaylistsAsync();
-        var filteredPlaylists = playlists
-            .Where(p => !p.IsDeleted && !p.IsLikedSong) // Exclude Liked Songs
-            .ToList();
-
-        Playlists = new ObservableCollection<PlaylistDTO>(filteredPlaylists);
-        SelectedPlaylist = Playlists.FirstOrDefault();
-    }
-
     private async Task LoadPlaylistSongs(string playlistId)
     {
         if (!string.IsNullOrEmpty(playlistId))
         {
             var songs = await _playlistSongDetailService.GetPlaylistSongDetailAsync(playlistId);
+
+            for (int i = 0; i < songs.Count; i++)
+            {
+                songs[i].Index = i + 1; // Bắt đầu từ 1
+            }
+
             PlaylistSongs = new ObservableCollection<PlaylistSongDetailDTO>(songs);
         }
         else
@@ -94,7 +90,6 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
 
     public async Task LoadSelectedPlaylist(string playlistId)
     {
-        // Check if the selected playlist is already loaded
         if (SelectedPlaylist != null && SelectedPlaylist.Id == playlistId)
             return;
 
@@ -104,8 +99,6 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
         if (playlist != null)
         {
             SelectedPlaylist = playlist;
-            //var songs = await _playlistSongDetailService.GetPlaylistSongDetailAsync(playlistId);
-            //PlaylistSongs = new ObservableCollection<PlaylistSongDetailDTO>(songs);
             await LoadPlaylistSongs(playlistId);
         }
     }
@@ -115,7 +108,7 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
         var newPlaylist = new PlaylistDTO
         {
             Title = playlistName,
-            CreatedBy = "Current User",
+            CreatedBy = (App.Current as App).CurrentUser.Username,
             CreatedAt = DateTime.Now,
             IsLikedSong = false,
             IsDeleted = false,

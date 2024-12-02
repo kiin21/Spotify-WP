@@ -49,13 +49,15 @@ public class PlaylistDAO : BaseDAO, IPlaylistDAO
         }
     }
 
-    public async Task<PlaylistDTO> GetLikedSongsPlaylistAsync()
+    public async Task<PlaylistDTO> GetLikedSongsPlaylistAsync(string userId)
     {
-        // Tìm kiếm playlist có thuộc tính IsLikedSongs là true
-        var likedSongs = await _playlists.Find(p => p.IsLikedSong).FirstOrDefaultAsync();
+        var filter = Builders<PlaylistDTO>.Filter.And(
+            Builders<PlaylistDTO>.Filter.Eq(p => p.OwnerId, userId),
+            Builders<PlaylistDTO>.Filter.Eq(p => p.IsLikedSong, true),
+            Builders<PlaylistDTO>.Filter.Eq(p => p.IsDeleted, false)
+        );
 
-        // Trả về PlaylistDTO nếu tìm thấy, ngược lại trả về null
-        return likedSongs != null ? new PlaylistDTO(likedSongs) : null;
+        return await _playlists.Find(filter).FirstOrDefaultAsync();
     }
 
     public async Task AddPlaylistAsync(PlaylistDTO playlist)
@@ -74,6 +76,18 @@ public class PlaylistDAO : BaseDAO, IPlaylistDAO
     public async Task RemovePlaylistAsync(string playlistId)
     {
         await UpdatePlaylistStatusAsync(playlistId, true);
+    }
+
+    public async Task<List<PlaylistDTO>> GetPlaylistsByUserIdAsync(string userId)
+    {
+        if (string.IsNullOrEmpty(userId)) throw new ArgumentNullException(nameof(userId));
+
+        var filter = Builders<PlaylistDTO>.Filter.And(
+            Builders<PlaylistDTO>.Filter.Eq(p => p.OwnerId, userId),
+            Builders<PlaylistDTO>.Filter.Eq(p => p.IsDeleted, false)
+        );
+
+        return await _playlists.Find(filter).ToListAsync();
     }
 
 }

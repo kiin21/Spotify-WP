@@ -43,11 +43,24 @@ namespace Spotify.ViewModels
 
         private async void LoadPlaylists()
         {
-            var playlists = await _playlistService.GetPlaylistsAsync();
-            var filteredPlaylists = playlists.Where(p => !p.IsDeleted).ToList();
+            var currentUser = (App.Current as App).CurrentUser;
 
-            Playlists = new ObservableCollection<PlaylistDTO>(filteredPlaylists);
-            OnPropertyChanged(nameof(Playlists)); // Thông báo cho UI biết có sự thay đổi
+            if (currentUser == null || string.IsNullOrEmpty(currentUser.Id))
+            {
+                throw new InvalidOperationException("User is not logged in or user ID is invalid.");
+            }
+
+            // Đảm bảo user có playlist "Liked Songs"
+            await _playlistService.EnsureLikedSongsPlaylistAsync(currentUser.Id, currentUser.Username);
+
+            // Lấy danh sách playlist của user
+            var playlists = await _playlistService.GetPlaylistsByUserIdAsync(currentUser.Id);
+
+            // Gán vào ObservableCollection
+            Playlists = new ObservableCollection<PlaylistDTO>(playlists);
+            OnPropertyChanged(nameof(Playlists));
+
+            // Chọn playlist đầu tiên (nếu có)
             SelectedPlaylist = Playlists.FirstOrDefault();
         }
 
@@ -56,11 +69,12 @@ namespace Spotify.ViewModels
             var newPlaylist = new PlaylistDTO
             {
                 Title = playlistName,
-                CreatedBy = "Current User",
+                CreatedBy = (App.Current as App).CurrentUser.Username,
                 CreatedAt = DateTime.Now,
                 IsLikedSong = false,
                 IsDeleted = false,
-                Avatar = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXX6SuxBncRoZdYpU9mt8u7hveYoHzeq9vPg&s"
+                Avatar = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXX6SuxBncRoZdYpU9mt8u7hveYoHzeq9vPg&s",
+                OwnerId = (App.Current as App).CurrentUser.Id
             };
 
             await _playlistService.AddPlaylistAsync(newPlaylist);
