@@ -21,7 +21,9 @@ namespace Spotify.ViewModels
         {
             PlayPauseCommand = new RelayCommand(TogglePlayPause);
             _playbackViewModel = PlaybackControlViewModel.Instance;
-            _playbackViewModel.CurrentSong = song;
+            
+            //_playbackViewModel.CurrentSong = song; //////////////////////////////
+            
             // Initialize with passed song details
             Song = song;
             Song.plainLyrics = song.plainLyrics ?? "No lyrics available";
@@ -29,9 +31,11 @@ namespace Spotify.ViewModels
             // Subscribe to playback view model events
             _playbackViewModel.PropertyChanged += PlaybackViewModel_PropertyChanged;
 
-            _playbackViewModel.IsPlaying = false;
+            //_playbackViewModel.IsPlaying = false; //////////////////////////////
+
             // Set the initial play/pause glyph
-            PlayPauseGlyph = _playbackViewModel.IsPlaying ? "\uE769" : "\uE768"; // Play or Pause
+            //PlayPauseGlyph = _playbackViewModel.IsPlaying ? "\uE769" : "\uE768"; // Play or Pause //////////////////////////////
+            PlayPauseGlyph = "\uE768"; // Play or Pause
         }
 
         private void PlaybackViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
