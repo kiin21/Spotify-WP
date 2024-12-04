@@ -51,23 +51,22 @@
                             Spacing="8">
                             <!--  Add to Playlist Button  -->
                             <Button
+                                x:Name="ShowPlaylistButton"
                                 Width="32"
                                 Height="32"
                                 Background="Transparent"
                                 BorderThickness="0"
                                 Content="&#xE710;"
                                 FontFamily="Segoe MDL2 Assets"
-                                FontSize="7px">
+                                FontSize="7px"
+                                Click="UpdateFlyout">
                                 <Button.Flyout>
                                     <MenuFlyout>
-                                        <MenuFlyoutItem Icon="Add" Text="Create New Playlist" />
-                                        <MenuFlyoutSeparator />
-                                        <MenuFlyoutItem Icon="List" Text="My Playlist 1" />
-                                        <MenuFlyoutItem Icon="List" Text="My Playlist 2" />
-                                        <MenuFlyoutItem Icon="List" Text="My Playlist 3" />
+                                        <MenuFlyoutItem Text="Loading..." />
                                     </MenuFlyout>
                                 </Button.Flyout>
                             </Button>
+
                             <!--  Duration  -->
                             <TextBlock
                                 Margin="4,0"

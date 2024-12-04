@@ -114,21 +114,21 @@ public partial class HeaderViewModel : INotifyPropertyChanged
         bool hasNewSongs = false;
         var newNotifications = new ObservableCollection<NotificationDTO>();
 
-        // Nếu không có nghệ sĩ nào được follow
-        if (!currentUser.FollowArtist.Any())
-        {
-            if (!Notifications.Any(n => n.Message == "Follow some artists to get updates!"))
-            {
-                Notifications.Add(new NotificationDTO
-                {
-                    Message = "Follow some artists to get updates!",
-                    Timestamp = DateTime.Now,
-                    ArtistName = "",
-                    ArtistId = "",
-                });
-            }
-            return;
-        }
+        //// Nếu không có nghệ sĩ nào được follow
+        //if (!currentUser.FollowArtist.Any())
+        //{
+        //    if (!Notifications.Any(n => n.Message == "Follow some artists to get updates!"))
+        //    {
+        //        Notifications.Add(new NotificationDTO
+        //        {
+        //            Message = "Follow some artists to get updates!",
+        //            Timestamp = DateTime.Now,
+        //            ArtistName = "",
+        //            ArtistId = "",
+        //        });
+        //    }
+        //    return;
+        //}
 
         foreach (var artistId in currentUser.FollowArtist)
         {

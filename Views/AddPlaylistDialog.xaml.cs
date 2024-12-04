@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using Spotify.Models.DTOs;
 using Spotify.Services;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace Spotify.Views
@@ -24,8 +25,7 @@ namespace Spotify.Views
             {
                 Title = PlaylistNameTextBox.Text,
                 CreatedAt = DateTime.UtcNow,
-                CreatedBy = "User" // Gán theo user hiện tại hoặc thông tin cần thiết
-                                   // Gán các thuộc tính khác nếu cần
+                ShareWithUsers = new List<string>(),
             };
 
             await playlistService.AddPlaylistAsync(newPlaylist);

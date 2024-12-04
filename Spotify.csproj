@@ -36,6 +36,7 @@
     <None Remove="Views\PlaybackControlPage.xaml" />
     <None Remove="Views\PlaylistPage.xaml" />
     <None Remove="Views\SearchResultsPage.xaml" />
+    <None Remove="Views\SharePlaylistDialog.xaml" />
     <None Remove="Views\SignupPage.xaml" />
     <None Remove="Views\SongDetailPage.xaml" />
   </ItemGroup>
@@ -91,6 +92,9 @@
     <None Update="Assets\App.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\SharePlaylistDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\Controls\QueueListUserControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -56,9 +56,14 @@ namespace Spotify.ViewModels
             // Lấy danh sách playlist của user
             var playlists = await _playlistService.GetPlaylistsByUserIdAsync(currentUser.Id);
 
+            // Lấy danh sách playlist được chia sẻ với user
+            var sharedPlaylists = await _playlistService.GetSharedPlaylistsAsync(currentUser.Id);
+
+            // Hợp nhất cả hai danh sách
+            var allPlaylists = playlists.Concat(sharedPlaylists).ToList();
+
             // Gán vào ObservableCollection
-            Playlists = new ObservableCollection<PlaylistDTO>(playlists);
-            OnPropertyChanged(nameof(Playlists));
+            Playlists = new ObservableCollection<PlaylistDTO>(allPlaylists);
 
             // Chọn playlist đầu tiên (nếu có)
             SelectedPlaylist = Playlists.FirstOrDefault();
@@ -73,7 +78,7 @@ namespace Spotify.ViewModels
                 CreatedAt = DateTime.Now,
                 IsLikedSong = false,
                 IsDeleted = false,
-                Avatar = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXX6SuxBncRoZdYpU9mt8u7hveYoHzeq9vPg&s",
+                Avatar = "ms-appx:///Assets/defaultSong.png",
                 OwnerId = (App.Current as App).CurrentUser.Id
             };
 

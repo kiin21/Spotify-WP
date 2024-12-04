@@ -8,6 +8,10 @@ using System.Linq;
 using System.Diagnostics;
 using Spotify.Models.DTOs;
 using Microsoft.UI.Xaml.Input;
+using Windows.UI.Notifications;
+using System;
+using System.Threading.Tasks;
+using Catel.MVVM;
 
 namespace Spotify.Views;
 
@@ -16,6 +20,7 @@ public sealed partial class PlaylistPage : Page
     public PlaylistPageViewModel PlaylistPageVM { get; set; }
 
     public LeftSidebarPageViewModel LeftSidebarPageVM { get; set; }
+    public string NotificationText { get; set; }
 
     public PlaylistPage()
     {
@@ -116,56 +121,27 @@ public sealed partial class PlaylistPage : Page
         // TODO: Thêm logic nút Play
     }
 
-    private void OnMoreOptionsClicked(object sender, RoutedEventArgs e)
-    {
-        var button = sender as Button;
-        if (button != null)
-        {
-            var selectedSong = button.DataContext as PlaylistSongDetailDTO;
-            if (selectedSong != null)
-            {
-                // Hiển thị menu hoặc thực hiện các hành động khác
-                ShowMoreOptionsMenu(selectedSong);
-            }
-        }
-    }
-
-    private void ShowMoreOptionsMenu(PlaylistSongDetailDTO song)
-    {
-
-        Debug.WriteLine($"More options for: {song.SongTitle}");
-    }
-
-    private void OnItemPointerEntered(object sender, PointerRoutedEventArgs e)
-    {
-        if (sender is FrameworkElement element &&
-            element.FindName("MoreOptionsButton") is Button moreOptionsButton)
-        {
-            moreOptionsButton.Visibility = Visibility.Visible;
-        }
-    }
-
-    private void OnItemPointerExited(object sender, PointerRoutedEventArgs e)
-    {
-        if (sender is FrameworkElement element &&
-            element.FindName("MoreOptionsButton") is Button moreOptionsButton)
-        {
-            moreOptionsButton.Visibility = Visibility.Collapsed;
-        }
-    }
-
     private async void OnRemoveFromPlaylistClick(object sender, RoutedEventArgs e)
     {
         if (sender is MenuFlyoutItem menuFlyoutItem &&
             menuFlyoutItem.DataContext is PlaylistSongDetailDTO songDetail)
         {
-            //// Gọi service để xóa bài hát khỏi playlist
-            //await PlaylistPageVM.RemoveSongFromPlaylist(songDetail);
+            var playlistId = PlaylistPageVM.SelectedPlaylist.Id;
 
-            //// Cập nhật danh sách bài hát trong playlist
-            //await PlaylistPageVM.LoadSelectedPlaylist(PlaylistPageVM.SelectedPlaylist.Id);
+            // Gọi service để xóa bài hát khỏi playlist
+            var _playlistSongDetailService = (App.Current as App).Services.GetRequiredService<PlaylistSongDetailService>();
+            await _playlistSongDetailService.RemoveSongFromPlaylistAsync(playlistId, songDetail.SongId);
 
-            Debug.WriteLine($"Removed {songDetail.SongTitle} from playlist.");
+            // Cập nhật danh sách bài hát trong playlist
+            await PlaylistPageVM.LoadPlaylistSongs(playlistId);
+
+            // Hiển thị thông báo
+            NotificationTextBlock.Text = $"'{songDetail.SongTitle}' has been removed";
+            NotificationTextBlock.Visibility = Visibility.Visible;
+
+            // Tự động ẩn sau 3 giây
+            await Task.Delay(3000);
+            NotificationTextBlock.Visibility = Visibility.Collapsed;
         }
     }
 
@@ -174,12 +150,43 @@ public sealed partial class PlaylistPage : Page
         if (sender is MenuFlyoutItem menuFlyoutItem &&
             menuFlyoutItem.DataContext is PlaylistSongDetailDTO songDetail)
         {
-            //var likedSongsService = (App.Current as App).Services.GetRequiredService<LikedSongsService>();
+            var _playlistService = (App.Current as App).Services.GetRequiredService<PlaylistService>();
+            var _playlistSongDetailService = (App.Current as App).Services.GetRequiredService<PlaylistSongDetailService>();
 
-            //// Gọi service để thêm bài hát vào danh sách yêu thích
-            //await likedSongsService.AddToLikedSongsAsync(songDetail.SongId);
+            var userId = (App.Current as App).CurrentUser.Id;
 
-            Debug.WriteLine($"Added {songDetail.SongTitle} to Liked Songs.");
+            var likedSongsPlaylist = await _playlistService.GetLikedSongsPlaylistAsync(userId);
+
+            // Gọi service để thêm bài hát vào danh sách yêu thích
+            await _playlistSongDetailService.AddSongToPlaylistAsync(likedSongsPlaylist.Id, songDetail);
+
+            // Hiển thị thông báo
+            NotificationTextBlock.Text = $"'{songDetail.SongTitle}' has been added to Liked Songs!";
+            NotificationTextBlock.Visibility = Visibility.Visible;
+
+            // Tự động ẩn sau 3 giây
+            await Task.Delay(3000);
+            NotificationTextBlock.Visibility = Visibility.Collapsed;
         }
+    }
+
+    private async void OnSharePlaylistClick(object sender, RoutedEventArgs e)
+    {
+        var playlist = PlaylistPageVM.SelectedPlaylist;
+
+
+        // Mở dialog SharePlaylistDialog
+        var dialog = new SharePlaylistDialog(playlist) { XamlRoot = this.XamlRoot };
+        var result = await dialog.ShowAsync();
+
+        if (result == ContentDialogResult.Primary)
+        {
+            await dialog.SharePlaylistViewModel.SharePlaylistAsync();
+        }
+    }
+
+    private void Notification_Closed(object sender, EventArgs e)
+    {
+        NotificationText = string.Empty;
     }
 }
