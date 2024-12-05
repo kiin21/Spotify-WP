@@ -14,8 +14,6 @@ namespace Spotify.Views;
 
 public sealed partial class HistoryPage : Page
 {
-    private PlayHistoryService _playHistoryService = (App.Current as App).Services.GetRequiredService<PlayHistoryService>();
-    private SongService _songSerivce  = (App.Current as App).Services.GetRequiredService<SongService>();
     public HistoryViewModel ViewModel { get; set; }
     public HistoryPage()
     {
