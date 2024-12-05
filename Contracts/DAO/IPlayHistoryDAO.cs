@@ -5,9 +5,10 @@ using Spotify.Models.DTOs;
 
 namespace Spotify.Contracts.DAO;
 
-public interface IPlayHistoryDAO: IDAO
+public interface IPlayHistoryDAO : IDAO
 {
-    Task<List<PlayHistoryDTO>> GetUserHistoryAsync(string userID);
+    Task<List<PlayHistoryWithSongDTO>> GetUserHistoryWithSongAsync(string userID); 
+    Task InsertPlayHistoryAsync(PlayHistoryDTO playHistory);
 }
 
 

@@ -14,6 +14,7 @@ using System.Collections.ObjectModel;
 using Catel.Collections;
 using Microsoft.UI.Xaml.Controls;
 using Spotify.Views;
+using Spotify.DAOs;
 
 namespace Spotify.ViewModels;
 
@@ -31,6 +32,8 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     }
 
     private readonly PlaybackControlService _playbackService;
+    private readonly PlayHistoryService _playHistoryService;
+
     private ObservableCollection<SongDTO> _playbacklist = new();
     private readonly ObservableCollection<SongDTO> _shuffledPlaylist = new();
     private int _currentIndex;
@@ -68,6 +71,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     private PlaybackControlViewModel()
     {
         _playbackService = PlaybackControlService.Instance;
+        _playHistoryService = new PlayHistoryService(App.Current.Services.GetService<IPlayHistoryDAO>());
 
         // Initialize commands
         PlayPauseCommand = new RelayCommand(TogglePlayPause);
@@ -130,18 +134,16 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
                 // Update total duration
                 _totalDuration = TimeSpan.FromSeconds(CurrentSongDurationInSeconds);
                 _playbackService.AddCurrentSong(value);
+
                 foreach (var song in _playbacklist)
                 {
-                    if (song == value)
-                    {
-                        song.IsCurrentSong = true;
-                    }
-                    else
-                    {
-                        song.IsCurrentSong = false;
-                    }
+                    song.IsCurrentSong = song == value;
                 }
 
+                // Save play history asynchronously
+                SavePlayHistory(value);
+
+                // Notify UI
                 OnPropertyChanged(nameof(CurrentSongTitle));
                 OnPropertyChanged(nameof(CurrentArtistName));
                 OnPropertyChanged(nameof(CurrentCoverArtUrl));
@@ -150,6 +152,24 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             }
         }
     }
+
+    private async void SavePlayHistory(SongDTO song)
+    {
+        try
+        {
+            var userID = App.Current.CurrentUser.Id;
+            var songID = song.Id.ToString();
+            var currentTime = DateTime.Now;
+
+            await _playHistoryService.SavePlayHistoryAsync(userID, songID, currentTime);
+        }
+        catch (Exception ex)
+        {
+            // Handle or log the exception
+            Console.WriteLine($"Error saving play history: {ex.Message}");
+        }
+    }
+
     public bool IsPlaying
     {
         get => _isPlaying;

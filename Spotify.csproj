@@ -28,6 +28,7 @@
     <None Remove="Views\ArtistPage.xaml" />
     <None Remove="Views\Controls\QueueListUserControl.xaml" />
     <None Remove="Views\HeaderPage.xaml" />
+    <None Remove="Views\HistoryPage.xaml" />
     <None Remove="Views\LeftSidebarPage.xaml" />
     <None Remove="Views\LoginPage.xaml" />
     <None Remove="Views\LyricPage.xaml" />
@@ -91,6 +92,9 @@
     <None Update="Assets\App.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\HistoryPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\Controls\QueueListUserControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

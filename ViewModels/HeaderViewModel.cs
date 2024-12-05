@@ -26,6 +26,7 @@ public partial class HeaderViewModel : INotifyPropertyChanged
 
     private readonly ArtistService _artistService;
     private readonly UserService _userService;
+    private readonly PlayHistoryService _playHistoryService;
 
     public ObservableCollection<SongDTO> SearchResults
     {
@@ -62,6 +63,7 @@ public partial class HeaderViewModel : INotifyPropertyChanged
     }
 
     public ICommand SearchCommand { get; }
+    public ICommand ShowHistoryCommand { get; }
 
 
     //public HeaderViewModel(SongService songService)
@@ -71,16 +73,34 @@ public partial class HeaderViewModel : INotifyPropertyChanged
     //    SearchResults = new ObservableCollection<SongDTO>();
     //}
 
-    public HeaderViewModel(SongService songService, ArtistService artistService, UserService userService)
+    public HeaderViewModel(SongService songService, ArtistService artistService, UserService userService, PlayHistoryService playHistoryService)
     {
         SearchCommand = new RelayCommand(async _ => await ExecuteSearchAsync(), _ => CanExecuteSearch());
+        ShowHistoryCommand = new RelayCommand(async _ => await ExecuteShowHistoryAsync(), _ => CanExecuteShowHistory());
         _songService = songService;
         SearchResults = new ObservableCollection<SongDTO>();
 
         _artistService = artistService;
         _userService = userService;
+        _playHistoryService = playHistoryService;
     }
 
+    private async Task ExecuteShowHistoryAsync()
+    {
+        List<PlayHistoryWithSongDTO> history = await _playHistoryService.GetUserHistoryAsync(App.Current.CurrentUser.Id);
+        var shellWindow = (App.Current as App).ShellWindow;
+        var mainFrame = shellWindow.getMainFrame();
+        shellWindow.GetNavigationService().Navigate(typeof(HistoryPage), history);
+    }
+
+    private bool CanExecuteShowHistory()
+    {
+        if(App.Current.CurrentUser == null)
+        {
+            return false;
+        }
+        return true;
+    }
 
     private async Task ExecuteSearchAsync()
     {

@@ -1,30 +1,50 @@
 ﻿using System;
+using MongoDB.Driver;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using MongoDB.Bson;
-using MongoDB.Driver;
 using Spotify.Contracts.DAO;
 using Spotify.Models.DTOs;
+using System.Diagnostics;
 
 namespace Spotify.DAOs;
 
 public class PlayHistoryDAO : BaseDAO, IPlayHistoryDAO
 {
     private readonly IMongoCollection<PlayHistoryDTO> _playHistory;
+
     public PlayHistoryDAO()
     {
         var database = connection.GetDatabase("SpotifineDB");
         _playHistory = database.GetCollection<PlayHistoryDTO>("PlayHistory");
     }
-    public async Task<List<PlayHistoryDTO>> GetUserHistoryAsync(string userID)
+
+    public async Task<List<PlayHistoryWithSongDTO>> GetUserHistoryWithSongAsync(string userID)
     {
-        // Find documents where UserID matches and sort by PlayedAt in descending order
-        return await _playHistory
-            .Find(playHistory => playHistory.UserID == userID)
-            .SortByDescending(playHistory => playHistory.PlayedAt)
-            .ToListAsync();
+        var pipeline = new[]
+        {
+            new BsonDocument("$match", new BsonDocument("user_id", userID)),
+            new BsonDocument("$addFields", new BsonDocument("song_id", new BsonDocument("$toObjectId", "$song_id"))),
+            new BsonDocument("$lookup", new BsonDocument{
+                                                            { "from", "Songs" },
+                                                            { "localField", "song_id" },
+                                                            { "foreignField", "_id" },
+                                                            { "as", "songDetails" }
+                                                        }),
+            new BsonDocument("$unwind", new BsonDocument("path", "$songDetails")),
+            new BsonDocument("$sort", new BsonDocument("played_at", -1)),
+            new BsonDocument("$addFields", new BsonDocument("song_id", new BsonDocument("$toString", "$song_id"))),
+        };
+
+        var result = await _playHistory.Aggregate<PlayHistoryWithSongDTO>(pipeline).ToListAsync();
+        return result;
+    }
+
+        //var another = await _playHistory.Find(new BsonDocument()).ToListAsync();
+    public async Task InsertPlayHistoryAsync(PlayHistoryDTO playHistory)
+    {
+        await _playHistory.InsertOneAsync(playHistory);
     }
 }
+
 
