@@ -9,15 +9,15 @@ public class PlayHistoryWithSongDTO
     [BsonId]
     public ObjectId Id { get; set; }
 
-    [BsonElement("user_id")] // Matches the MongoDB field name
+    [BsonElement("user_id")] 
     public string UserID { get; set; }
 
-    [BsonElement("song_id")] // Matches the MongoDB field name
+    [BsonElement("song_id")] 
     public string SongID { get; set; }
 
-    [BsonElement("played_at")] // Matches the MongoDB field name
+    [BsonElement("played_at")] 
     public DateTime PlayedAt { get; set; }
 
-    [BsonElement("songDetails")] // Matches the MongoDB field name for the joined data
+    [BsonElement("songDetails")]
     public SongDTO SongDetails { get; set; }
 }

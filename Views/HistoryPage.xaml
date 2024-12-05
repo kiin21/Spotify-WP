@@ -53,9 +53,9 @@
             BorderThickness="1"
             IsItemClickEnabled="True"
             ItemClick="Item_Selected"
-            ItemsSource="{Binding Songs}">
+            ItemsSource="{x:Bind ViewModel.Songs}">
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="local1:SongDTO">
+                <DataTemplate x:DataType="local1:PlayHistoryWithSongDTO">
                     <Grid Margin="0,12,0,12">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" MinWidth="150" />
@@ -66,7 +66,7 @@
                         <Image
                             MaxWidth="100"
                             MaxHeight="100"
-                            Source="{x:Bind CoverArtUrl}"
+                            Source="{x:Bind SongDetails.CoverArtUrl}"
                             Stretch="Fill" />
 
                         <!--  Song Info  -->
@@ -75,7 +75,7 @@
                                 Margin="0,0,0,6"
                                 HorizontalAlignment="Left"
                                 Style="{StaticResource CustomTitleTextBlockStyle}"
-                                Text="{x:Bind title}" />
+                                Text="{x:Bind SongDetails.title}" />
                             <TextBlock
                                 Width="350"
                                 HorizontalAlignment="Left"
@@ -83,13 +83,13 @@
                                 FontWeight="Normal"
                                 Foreground="#B3B3B3"
                                 MaxLines="1"
-                                Text="{x:Bind ArtistName}"
+                                Text="{x:Bind SongDetails.ArtistName}"
                                 TextTrimming="CharacterEllipsis" />
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock
                                     HorizontalAlignment="Left"
                                     Style="{StaticResource CustomCaptionTextBlockStyle}"
-                                    Text="{x:Bind FormattedDuration}" />
+                                    Text="{x:Bind SongDetails.FormattedDuration}" />
                                 <TextBlock
                                     HorizontalAlignment="Left"
                                     Style="{StaticResource CustomCaptionTextBlockStyle}"
@@ -98,7 +98,7 @@
                                     Margin="5,0,0,0"
                                     HorizontalAlignment="Left"
                                     Style="{StaticResource CustomCaptionTextBlockStyle}"
-                                    Text="{x:Bind ReleaseDate}" />
+                                    Text="{x:Bind SongDetails.ReleaseDate}" />
                             </StackPanel>
                         </StackPanel>
                     </Grid>
