@@ -4,31 +4,81 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using Spotify.Models;
 using Spotify.Models.DTOs;
-using Spotify.Services;
 
-namespace Spotify.ViewModels;
-
-public partial class HistoryViewModel : INotifyPropertyChanged
+namespace Spotify.ViewModels
 {
-    private ObservableCollection<PlayHistoryWithSongDTO> _songs = new ObservableCollection<PlayHistoryWithSongDTO>();
-    public ObservableCollection<PlayHistoryWithSongDTO> Songs
+    public class HistoryViewModel : INotifyPropertyChanged
     {
-        get => _songs;
-        set
+        private ObservableCollection<PlayHistoryWithSongDTO> _songs = new ObservableCollection<PlayHistoryWithSongDTO>();
+        public ObservableCollection<PlayHistoryWithSongDTO> Songs
         {
-            _songs = value;
-            OnPropertyChanged();
+            get => _songs;
+            set
+            {
+                _songs = value;
+                OnPropertyChanged();
+                LoadAndGroupSongs();
+            }
+        }
+
+        private ObservableCollection<GroupedPlayHistory> _groupedSongs = new ObservableCollection<GroupedPlayHistory>();
+        public ObservableCollection<GroupedPlayHistory> GroupedSongs
+        {
+            get => _groupedSongs;
+            set
+            {
+                _groupedSongs = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public HistoryViewModel()
+        {
+            // Initialize or load songs if needed
+        }
+
+        private void LoadAndGroupSongs()
+        {
+            var grouped = Songs
+                .GroupBy(song => GetGroupKey(song.PlayedAt))
+                .Select(g => new GroupedPlayHistory(g.Key, new ObservableCollection<PlayHistoryWithSongDTO>(g)))
+                .OrderByDescending(g => g.Key)
+                .ToList();
+
+            GroupedSongs = new ObservableCollection<GroupedPlayHistory>(grouped);
+        }
+
+        private string GetGroupKey(DateTime date)
+        {
+            var today = DateTime.Today;
+            var startOfWeek = today.AddDays(-(int)today.DayOfWeek);
+
+            if (date.Date == today)
+                return "Today";
+            if (date.Date >= startOfWeek && date.Date < startOfWeek.AddDays(7))
+                return "This Week";
+            if (date.Date >= startOfWeek.AddDays(-7) && date.Date < startOfWeek)
+                return "Last Week";
+            return date.ToString("MMM-yyyy");
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
-    public HistoryViewModel(){}
 
-    // Implement INotifyPropertyChanged
-    public event PropertyChangedEventHandler PropertyChanged;
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    public class GroupedPlayHistory
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        public string Key { get; }
+        public ObservableCollection<PlayHistoryWithSongDTO> Items { get; }
+
+        public GroupedPlayHistory(string key, ObservableCollection<PlayHistoryWithSongDTO> items)
+        {
+            Key = key;
+            Items = items;
+        }
     }
 }
