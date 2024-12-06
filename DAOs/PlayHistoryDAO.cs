@@ -40,7 +40,6 @@ public class PlayHistoryDAO : BaseDAO, IPlayHistoryDAO
         return result;
     }
 
-        //var another = await _playHistory.Find(new BsonDocument()).ToListAsync();
     public async Task InsertPlayHistoryAsync(PlayHistoryDTO playHistory)
     {
         await _playHistory.InsertOneAsync(playHistory);
