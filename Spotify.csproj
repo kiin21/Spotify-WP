@@ -28,6 +28,7 @@
     <None Remove="Views\ArtistPage.xaml" />
     <None Remove="Views\Controls\QueueListUserControl.xaml" />
     <None Remove="Views\HeaderPage.xaml" />
+    <None Remove="Views\HistoryPage.xaml" />
     <None Remove="Views\LeftSidebarPage.xaml" />
     <None Remove="Views\LoginPage.xaml" />
     <None Remove="Views\LyricPage.xaml" />
@@ -93,6 +94,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Page Update="Views\SharePlaylistDialog.xaml">
+		<Generator>MSBuild:Compile</Generator>
+	</Page>
+    <Page Update="Views\HistoryPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\Controls\QueueListUserControl.xaml">

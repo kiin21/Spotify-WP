@@ -8,6 +8,7 @@ using System.Linq;
 using System.Diagnostics;
 using Spotify.Models.DTOs;
 using Microsoft.UI.Xaml.Input;
+using System.ComponentModel;
 using Windows.UI.Notifications;
 using System;
 using System.Threading.Tasks;
@@ -18,8 +19,9 @@ namespace Spotify.Views;
 public sealed partial class PlaylistPage : Page
 {
     public PlaylistPageViewModel PlaylistPageVM { get; set; }
-
+    public PlaybackControlViewModel PlaybackControlViewModel;
     public LeftSidebarPageViewModel LeftSidebarPageVM { get; set; }
+    string PlayPauseGlyph;
     public string NotificationText { get; set; }
 
     public PlaylistPage()
@@ -29,10 +31,13 @@ public sealed partial class PlaylistPage : Page
         var playlistService = (App.Current as App).Services.GetRequiredService<PlaylistService>();
         var playlistSongDetailService = (App.Current as App).Services.GetRequiredService<PlaylistSongDetailService>();
         LeftSidebarPageVM = (App.Current as App).Services.GetRequiredService<LeftSidebarPageViewModel>();
+        PlaybackControlViewModel = PlaybackControlViewModel.Instance;
 
         PlaylistPageVM = new PlaylistPageViewModel(playlistService, playlistSongDetailService);
         DataContext = PlaylistPageVM;  // Đảm bảo DataContext là PlaylistPageVM
     }
+
+
 
     protected override async void OnNavigatedTo(NavigationEventArgs e)
     {
@@ -100,6 +105,8 @@ public sealed partial class PlaylistPage : Page
         }
     }
 
+
+
     private async void OnArtistTapped(object sender, TappedRoutedEventArgs e)
     {
         if (sender is FrameworkElement element && element.DataContext is PlaylistSongDetailDTO songDetail)
@@ -119,6 +126,44 @@ public sealed partial class PlaylistPage : Page
     private void OnPlayClick(object sender, RoutedEventArgs e)
     {
         // TODO: Thêm logic nút Play
+    }
+
+    private void OnMoreOptionsClicked(object sender, RoutedEventArgs e)
+    {
+        var button = sender as Button;
+        if (button != null)
+        {
+            var selectedSong = button.DataContext as PlaylistSongDetailDTO;
+            if (selectedSong != null)
+            {
+                // Hiển thị menu hoặc thực hiện các hành động khác
+                ShowMoreOptionsMenu(selectedSong);
+            }
+        }
+    }
+
+    private void ShowMoreOptionsMenu(PlaylistSongDetailDTO song)
+    {
+
+        Debug.WriteLine($"More options for: {song.SongTitle}");
+    }
+
+    private void OnItemPointerEntered(object sender, PointerRoutedEventArgs e)
+    {
+        if (sender is FrameworkElement element &&
+            element.FindName("MoreOptionsButton") is Button moreOptionsButton)
+        {
+            moreOptionsButton.Visibility = Visibility.Visible;
+        }
+    }
+
+    private void OnItemPointerExited(object sender, PointerRoutedEventArgs e)
+    {
+        if (sender is FrameworkElement element &&
+            element.FindName("MoreOptionsButton") is Button moreOptionsButton)
+        {
+            moreOptionsButton.Visibility = Visibility.Collapsed;
+        }
     }
 
     private async void OnRemoveFromPlaylistClick(object sender, RoutedEventArgs e)

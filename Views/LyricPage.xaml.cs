@@ -34,7 +34,7 @@ public sealed partial class LyricPage : Page
     {
         if (highlightedLyric != null)
         {
-            LyricListView.ScrollIntoView(highlightedLyric, ScrollIntoViewAlignment.Default);
+            LyricListView.ScrollIntoView(highlightedLyric, ScrollIntoViewAlignment.Leading);
         }
     }
 }

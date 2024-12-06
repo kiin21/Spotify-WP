@@ -13,7 +13,7 @@ namespace Spotify.Contracts.DAO
         //Task<List<QueueDTO>> GetQueueAsync();
         Task<QueueDTO> GetQueueByIdAsync(string id);
         Task AddQueueAsync(QueueDTO queue);
-        Task UpdateQueueAsync(string id, QueueDTO updatedQueue);
-        Task DeleteQueueAsync(string id);
+        Task UpdateQueueAsync(string user_id, List<string> song_ids);
+        Task DeleteQueueAsync(string user_id);
     }
 }

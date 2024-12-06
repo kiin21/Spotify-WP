@@ -33,16 +33,29 @@ public class QueueDAO : BaseDAO, IQueueDAO
         await _queues.InsertOneAsync(queue);
     }
 
-    public async Task UpdateQueueAsync(string id, QueueDTO updatedQueue)
+    public async Task UpdateQueueAsync(string user_id, List<string> song_ids)
     {
-        //TODO: Implement this method
-        throw new NotImplementedException();
-        //var filter = Builders<QueueDTO>.Filter.Eq(q => q.Id, id);
-        //var options = new FindOneAndReplaceOptions<QueueDTO> { ReturnDocument = ReturnDocument.After };
-        //await _queues.FindOneAndReplaceAsync(filter, updatedQueue, options);
+        if (string.IsNullOrWhiteSpace(user_id))
+            throw new ArgumentNullException(nameof(user_id));
+        if (song_ids == null || song_ids.Count == 0)
+            throw new ArgumentNullException(nameof(song_ids));
+
+        var filter = Builders<QueueDTO>.Filter.Eq(q => q.UserId, user_id);
+
+        // Use UpdateDefinition to replace the `song_ids` field
+        var update = Builders<QueueDTO>.Update.Set(q => q.SongIds, song_ids);
+
+        var updateResult = await _queues.UpdateOneAsync(filter, update);
+
+        //// Check if the update was successful
+        //if (updateResult.ModifiedCount == 0)
+        //{
+        //    throw new InvalidOperationException("No queue found for the given user_id or no changes made.");
+        //}
     }
 
-    public async Task DeleteQueueAsync(string id)
+
+    public async Task DeleteQueueAsync(string user_id)
     {
         //TODO : Implement this method
         throw new NotImplementedException();
