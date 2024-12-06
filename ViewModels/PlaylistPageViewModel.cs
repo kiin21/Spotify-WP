@@ -4,6 +4,7 @@ using Spotify.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -63,7 +64,7 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
         _playlistSongs = new ObservableCollection<PlaylistSongDetailDTO>();
     }
 
-    private async Task LoadPlaylistSongs(string playlistId)
+    public async Task LoadPlaylistSongs(string playlistId)
     {
         if (!string.IsNullOrEmpty(playlistId))
         {
@@ -72,6 +73,9 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
             for (int i = 0; i < songs.Count; i++)
             {
                 songs[i].Index = i + 1; // Bắt đầu từ 1
+
+                // Kiểm tra xem bài hát có thuộc playlist "Liked Songs" không
+                songs[i].IsInLikedPlaylist = SelectedPlaylist?.IsLikedSong ?? false;
             }
 
             PlaylistSongs = new ObservableCollection<PlaylistSongDetailDTO>(songs);

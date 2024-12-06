@@ -16,5 +16,7 @@ namespace Spotify.Contracts.DAO
         Task UpdatePlaylistStatusAsync(string playlistId, bool isDeleted);
         Task RemovePlaylistAsync(string playlistId);
         Task<List<PlaylistDTO>> GetPlaylistsByUserIdAsync(string userId);
+        Task UpdatePlaylistAsync(string playlistId, PlaylistDTO updatedPlaylist);
+
     }
 }

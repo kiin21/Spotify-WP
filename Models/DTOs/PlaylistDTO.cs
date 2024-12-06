@@ -49,5 +49,8 @@ namespace Spotify.Models.DTOs
 
         [BsonElement("owner_id")]
         public string OwnerId { get; set; }
+
+        [BsonElement("shareWithUsers")]
+        public List<string> ShareWithUsers { get; set; } = new List<string>();
     }
 }

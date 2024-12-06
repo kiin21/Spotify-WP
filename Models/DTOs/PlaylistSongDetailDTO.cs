@@ -18,5 +18,8 @@ namespace Spotify.Models.DTOs
         public int Duration { get; set; }
 
         public int Index { get; set; }
+
+        // Thuộc tính mới để xác định bài hát có phải thuộc playlist "Liked Songs" không
+        public bool IsInLikedPlaylist { get; set; }
     }
 }

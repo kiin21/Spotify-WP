@@ -2,6 +2,7 @@
 using Spotify.Models.DTOs;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Spotify.Services
@@ -71,5 +72,35 @@ namespace Spotify.Services
 
             return likedSongsPlaylist;
         }
+
+        public async Task SharePlaylistAsync(string playlistId, string userId)
+        {
+
+            var playlist = await _playlistDAO.GetPlaylistByIdAsync(playlistId);
+
+            if (playlist.ShareWithUsers == null)
+                playlist.ShareWithUsers = new List<string>();
+
+            if (!playlist.ShareWithUsers.Contains(userId))
+            {
+                playlist.ShareWithUsers.Add(userId);
+                await _playlistDAO.UpdatePlaylistAsync(playlistId, playlist);
+            }
+        }
+
+        public async Task<List<PlaylistDTO>> GetSharedPlaylistsAsync(string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+                throw new ArgumentNullException(nameof(userId));
+
+            // Lấy tất cả các playlist
+            var allPlaylists = await _playlistDAO.GetPlaylistsAsync();
+
+            // Lọc những playlist có userId trong danh sách ShareWithUsers
+            var sharedPlaylists = allPlaylists.Where(p => p.ShareWithUsers != null && p.ShareWithUsers.Contains(userId)).ToList();
+
+            return sharedPlaylists;
+        }
+
     }
 }

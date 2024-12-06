@@ -16,9 +16,6 @@ namespace Spotify.Models.DTOs
         [BsonElement("playlist_id")]
         public string PlaylistId { get; set; }
 
-        [BsonElement("position")]
-        public int Position { get; set; }
-
         [BsonElement("added_at")]
         public DateTime AddedAt { get; set; }
 
