@@ -35,7 +35,7 @@ namespace Spotify.ViewModels
 
         public HistoryViewModel()
         {
-            // Initialize or load songs if needed
+            // What to do ?
         }
 
         private void LoadAndGroupSongs()

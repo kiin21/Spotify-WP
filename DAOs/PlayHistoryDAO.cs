@@ -6,6 +6,7 @@ using MongoDB.Bson;
 using Spotify.Contracts.DAO;
 using Spotify.Models.DTOs;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Spotify.DAOs;
 
@@ -42,7 +43,29 @@ public class PlayHistoryDAO : BaseDAO, IPlayHistoryDAO
 
     public async Task InsertPlayHistoryAsync(PlayHistoryDTO playHistory)
     {
-        await _playHistory.InsertOneAsync(playHistory);
+        // Define the aggregation pipeline to check if the song has been played today
+        var pipeline = new[]
+        {
+                new BsonDocument("$match", new BsonDocument
+                {
+                    { "user_id", playHistory.UserID },
+                    { "song_id", playHistory.SongID },
+                    { "played_at", new BsonDocument
+                        {
+                            { "$gte", playHistory.PlayedAt.Date },
+                            { "$lt", playHistory.PlayedAt.Date.AddDays(1) }
+                        }
+                    }
+                })
+            };
+
+        var existingPlayHistory = await _playHistory.Aggregate<PlayHistoryDTO>(pipeline).ToListAsync();
+
+        if (!existingPlayHistory.Any())
+        {
+            // Insert the new play history record
+            await _playHistory.InsertOneAsync(playHistory);
+        }
     }
 }
 
