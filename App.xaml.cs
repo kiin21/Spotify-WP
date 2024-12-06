@@ -97,6 +97,10 @@ namespace Spotify
             services.AddSingleton<ArtistService>();
 
 
+            // FIX_LATTER
+            services.AddSingleton<ShellWindow>();
+
+
 
 
             // Register ViewModels
