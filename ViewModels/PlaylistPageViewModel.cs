@@ -11,6 +11,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
+/// <summary>
+/// ViewModel for managing playlists and their songs.
+/// </summary>
 public class PlaylistPageViewModel : INotifyPropertyChanged
 {
     private readonly PlaylistService _playlistService;
@@ -19,7 +22,14 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
     private ObservableCollection<PlaylistSongDetailDTO> _playlistSongs;
     private PlaylistDTO _selectedPlaylist;
 
+    /// <summary>
+    /// Command to play the selected playlist.
+    /// </summary>
     public IRelayCommand PlaySelectedPlaylistCommand { get; }
+
+    /// <summary>
+    /// Gets or sets the collection of playlists.
+    /// </summary>
     public ObservableCollection<PlaylistDTO> Playlists
     {
         get => _playlists;
@@ -30,6 +40,9 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the collection of songs in the selected playlist.
+    /// </summary>
     public ObservableCollection<PlaylistSongDetailDTO> PlaylistSongs
     {
         get => _playlistSongs;
@@ -41,11 +54,17 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets the count of songs in the selected playlist.
+    /// </summary>
     public string SongCount => $"{PlaylistSongs?.Count ?? 0} bài hát";
 
+    /// <summary>
+    /// Gets or sets the selected playlist.
+    /// </summary>
     public PlaylistDTO SelectedPlaylist
     {
-        get => _selectedPlaylist; 
+        get => _selectedPlaylist;
         set
         {
             if (_selectedPlaylist != value)
@@ -58,8 +77,16 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Occurs when the selected playlist ID changes.
+    /// </summary>
     public event EventHandler<string> SelectedPlaylistIdChanged;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PlaylistPageViewModel"/> class.
+    /// </summary>
+    /// <param name="playlistService">The playlist service.</param>
+    /// <param name="playlistSongDetailService">The playlist song detail service.</param>
     public PlaylistPageViewModel(PlaylistService playlistService, PlaylistSongDetailService playlistSongDetailService)
     {
         _playlistService = playlistService;
@@ -70,6 +97,9 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
         PlaySelectedPlaylistCommand = new RelayCommand(TogglePlay_Playlist);
     }
 
+    /// <summary>
+    /// Toggles the play state of the selected playlist.
+    /// </summary>
     private async void TogglePlay_Playlist()
     {
         List<string> song_ids = PlaylistSongs.Select(ps => ps.SongId).ToList();
@@ -85,7 +115,7 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
                                                             App.Current.Services.GetRequiredService<IQueueDAO>(),
                                                             App.Current.Services.GetRequiredService<ISongDAO>(),
                                                             App.Current.CurrentUser);
-        
+
         try
         {
             await queueService.UpdateQueueAsync(App.Current.CurrentUser.Id, song_ids);
@@ -96,6 +126,10 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Loads the songs for the specified playlist asynchronously.
+    /// </summary>
+    /// <param name="playlistId">The ID of the playlist.</param>
     private async Task LoadPlaylistSongs(string playlistId)
     {
         if (!string.IsNullOrEmpty(playlistId))
@@ -115,12 +149,19 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Clears the selected playlist.
+    /// </summary>
     public void ClearSelectedPlaylist()
     {
         SelectedPlaylist = null;
         PlaylistSongs.Clear();
     }
 
+    /// <summary>
+    /// Loads the selected playlist by its ID asynchronously.
+    /// </summary>
+    /// <param name="playlistId">The ID of the playlist to load.</param>
     public async Task LoadSelectedPlaylist(string playlistId)
     {
         if (SelectedPlaylist != null && SelectedPlaylist.Id == playlistId)
@@ -136,6 +177,10 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Adds a new playlist asynchronously.
+    /// </summary>
+    /// <param name="playlistName">The name of the new playlist.</param>
     public async Task AddPlaylistAsync(string playlistName)
     {
         var newPlaylist = new PlaylistDTO
@@ -152,6 +197,9 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
         Playlists.Add(newPlaylist);
     }
 
+    /// <summary>
+    /// Removes the selected playlist asynchronously.
+    /// </summary>
     public async Task RemoveSelectedPlaylist()
     {
         if (SelectedPlaylist != null)
@@ -167,9 +215,15 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
         }
     }
 
-
-    // Implement INotifyPropertyChanged
+    /// <summary>
+    /// Occurs when a property value changes.
+    /// </summary>
     public event PropertyChangedEventHandler PropertyChanged;
+
+    /// <summary>
+    /// Notifies listeners that a property value has changed.
+    /// </summary>
+    /// <param name="propertyName">Name of the property that changed.</param>
     protected virtual void OnPropertyChanged(string propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

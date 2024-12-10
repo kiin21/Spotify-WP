@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Windows;
-using Catel.IoC;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,21 +6,25 @@ using Spotify.Models.DTOs;
 using Spotify.Services;
 using Spotify.Contracts.DAO;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using System.Collections.ObjectModel;
-using Catel.Collections;
 using Microsoft.UI.Xaml.Controls;
 using Spotify.Views;
-using Spotify.DAOs;
-using Microsoft.UI.Dispatching;
 
 namespace Spotify.ViewModels;
 
+/// <summary>
+/// ViewModel for managing music playback control.
+/// </summary>
 public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 {
-
+    /// <summary>
+    /// Singleton instance of the PlaybackControlViewModel.
+    /// </summary>
     public static PlaybackControlViewModel Instance { get; private set; }
 
+    /// <summary>
+    /// Initializes the singleton instance of the PlaybackControlViewModel.
+    /// </summary>
     public static void Initialize()
     {
         if (Instance == null)
@@ -31,8 +32,6 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             Instance = new PlaybackControlViewModel();
         }
     }
-
-
 
     private readonly PlaybackControlService _playbackService;
     private readonly PlayHistoryService _playHistoryService;
@@ -54,23 +53,47 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     private bool _isDraggingSlider;
     private bool _isShowingLyricPage = false;
 
-
     // Constants
     private readonly string[] _speedOptions = new[] { "0.5x", "0.75x", "1.0x", "1.25x", "1.5x", "2.0x" };
 
-    #region Commands
-
+    /// <summary>
+    /// Command to play or pause the playback.
+    /// </summary>
     public IRelayCommand PlayPauseCommand { get; }
+
+    /// <summary>
+    /// Command to play the next song.
+    /// </summary>
     public IRelayCommand NextCommand { get; }
+
+    /// <summary>
+    /// Command to play the previous song.
+    /// </summary>
     public IRelayCommand PreviousCommand { get; }
+
+    /// <summary>
+    /// Command to toggle shuffle mode.
+    /// </summary>
     public IRelayCommand ShuffleCommand { get; }
+
+    /// <summary>
+    /// Command to toggle repeat mode.
+    /// </summary>
     public IRelayCommand RepeatCommand { get; }
+
+    /// <summary>
+    /// Command to toggle the visibility of the queue.
+    /// </summary>
     public IRelayCommand ToggleQueueCommand { get; }
+
+    /// <summary>
+    /// Command to show the lyric control.
+    /// </summary>
     public IRelayCommand ShowLyricCommand { get; }
 
-    #endregion
-
-
+    /// <summary>
+    /// Private constructor to prevent direct instantiation.
+    /// </summary>
     private PlaybackControlViewModel()
     {
         _playbackService = PlaybackControlService.Instance;
@@ -88,7 +111,6 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         // Initialize the playlist 
         try
         {
-
             // Get the queue from the app and assign it to the playbacklist on initialization
             _playbacklist = App.Current.ShellWindow.Queue;
 
@@ -96,7 +118,6 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             {
                 CurrentSong = _playbacklist[0];
                 UpdateShuffledPlaylist();
-
             }
 
             // Subscribe to service events
@@ -110,11 +131,11 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             Debug.WriteLine($"Stack trace: {ex.StackTrace}");
             // Handle error (e.g., show a message to the user)
         }
-
     }
 
-    #region Properties
-
+    /// <summary>
+    /// Gets or sets the playback list.
+    /// </summary>
     public ObservableCollection<SongDTO> PlaybackList
     {
         get => _playbacklist;
@@ -126,6 +147,12 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             }
         }
     }
+
+    /// <summary>
+    /// Adds songs to the playback list.
+    /// </summary>
+    /// <param name="songs">The collection of songs to add.</param>
+    /// <param name="belongToPlaylist">Indicates whether the songs belong to a playlist.</param>
     public void AddToPlaybackList(ObservableCollection<SongDTO> songs, bool belongToPlaylist = false)
     {
         if (belongToPlaylist)
@@ -140,14 +167,16 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
         else
         {
-            // FIX_LATTER
             foreach (var song in songs)
             {
                 _playbacklist.Add(song);
             }
         }
     }
-    // Current Song Properties
+
+    /// <summary>
+    /// Gets or sets the current song.
+    /// </summary>
     public SongDTO CurrentSong
     {
         get => _currentSong;
@@ -177,6 +206,10 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
+    /// <summary>
+    /// Saves the play history asynchronously.
+    /// </summary>
+    /// <param name="song">The song to save in the play history.</param>
     private async void SavePlayHistory(SongDTO song)
     {
         try
@@ -194,6 +227,9 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the playback is currently playing.
+    /// </summary>
     public bool IsPlaying
     {
         get => _isPlaying;
@@ -205,12 +241,31 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             }
         }
     }
+
+    /// <summary>
+    /// Gets the title of the current song.
+    /// </summary>
     public string CurrentSongTitle => CurrentSong?.title ?? "No song playing";
+
+    /// <summary>
+    /// Gets the name of the current artist.
+    /// </summary>
     public string CurrentArtistName => CurrentSong?.ArtistName ?? "Unknown artist";
+
+    /// <summary>
+    /// Gets the cover art URL of the current song.
+    /// </summary>
     public string CurrentCoverArtUrl => CurrentSong?.CoverArtUrl ?? "default_cover.jpg";
+
+    /// <summary>
+    /// Gets the duration of the current song in seconds.
+    /// </summary>
     public int CurrentSongDurationInSeconds => CurrentSong?.Duration ?? 0;
 
     // Volume Control
+    /// <summary>
+    /// Gets or sets the volume of the playback.
+    /// </summary>
     public double Volume
     {
         get => _volume;
@@ -223,6 +278,10 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             OnPropertyChanged(nameof(VolumeIcon)); // Update icon when volume changes
         }
     }
+
+    /// <summary>
+    /// Gets the icon representing the current volume level.
+    /// </summary>
     public string VolumeIcon
     {
         get
@@ -246,6 +305,9 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the queue is visible.
+    /// </summary>
     public bool IsQueueVisible
     {
         get => _isQueueVisible;
@@ -254,6 +316,10 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             SetProperty(ref _isQueueVisible, value);
         }
     }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the lyric page is showing.
+    /// </summary>
     public bool IsShowingLyricPage
     {
         get => _isShowingLyricPage;
@@ -263,10 +329,15 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
-
     // Playback Speed
+    /// <summary>
+    /// Gets the available playback speed options.
+    /// </summary>
     public string[] SpeedOptions => _speedOptions;
 
+    /// <summary>
+    /// Gets or sets the selected playback speed.
+    /// </summary>
     public string SelectedSpeed
     {
         get => _selectedSpeed;
@@ -281,6 +352,9 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     }
 
     // Position and Duration
+    /// <summary>
+    /// Gets or sets the current position in the playback in seconds.
+    /// </summary>
     public double CurrentPositionSeconds
     {
         get => _currentPosition.TotalSeconds;
@@ -293,6 +367,9 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
+    /// <summary>
+    /// Gets or sets the current position in the playback.
+    /// </summary>
     public TimeSpan CurrentPosition
     {
         get => _currentPosition;
@@ -307,23 +384,40 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
+    /// <summary>
+    /// Gets the display string for the current position.
+    /// </summary>
     public string CurrentPositionDisplay => _currentPosition.ToString(@"mm\:ss");
 
+    /// <summary>
+    /// Gets the total duration of the current media in seconds.
+    /// </summary>
     public double TotalDurationSeconds => _totalDuration.TotalSeconds;
 
+    /// <summary>
+    /// Gets the display string for the total duration.
+    /// </summary>
     public string TotalDurationDisplay => _totalDuration.ToString(@"mm\:ss");
 
     // Playback State
+    /// <summary>
+    /// Gets the icon representing the play/pause state.
+    /// </summary>
     public string PlayPauseIcon => _isPlaying ? "\uE769" : "\uE768"; // Play : Pause 
 
+    /// <summary>
+    /// Gets the color of the repeat button.
+    /// </summary>
     public string RepeatButtonColor => _repeatMode != RepeatMode.None ? "#1DB954" : "White";
 
+    /// <summary>
+    /// Gets the color of the shuffle button.
+    /// </summary>
     public string ShuffleButtonColor => _isShuffleEnabled ? "#1DB954" : "White";
 
-    #endregion
-
-    #region Command Implementations
-
+    /// <summary>
+    /// Toggles the play/pause state of the playback.
+    /// </summary>
     public void TogglePlayPause()
     {
         if (_isPlaying)
@@ -343,16 +437,21 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
+    /// <summary>
+    /// Plays the specified song.
+    /// </summary>
+    /// <param name="song">The song to play.</param>
+    /// <param name="belongToPlaylist">Indicates whether the song belongs to a playlist.</param>
     public void Play(SongDTO song, bool belongToPlaylist = false)
     {
         if (_playbacklist.Contains(song))
         {
-            //Do nothing
+            // Do nothing
         }
         else
         {
             if (!belongToPlaylist) { _playbacklist.Clear(); }
-            //Save in playlist temporarily, not save in database
+            // Save in playlist temporarily, not save in database
             _playbacklist.Insert(_currentIndex, song);
             CurrentSong = song;
             _playbackService.Play(new Uri(song.audio_url));
@@ -361,6 +460,9 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         _playbackService.Play(new Uri(song.audio_url));
     }
 
+    /// <summary>
+    /// Plays the next song in the playlist.
+    /// </summary>
     public void Next()
     {
         var playlist = new ObservableCollection<SongDTO>();
@@ -389,6 +491,9 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         Play(playlist[_currentIndex]);
     }
 
+    /// <summary>
+    /// Plays the previous song in the playlist.
+    /// </summary>
     public void Previous()
     {
         var playlist = new ObservableCollection<SongDTO>();
@@ -418,6 +523,9 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         Play(playlist[_currentIndex]);
     }
 
+    /// <summary>
+    /// Toggles shuffle mode.
+    /// </summary>
     private void ToggleShuffle()
     {
         // Business logic
@@ -430,6 +538,9 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         OnPropertyChanged(nameof(RepeatButtonColor));
     }
 
+    /// <summary>
+    /// Toggles repeat mode.
+    /// </summary>
     private void ToggleRepeat()
     {
         // Turn off shuffle
@@ -447,17 +558,24 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
         OnPropertyChanged(nameof(RepeatButtonColor));
     }
+
+    /// <summary>
+    /// Toggles the visibility of the queue.
+    /// </summary>
     private void ToggleQueue()
     {
         IsQueueVisible = !IsQueueVisible;
         Debug.WriteLine("Toggle queue");
     }
+
+    /// <summary>
+    /// Shows the lyric control.
+    /// </summary>
     private void ShowLyricControl()
     {
         IsShowingLyricPage = !IsShowingLyricPage;
         var shellWindow = App.Current.ShellWindow;
         Frame mainFrame = shellWindow.getMainFrame();
-
 
         if (IsShowingLyricPage) // If we aren't showing the lyric page, navigate to it
         {
@@ -470,9 +588,9 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
-    #endregion
-
-    #region Private Helper Methods
+    /// <summary>
+    /// Updates the shuffled playlist.
+    /// </summary>
     private void UpdateShuffledPlaylist()
     {
         _shuffledPlaylist.Clear();
@@ -492,17 +610,22 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
-
-    #endregion
-
-    #region Event Handlers
-
+    /// <summary>
+    /// Handles the playback state changed event.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="isPlaying">Indicates whether the playback is currently playing.</param>
     private void OnPlaybackStateChanged(object sender, bool isPlaying)
     {
         _isPlaying = isPlaying;
         OnPropertyChanged(nameof(PlayPauseIcon));
     }
 
+    /// <summary>
+    /// Handles the position changed event.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="position">The new position in the playback.</param>
     private void OnPositionChanged(object sender, TimeSpan position)
     {
         // Check if we should update the position
@@ -515,6 +638,13 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
+
+
+    /// <summary> 
+    /// Handles the media ended event.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void OnMediaEnded(object sender, EventArgs e)
     {
         switch (this._repeatMode)
@@ -526,7 +656,6 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
             case RepeatMode.None:
                 Next();
-
                 break;
 
             default:
@@ -534,15 +663,17 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
-    #endregion
-
-    #region Slider Interaction Methods
-
+    /// <summary>
+    /// Handles the slider drag started event.
+    /// </summary>
     public void OnSliderDragStarted()
     {
         _isDraggingSlider = true;
     }
 
+    /// <summary>
+    /// Handles the slider drag completed event.
+    /// </summary>
     public void OnSliderDragCompleted()
     {
         if (_isDraggingSlider)
@@ -552,16 +683,13 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
-    #endregion
-
-    #region IDisposable Implementation
-
+    /// <summary>
+    /// Disposes the resources used by the PlaybackControlViewModel.
+    /// </summary>
     public void Dispose()
     {
         _playbackService.PlaybackStateChanged -= OnPlaybackStateChanged;
         _playbackService.PositionChanged -= OnPositionChanged;
         _playbackService.MediaEnded -= OnMediaEnded;
     }
-
-    #endregion
 }

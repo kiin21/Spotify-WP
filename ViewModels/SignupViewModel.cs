@@ -13,15 +13,34 @@ using Spotify.Models.DTOs;
 using Spotify.Services;
 
 namespace Spotify.ViewModels;
+
+/// <summary>
+/// ViewModel for managing user signup.
+/// </summary>
 public class SignupViewModel : INotifyPropertyChanged
 {
     private readonly UserService _userService;
     private readonly LocalStorageService _localStorageService;
+
+    /// <summary>
+    /// Occurs when a property value changes.
+    /// </summary>
     public event PropertyChangedEventHandler PropertyChanged;
+
+    /// <summary>
+    /// Command to navigate to the sign-in page.
+    /// </summary>
     public RelayCommand GoToSignIn { get; }
+
+    /// <summary>
+    /// Command to execute the sign-up process.
+    /// </summary>
     public RelayCommand SignUpCommand { get; }
 
     private string _username;
+    /// <summary>
+    /// Gets or sets the username.
+    /// </summary>
     public string Username
     {
         get => _username;
@@ -33,6 +52,9 @@ public class SignupViewModel : INotifyPropertyChanged
     }
 
     private string _password;
+    /// <summary>
+    /// Gets or sets the password.
+    /// </summary>
     public string Password
     {
         get => _password;
@@ -44,6 +66,9 @@ public class SignupViewModel : INotifyPropertyChanged
     }
 
     private string _confirmPassword;
+    /// <summary>
+    /// Gets or sets the confirm password.
+    /// </summary>
     public string ConfirmPassword
     {
         get => _confirmPassword;
@@ -54,6 +79,10 @@ public class SignupViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SignupViewModel"/> class.
+    /// </summary>
+    /// <param name="userService">The user service.</param>
     public SignupViewModel(UserService userService)
     {
         _userService = userService;
@@ -62,6 +91,10 @@ public class SignupViewModel : INotifyPropertyChanged
         GoToSignIn = new RelayCommand(_ => NavigateToLogin());
     }
 
+    /// <summary>
+    /// Executes the sign-up process asynchronously.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a tuple indicating success and a message.</returns>
     public async Task<(bool success, string message)> ExecuteSignUpAsync()
     {
         try
@@ -73,7 +106,6 @@ public class SignupViewModel : INotifyPropertyChanged
             }
 
             // Check if username already exists
-            //var existingUsers = await _localStorageService.GetUsersAsync();
             var existingUsers = await _userService.GetUsersAsync();
             if (existingUsers.Any(u => u.Username.Equals(Username, StringComparison.OrdinalIgnoreCase)))
             {
@@ -85,7 +117,6 @@ public class SignupViewModel : INotifyPropertyChanged
             var (hashedPassword, salt) = PasswordHasher.HashPassword(Password);
 
             await _userService.AddUserAsync(Username, Password);
-            //await _localStorageService.SaveUserAsync(user);
             NavigateToLogin();
             return (true, "Sign up successfully!");
         }
@@ -96,6 +127,10 @@ public class SignupViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Validates the input fields.
+    /// </summary>
+    /// <returns>A tuple indicating whether the input is valid and a message.</returns>
     private (bool, string) ValidateInput()
     {
         if (string.IsNullOrWhiteSpace(Username))
@@ -117,12 +152,19 @@ public class SignupViewModel : INotifyPropertyChanged
         return (true, "Sign up successfully!");
     }
 
+    /// <summary>
+    /// Navigates to the login page.
+    /// </summary>
     private void NavigateToLogin()
     {
         var loginSignupWindow = (App.Current as App).LoginSignupWindow as LoginSignupWindow;
         loginSignupWindow?.GetNavigationService().Navigate(typeof(LoginPage));
     }
 
+    /// <summary>
+    /// Notifies listeners that a property value has changed.
+    /// </summary>
+    /// <param name="propertyName">Name of the property that changed.</param>
     protected void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

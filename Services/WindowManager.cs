@@ -4,10 +4,16 @@ using System;
 
 namespace Spotify.Services;
 
+/// <summary>
+/// Manages window switching and activation.
+/// </summary>
 public class WindowManager
 {
     private static WindowManager _instance;
 
+    /// <summary>
+    /// Gets the singleton instance of the <see cref="WindowManager"/> class.
+    /// </summary>
     public static WindowManager Instance
     {
         get
@@ -20,24 +26,27 @@ public class WindowManager
         }
     }
 
+    // Private constructor to prevent instantiation
     private WindowManager() { }
 
+    /// <summary>
+    /// Switches to the ShellWindow and closes the login/signup window if it exists.
+    /// </summary>
     public void SwitchToShellWindow()
     {
         var app = App.Current as App;
 
-        // Tạo và hiển thị ShellWindow
+        // Create and display ShellWindow
         if (app._shellWindow == null)
         {
             app._shellWindow = new ShellWindow();
         }
         app._shellWindow.Activate();
 
-        // Sau khi ShellWindow được kích hoạt, đóng cửa sổ cũ
+        // Close the old window after ShellWindow is activated
         if (app._loginSignupWindow != null)
         {
             app._loginSignupWindow.Close();
         }
     }
-
 }

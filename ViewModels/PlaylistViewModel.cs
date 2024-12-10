@@ -10,12 +10,18 @@ using System.Diagnostics;
 
 namespace Spotify.ViewModels
 {
+    /// <summary>
+    /// ViewModel for managing playlists.
+    /// </summary>
     public class PlaylistViewModel : INotifyPropertyChanged
     {
         private readonly PlaylistService _playlistService;
         private ObservableCollection<PlaylistDTO> _playlists;
         private PlaylistDTO _selectedPlaylist;
 
+        /// <summary>
+        /// Gets or sets the collection of playlists.
+        /// </summary>
         public ObservableCollection<PlaylistDTO> Playlists
         {
             get => _playlists;
@@ -26,6 +32,9 @@ namespace Spotify.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets or sets the selected playlist.
+        /// </summary>
         public PlaylistDTO SelectedPlaylist
         {
             get => _selectedPlaylist;
@@ -33,14 +42,20 @@ namespace Spotify.ViewModels
             {
                 _selectedPlaylist = value;
                 OnPropertyChanged(nameof(SelectedPlaylist));
-                // Kích hoạt sự kiện SelectedPlaylistIdChanged khi SelectedPlaylist thay đổi
+                // Trigger the SelectedPlaylistIdChanged event when SelectedPlaylist changes
                 SelectedPlaylistIdChanged?.Invoke(this, _selectedPlaylist?.Id.ToString());
             }
         }
 
-        // Khai báo sự kiện SelectedPlaylistIdChanged
+        /// <summary>
+        /// Occurs when the selected playlist ID changes.
+        /// </summary>
         public event EventHandler<string> SelectedPlaylistIdChanged;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PlaylistViewModel"/> class.
+        /// </summary>
+        /// <param name="playlistService">The playlist service.</param>
         public PlaylistViewModel(PlaylistService playlistService)
         {
             _playlistService = playlistService;
@@ -48,6 +63,9 @@ namespace Spotify.ViewModels
             LoadPlaylists();
         }
 
+        /// <summary>
+        /// Loads the playlists asynchronously.
+        /// </summary>
         private async void LoadPlaylists()
         {
             var playlists = await _playlistService.GetPlaylistsAsync();
@@ -55,12 +73,19 @@ namespace Spotify.ViewModels
             Playlists = new ObservableCollection<PlaylistDTO>(filteredPlaylists);
         }
 
+        /// <summary>
+        /// Clears the selected playlist and other data.
+        /// </summary>
         public void ClearData()
         {
             SelectedPlaylist = null;
             // Clear any other data that needs to be reset
         }
 
+        /// <summary>
+        /// Loads the selected playlist by its ID asynchronously.
+        /// </summary>
+        /// <param name="playlistId">The ID of the playlist to load.</param>
         public async Task LoadSelectedPlaylist(string playlistId)
         {
             if (string.IsNullOrEmpty(playlistId))
@@ -82,12 +107,18 @@ namespace Spotify.ViewModels
             }
         }
 
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Notifies listeners that a property value has changed.
+        /// </summary>
+        /// <param name="propertyName">Name of the property that changed.</param>
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
-
-
 }

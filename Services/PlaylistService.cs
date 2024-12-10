@@ -4,72 +4,122 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Spotify.Services
+namespace Spotify.Services;
+
+/// <summary>
+/// Service class for managing playlists.
+/// </summary>
+public class PlaylistService
 {
-    public class PlaylistService
+    private readonly IPlaylistDAO _playlistDAO;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PlaylistService"/> class.
+    /// </summary>
+    /// <param name="playlistDAO">The data access object for playlists.</param>
+    /// <exception cref="ArgumentNullException">Thrown when playlistDAO is null.</exception>
+    public PlaylistService(IPlaylistDAO playlistDAO)
     {
-        private readonly IPlaylistDAO _playlistDAO;
+        _playlistDAO = playlistDAO ?? throw new ArgumentNullException(nameof(playlistDAO));
+    }
 
-        public PlaylistService(IPlaylistDAO playlistDAO)
+    /// <summary>
+    /// Gets all playlists asynchronously.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a list of playlists.</returns>
+    public Task<List<PlaylistDTO>> GetPlaylistsAsync() =>
+        _playlistDAO.GetPlaylistsAsync();
+
+    /// <summary>
+    /// Gets a playlist by its ID asynchronously.
+    /// </summary>
+    /// <param name="id">The ID of the playlist.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the playlist.</returns>
+    public Task<PlaylistDTO> GetPlaylistByIdAsync(string id) =>
+        _playlistDAO.GetPlaylistByIdAsync(id);
+
+    /// <summary>
+    /// Gets the liked songs playlist for a user asynchronously.
+    /// </summary>
+    /// <param name="userId">The ID of the user.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the liked songs playlist.</returns>
+    public Task<PlaylistDTO> GetLikedSongsPlaylistAsync(string userId) =>
+        _playlistDAO.GetLikedSongsPlaylistAsync(userId);
+
+    /// <summary>
+    /// Adds a new playlist asynchronously.
+    /// </summary>
+    /// <param name="playlist">The playlist to add.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when playlist is null.</exception>
+    public Task AddPlaylistAsync(PlaylistDTO playlist)
+    {
+        if (playlist == null) throw new ArgumentNullException(nameof(playlist));
+        return _playlistDAO.AddPlaylistAsync(playlist);
+    }
+
+    /// <summary>
+    /// Updates the status of a playlist asynchronously.
+    /// </summary>
+    /// <param name="playlistId">The ID of the playlist.</param>
+    /// <param name="isDeleted">The new status of the playlist.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public async Task UpdatePlaylistStatusAsync(string playlistId, bool isDeleted)
+    {
+        await _playlistDAO.UpdatePlaylistStatusAsync(playlistId, isDeleted);
+    }
+
+    /// <summary>
+    /// Removes a playlist asynchronously.
+    /// </summary>
+    /// <param name="playlistId">The ID of the playlist to remove.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public async Task RemovePlaylistAsync(string playlistId)
+    {
+        await _playlistDAO.RemovePlaylistAsync(playlistId);
+    }
+
+    /// <summary>
+    /// Gets playlists by user ID asynchronously.
+    /// </summary>
+    /// <param name="userId">The ID of the user.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a list of playlists.</returns>
+    public async Task<List<PlaylistDTO>> GetPlaylistsByUserIdAsync(string userId)
+    {
+        return await _playlistDAO.GetPlaylistsByUserIdAsync(userId);
+    }
+
+    /// <summary>
+    /// Ensures that the liked songs playlist exists for a user. If it does not exist, it creates a new one.
+    /// </summary>
+    /// <param name="userId">The ID of the user.</param>
+    /// <param name="username">The username of the user.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the liked songs playlist.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when userId or username is null or empty.</exception>
+    public async Task<PlaylistDTO> EnsureLikedSongsPlaylistAsync(string userId, string username)
+    {
+        if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(username))
+            throw new ArgumentNullException("UserId or Username is null.");
+
+        var likedSongsPlaylist = await _playlistDAO.GetLikedSongsPlaylistAsync(userId);
+
+        if (likedSongsPlaylist == null)
         {
-            _playlistDAO = playlistDAO ?? throw new ArgumentNullException(nameof(playlistDAO));
-        }
-
-        public Task<List<PlaylistDTO>> GetPlaylistsAsync() =>
-            _playlistDAO.GetPlaylistsAsync();
-
-        public Task<PlaylistDTO> GetPlaylistByIdAsync(string id) =>
-            _playlistDAO.GetPlaylistByIdAsync(id);
-
-        public Task<PlaylistDTO> GetLikedSongsPlaylistAsync(string userId) =>
-            _playlistDAO.GetLikedSongsPlaylistAsync(userId);
-
-        public Task AddPlaylistAsync(PlaylistDTO playlist)
-        {
-            if (playlist == null) throw new ArgumentNullException(nameof(playlist));
-            return _playlistDAO.AddPlaylistAsync(playlist);
-        }
-
-        public async Task UpdatePlaylistStatusAsync(string playlistId, bool isDeleted)
-        {
-            await _playlistDAO.UpdatePlaylistStatusAsync(playlistId, isDeleted);
-        }
-
-        public async Task RemovePlaylistAsync(string playlistId)
-        {
-            await _playlistDAO.RemovePlaylistAsync(playlistId);
-        }
-
-        public async Task<List<PlaylistDTO>> GetPlaylistsByUserIdAsync(string userId)
-        {
-            return await _playlistDAO.GetPlaylistsByUserIdAsync(userId);
-        }
-
-        public async Task<PlaylistDTO> EnsureLikedSongsPlaylistAsync(string userId, string username)
-        {
-            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(username))
-                throw new ArgumentNullException("UserId or Username is null.");
-
-            var likedSongsPlaylist = await _playlistDAO.GetLikedSongsPlaylistAsync(userId);
-
-            if (likedSongsPlaylist == null)
+            // Create a new "Liked Songs" playlist
+            likedSongsPlaylist = new PlaylistDTO
             {
-                // Tạo mới playlist "Liked Songs"
-                likedSongsPlaylist = new PlaylistDTO
-                {
-                    Title = "Liked Songs",
-                    CreatedBy = username,
-                    CreatedAt = DateTime.Now,
-                    OwnerId = userId,
-                    IsLikedSong = true,
-                    IsDeleted = false,
-                    Avatar = "https://i1.sndcdn.com/artworks-4Lu85Xrs7UjJ4wVq-vuI2zg-t500x500.jpg"
-                };
+                Title = "Liked Songs",
+                CreatedBy = username,
+                CreatedAt = DateTime.Now,
+                OwnerId = userId,
+                IsLikedSong = true,
+                IsDeleted = false,
+                Avatar = "https://i1.sndcdn.com/artworks-4Lu85Xrs7UjJ4wVq-vuI2zg-t500x500.jpg"
+            };
 
-                await _playlistDAO.AddPlaylistAsync(likedSongsPlaylist);
-            }
-
-            return likedSongsPlaylist;
+            await _playlistDAO.AddPlaylistAsync(likedSongsPlaylist);
         }
+
+        return likedSongsPlaylist;
     }
 }

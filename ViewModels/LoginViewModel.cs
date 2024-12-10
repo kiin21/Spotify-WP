@@ -13,12 +13,20 @@ using Windows.Storage;
 using Spotify.Services;
 
 namespace Spotify.ViewModels;
+
+/// <summary>
+/// ViewModel for managing the login functionality.
+/// </summary>
 public class LoginViewModel : INotifyPropertyChanged
 {
     private readonly UserService _userService;
     public event PropertyChangedEventHandler PropertyChanged;
 
     private string _username;
+
+    /// <summary>
+    /// Gets or sets the username.
+    /// </summary>
     public string Username
     {
         get => _username;
@@ -30,6 +38,10 @@ public class LoginViewModel : INotifyPropertyChanged
     }
 
     private string _password;
+
+    /// <summary>
+    /// Gets or sets the password.
+    /// </summary>
     public string Password
     {
         get => _password;
@@ -41,6 +53,10 @@ public class LoginViewModel : INotifyPropertyChanged
     }
 
     private bool _rememberMe;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to remember the user.
+    /// </summary>
     public bool RememberMe
     {
         get => _rememberMe;
@@ -51,9 +67,20 @@ public class LoginViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets the command to navigate to the sign-up page.
+    /// </summary>
     public RelayCommand GoToSignUp { get; }
+
+    /// <summary>
+    /// Gets the command to sign in.
+    /// </summary>
     public RelayCommand SignInCommand { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LoginViewModel"/> class.
+    /// </summary>
+    /// <param name="userService">The user service.</param>
     public LoginViewModel(UserService userService)
     {
         _userService = userService;
@@ -64,6 +91,10 @@ public class LoginViewModel : INotifyPropertyChanged
         LoadSavedCredentials();
     }
 
+    /// <summary>
+    /// Executes the sign-in command asynchronously.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a boolean indicating whether the sign-in was successful.</returns>
     public async Task<bool> ExecuteSignInAsync()
     {
         try
@@ -98,11 +129,6 @@ public class LoginViewModel : INotifyPropertyChanged
                     // Login successful
                     Debug.WriteLine("Login successfully");
 
-                    //// Save current user to local settings
-                    //var localSettings = ApplicationData.Current.LocalSettings;
-                    //localSettings.Values["currentUsername"] = user.Username;
-                    //localSettings.Values["currentUserID"] = user.Id;
-
                     App.Current.CurrentUser = user;
                     // TODO: Navigate to main window
                     return true;
@@ -126,6 +152,10 @@ public class LoginViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Validates the input fields.
+    /// </summary>
+    /// <returns><c>true</c> if the input is valid; otherwise, <c>false</c>.</returns>
     private bool ValidateInput()
     {
         if (string.IsNullOrWhiteSpace(Username))
@@ -139,16 +169,22 @@ public class LoginViewModel : INotifyPropertyChanged
         return true;
     }
 
+    /// <summary>
+    /// Navigates to the sign-up page.
+    /// </summary>
     private void NavigateToSignUp()
     {
         var loginSignupWindow = (App.Current as App).LoginSignupWindow as LoginSignupWindow;
         loginSignupWindow?.GetNavigationService().Navigate(typeof(SignupPage));
     }
 
+    /// <summary>
+    /// Removes the saved credentials.
+    /// </summary>
     private void RemoveCredential()
     {
         var vault = new Windows.Security.Credentials.PasswordVault();
-        // Xóa credential cũ nếu có
+        // Remove old credentials if any
         try
         {
             var oldCredentials = vault.FindAllByResource("SpotifyApp");
@@ -159,13 +195,17 @@ public class LoginViewModel : INotifyPropertyChanged
         }
         catch { }
     }
+
+    /// <summary>
+    /// Saves the credentials.
+    /// </summary>
     private void SaveCredentials()
     {
         var vault = new Windows.Security.Credentials.PasswordVault();
         try
         {
             RemoveCredential();
-            // Thêm credential mới
+            // Add new credentials
             vault.Add(new Windows.Security.Credentials.PasswordCredential(
                 "SpotifyApp",
                 Username,
@@ -178,6 +218,9 @@ public class LoginViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Loads the saved credentials.
+    /// </summary>
     private void LoadSavedCredentials()
     {
         try
@@ -187,7 +230,7 @@ public class LoginViewModel : INotifyPropertyChanged
 
             if (credentials != null && credentials.Count > 0)
             {
-                // Lấy credential đầu tiên
+                // Get the first credential
                 var credential = credentials[0];
                 credential.RetrievePassword();
 
@@ -200,7 +243,7 @@ public class LoginViewModel : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            // Không tìm thấy credentials đã lưu
+            // No saved credentials found
             Debug.WriteLine($"No saved credentials found: {ex.Message}");
             RememberMe = false;
             Username = string.Empty;
@@ -208,6 +251,10 @@ public class LoginViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Notifies listeners that a property value has changed.
+    /// </summary>
+    /// <param name="propertyName">Name of the property that changed.</param>
     protected void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -16,18 +16,27 @@ using Windows.UI.Notifications;
 
 namespace Spotify.ViewModels;
 
+/// <summary>
+/// ViewModel for managing the header section, including search functionality and notifications.
+/// </summary>
 public partial class HeaderViewModel : INotifyPropertyChanged
 {
     private string _searchQuery;
     private readonly SongService _songService;
     private ObservableCollection<SongDTO> _searchResults;
-    //public string UserAvatar { get; set; } = App.Current.CurrentUser.UserAvatar;
+
+    /// <summary>
+    /// Gets or sets the user's avatar.
+    /// </summary>
     public string UserAvatar { get; set; } = "../Assets/defaultAvt.jpg";
 
     private readonly ArtistService _artistService;
     private readonly UserService _userService;
     private readonly PlayHistoryService _playHistoryService;
 
+    /// <summary>
+    /// Gets or sets the search results.
+    /// </summary>
     public ObservableCollection<SongDTO> SearchResults
     {
         get => _searchResults;
@@ -38,6 +47,9 @@ public partial class HeaderViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the search query.
+    /// </summary>
     public string SearchQuery
     {
         get => _searchQuery;
@@ -48,10 +60,16 @@ public partial class HeaderViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets the collection of notifications.
+    /// </summary>
     public ObservableCollection<NotificationDTO> Notifications { get; } = new ObservableCollection<NotificationDTO>();
 
     private bool _hasNotification;
 
+    /// <summary>
+    /// Gets or sets a value indicating whether there are notifications.
+    /// </summary>
     public bool HasNotification
     {
         get => _hasNotification;
@@ -62,17 +80,23 @@ public partial class HeaderViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets the command for executing a search.
+    /// </summary>
     public ICommand SearchCommand { get; }
+
+    /// <summary>
+    /// Gets the command for showing the play history.
+    /// </summary>
     public ICommand ShowHistoryCommand { get; }
 
-
-    //public HeaderViewModel(SongService songService)
-    //{
-    //    SearchCommand = new RelayCommand(async _ => await ExecuteSearchAsync(), _ => CanExecuteSearch());
-    //    _songService = songService;
-    //    SearchResults = new ObservableCollection<SongDTO>();
-    //}
-
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HeaderViewModel"/> class.
+    /// </summary>
+    /// <param name="songService">The song service.</param>
+    /// <param name="artistService">The artist service.</param>
+    /// <param name="userService">The user service.</param>
+    /// <param name="playHistoryService">The play history service.</param>
     public HeaderViewModel(SongService songService, ArtistService artistService, UserService userService, PlayHistoryService playHistoryService)
     {
         SearchCommand = new RelayCommand(async _ => await ExecuteSearchAsync(), _ => CanExecuteSearch());
@@ -85,6 +109,10 @@ public partial class HeaderViewModel : INotifyPropertyChanged
         _playHistoryService = playHistoryService;
     }
 
+    /// <summary>
+    /// Executes the show history command asynchronously.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     private async Task ExecuteShowHistoryAsync()
     {
         List<PlayHistoryWithSongDTO> history = await _playHistoryService.GetUserHistoryAsync(App.Current.CurrentUser.Id);
@@ -93,15 +121,23 @@ public partial class HeaderViewModel : INotifyPropertyChanged
         shellWindow.GetNavigationService().Navigate(typeof(HistoryPage), history);
     }
 
+    /// <summary>
+    /// Determines whether the show history command can execute.
+    /// </summary>
+    /// <returns><c>true</c> if the command can execute; otherwise, <c>false</c>.</returns>
     private bool CanExecuteShowHistory()
     {
-        if(App.Current.CurrentUser == null)
+        if (App.Current.CurrentUser == null)
         {
             return false;
         }
         return true;
     }
 
+    /// <summary>
+    /// Executes the search command asynchronously.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     private async Task ExecuteSearchAsync()
     {
         if (SearchQuery == "")
@@ -111,7 +147,6 @@ public partial class HeaderViewModel : INotifyPropertyChanged
         }
         else
         {
-
             var results = await _songService.SearchSongs(SearchQuery);
             SearchResults = new ObservableCollection<SongDTO>(results);
         }
@@ -121,11 +156,19 @@ public partial class HeaderViewModel : INotifyPropertyChanged
         shellWindow.GetNavigationService().Navigate(typeof(SearchResultsPage), SearchResults);
     }
 
+    /// <summary>
+    /// Determines whether the search command can execute.
+    /// </summary>
+    /// <returns><c>true</c> if the command can execute; otherwise, <c>false</c>.</returns>
     private bool CanExecuteSearch()
     {
         return SearchQuery != null;
     }
 
+    /// <summary>
+    /// Checks for song updates asynchronously.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task CheckForSongUpdatesAsync()
     {
         var currentUser = App.Current.CurrentUser;
@@ -134,7 +177,7 @@ public partial class HeaderViewModel : INotifyPropertyChanged
         bool hasNewSongs = false;
         var newNotifications = new ObservableCollection<NotificationDTO>();
 
-        // Nếu không có nghệ sĩ nào được follow
+        // If no artists are followed
         if (!currentUser.FollowArtist.Any())
         {
             if (!Notifications.Any(n => n.Message == "Follow some artists to get updates!"))
@@ -155,29 +198,29 @@ public partial class HeaderViewModel : INotifyPropertyChanged
             var artist = await _artistService.GetArtistByIdAsync(artistId);
             if (artist == null) continue;
 
-            // Lấy cache hiện tại
+            // Get current cache
             var cachedSongs = _songService.GetCachedSongs(artistId);
 
-            // Nếu cache rỗng, không coi tất cả là bài hát mới
+            // If cache is empty, do not consider all as new songs
             if (!cachedSongs.Any())
             {
                 _songService.UpdateCache(artistId, artist.SongIds);
                 continue;
             }
 
-            // Kiểm tra bài hát mới
+            // Check for new songs
             var newSongIds = artist.SongIds.Except(cachedSongs).ToList();
 
             if (newSongIds.Any())
             {
                 hasNewSongs = true;
 
-                // Lấy chi tiết các bài hát mới
+                // Get details of new songs
                 foreach (var songId in newSongIds)
                 {
                     var newSong = await _songService.GetSongByIdAsync(songId);
 
-                    // Tạo thông báo mới
+                    // Create new notification
                     var notification = new NotificationDTO
                     {
                         Message = $"'{newSong.title}' was just released by {artist.Name}",
@@ -189,15 +232,15 @@ public partial class HeaderViewModel : INotifyPropertyChanged
                     newNotifications.Add(notification);
                 }
 
-                // Cập nhật cache
+                // Update cache
                 _songService.UpdateCache(artistId, artist.SongIds);
             }
         }
 
-        // Nếu không có thông báo mới, giữ nguyên các thông báo cũ
+        // If no new notifications, keep the old ones
         if (!hasNewSongs)
         {
-            // Nếu chưa có thông báo "No new updates", thêm vào
+            // If there is no "No new updates" notification, add it
             if (!Notifications.Any())
             {
                 Notifications.Add(new NotificationDTO
@@ -211,19 +254,18 @@ public partial class HeaderViewModel : INotifyPropertyChanged
         }
         else
         {
-            // Xóa thông báo mặc định nếu có
+            // Remove default notification if exists
             var noUpdateNotification = Notifications.FirstOrDefault(n => n.Message == "No messages");
             if (noUpdateNotification != null)
             {
                 Notifications.Remove(noUpdateNotification);
             }
 
-            // Thêm các thông báo mới vào đầu danh sách
+            // Add new notifications at the beginning of the list
             foreach (var notification in newNotifications.Reverse())
             {
                 Notifications.Insert(0, notification);
             }
-
         }
 
         HasNotification = hasNewSongs;
@@ -231,8 +273,15 @@ public partial class HeaderViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(HasNotification));
     }
 
+    /// <summary>
+    /// Occurs when a property value changes.
+    /// </summary>
     public event PropertyChangedEventHandler PropertyChanged;
 
+    /// <summary>
+    /// Notifies listeners that a property value has changed.
+    /// </summary>
+    /// <param name="propertyName">Name of the property that changed.</param>
     protected void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

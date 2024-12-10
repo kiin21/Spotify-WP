@@ -7,6 +7,9 @@ using Spotify.Models.DTOs;
 
 namespace Spotify.Services;
 
+/// <summary>
+/// Service for handling the user's song queue.
+/// </summary>
 public class QueueService
 {
     private readonly IQueueDAO _queueDAO;
@@ -16,8 +19,17 @@ public class QueueService
     private static QueueService _instance;
     private static readonly object _lock = new object();
 
-    // Event to notify when the Queue changes
+    /// <summary>
+    /// Event to notify when the Queue changes.
+    /// </summary>
     public event Action QueueChanged;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="QueueService"/> class.
+    /// </summary>
+    /// <param name="queueDAO">The queue DAO.</param>
+    /// <param name="songDAO">The song DAO.</param>
+    /// <param name="user">The user DTO.</param>
     private QueueService(IQueueDAO queueDAO, ISongDAO songDAO, UserDTO user)
     {
         _queueDAO = queueDAO;
@@ -25,7 +37,13 @@ public class QueueService
         _user = user;
     }
 
-    // Public method to get the single instance of QueueService
+    /// <summary>
+    /// Gets the single instance of the <see cref="QueueService"/> class.
+    /// </summary>
+    /// <param name="queueDAO">The queue DAO.</param>
+    /// <param name="songDAO">The song DAO.</param>
+    /// <param name="user">The user DTO.</param>
+    /// <returns>The single instance of the <see cref="QueueService"/> class.</returns>
     public static QueueService GetInstance(IQueueDAO queueDAO, ISongDAO songDAO, UserDTO user)
     {
         // Double-checked locking for thread safety
@@ -42,11 +60,15 @@ public class QueueService
         return _instance;
     }
 
+    /// <summary>
+    /// Gets the queue of songs for the user asynchronously.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation. The task result contains an observable collection of <see cref="SongDTO"/>.</returns>
     public async Task<ObservableCollection<SongDTO>> GetQueue()
     {
         QueueDTO queue = await _queueDAO.GetQueueByIdAsync(_user.Id);
-        
-        if(queue == null)
+
+        if (queue == null)
         {
             return new ObservableCollection<SongDTO>();
         }
@@ -61,6 +83,13 @@ public class QueueService
 
         return songs;
     }
+
+    /// <summary>
+    /// Adds a new queue asynchronously.
+    /// </summary>
+    /// <param name="queue">The queue DTO.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the queue is null.</exception>
     public async Task AddQueueAsync(QueueDTO queue)
     {
         if (queue == null)
@@ -70,6 +99,13 @@ public class QueueService
         NotifyQueueChanged();
     }
 
+    /// <summary>
+    /// Updates the queue for the user asynchronously.
+    /// </summary>
+    /// <param name="userId">The user identifier.</param>
+    /// <param name="songIds">The list of song identifiers.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the userId or songIds are null or empty.</exception>
     public async Task UpdateQueueAsync(string userId, List<string> songIds)
     {
         if (string.IsNullOrWhiteSpace(userId))
@@ -81,6 +117,12 @@ public class QueueService
         NotifyQueueChanged();
     }
 
+    /// <summary>
+    /// Deletes the queue for the user asynchronously.
+    /// </summary>
+    /// <param name="userId">The user identifier.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the userId is null or empty.</exception>
     public async Task DeleteQueueAsync(string userId)
     {
         if (string.IsNullOrWhiteSpace(userId))
@@ -90,6 +132,9 @@ public class QueueService
         NotifyQueueChanged();
     }
 
+    /// <summary>
+    /// Notifies subscribers that the queue has changed.
+    /// </summary>
     private void NotifyQueueChanged()
     {
         QueueChanged?.Invoke();
