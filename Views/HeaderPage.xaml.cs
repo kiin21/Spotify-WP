@@ -9,6 +9,7 @@ using Spotify.Contracts.Services;
 using Microsoft.UI.Xaml;
 using Spotify.Models.DTOs;
 using System.Diagnostics;
+using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Spotify.Views;
 public sealed partial class HeaderPage : Page
@@ -22,12 +23,21 @@ public sealed partial class HeaderPage : Page
         var songService = (App.Current as App).Services.GetRequiredService<SongService>();
         var artistService = (App.Current as App).Services.GetRequiredService<ArtistService>();
         var userService = (App.Current as App).Services.GetRequiredService<UserService>();
+        var playHistoryService = (App.Current as App).Services.GetRequiredService<PlayHistoryService>();
 
-        ViewModel = new HeaderViewModel(songService, artistService, userService);
+        ViewModel = new HeaderViewModel(songService, artistService, userService, playHistoryService);
         DataContext = ViewModel;
 
         // Xử lý sự kiện khi HeaderPage được tải
         this.Loaded += HeaderPage_Loaded;
+    }
+
+    private void ShowHistoryCommand(object sender, RoutedEventArgs e)
+    {
+        if(ViewModel.ShowHistoryCommand.CanExecute(null))
+        {
+            ViewModel.ShowHistoryCommand.Execute(null);
+        }
     }
 
     private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)

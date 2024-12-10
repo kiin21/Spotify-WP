@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Spotify.Contracts.DAO;
@@ -15,6 +16,8 @@ public class QueueService
     private static QueueService _instance;
     private static readonly object _lock = new object();
 
+    // Event to notify when the Queue changes
+    public event Action QueueChanged;
     private QueueService(IQueueDAO queueDAO, ISongDAO songDAO, UserDTO user)
     {
         _queueDAO = queueDAO;
@@ -58,10 +61,37 @@ public class QueueService
 
         return songs;
     }
+    public async Task AddQueueAsync(QueueDTO queue)
+    {
+        if (queue == null)
+            throw new ArgumentNullException(nameof(queue));
 
-    public Task AddQueue(QueueDTO queue) => _queueDAO.AddQueueAsync(queue);
+        await _queueDAO.AddQueueAsync(queue);
+        NotifyQueueChanged();
+    }
 
-    public Task UpdateQueue(string id, QueueDTO updatedQueue) => _queueDAO.UpdateQueueAsync(id, updatedQueue);
+    public async Task UpdateQueueAsync(string userId, List<string> songIds)
+    {
+        if (string.IsNullOrWhiteSpace(userId))
+            throw new ArgumentNullException(nameof(userId));
+        if (songIds == null || songIds.Count == 0)
+            throw new ArgumentNullException(nameof(songIds));
 
-    public Task DeleteQueue(string id) => _queueDAO.DeleteQueueAsync(id);
+        await _queueDAO.UpdateQueueAsync(userId, songIds);
+        NotifyQueueChanged();
+    }
+
+    public async Task DeleteQueueAsync(string userId)
+    {
+        if (string.IsNullOrWhiteSpace(userId))
+            throw new ArgumentNullException(nameof(userId));
+
+        await _queueDAO.DeleteQueueAsync(userId);
+        NotifyQueueChanged();
+    }
+
+    private void NotifyQueueChanged()
+    {
+        QueueChanged?.Invoke();
+    }
 }

@@ -29,7 +29,6 @@ public sealed partial class SongDetailPage : Page
         }
     }
 
-
     private void BackButton_Click(object sender, RoutedEventArgs e)
     {
         // Navigate back

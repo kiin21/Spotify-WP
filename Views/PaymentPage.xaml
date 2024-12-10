@@ -30,16 +30,18 @@
         <TextBox Header="Card Number" Text="{Binding CardNumber, Mode=TwoWay}" Width="300" />
 
         <!-- Expiry Date Field (MM/YY) -->
-        <StackPanel Orientation="Horizontal" Spacing="10">
-            <TextBox Header="Expiry Month (MM)" Text="{Binding ExpiryMonth, Mode=TwoWay}" Width="100" />
-            <TextBox Header="Expiry Year (YY)" Text="{Binding ExpiryYear, Mode=TwoWay}" Width="100" />
-        </StackPanel>
+
+        <TextBox Header="MM/YY" Text="{Binding ExpirationDate, Mode=TwoWay}" Width="100" Margin="0 0 200 0" />
+     
 
         <!-- CVV Field -->
         <TextBox Header="CVV" Text="{Binding CVV, Mode=TwoWay}" Width="300" />
 
         <!-- Amount Field (Read-Only) -->
         <TextBox Header="Amount" Text="{Binding Amount, Mode=OneWay}" Width="300" IsReadOnly="True" />
+        
+        <!-- Message Field-->
+        <TextBox Header="Message" Text="{Binding Message, Mode=TwoWay}" Width="300" Height="60"/>
 
         <Button Content="Pay" Command="{Binding PayCommand}" Width="100" />
 

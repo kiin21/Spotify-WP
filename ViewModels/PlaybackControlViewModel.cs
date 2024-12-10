@@ -14,6 +14,8 @@ using System.Collections.ObjectModel;
 using Catel.Collections;
 using Microsoft.UI.Xaml.Controls;
 using Spotify.Views;
+using Spotify.DAOs;
+using Microsoft.UI.Dispatching;
 
 namespace Spotify.ViewModels;
 
@@ -32,7 +34,11 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
     private static UserDTO CurrentUser => App.Current.CurrentUser;
     private readonly AdsService _adsService;
+
+
     private readonly PlaybackControlService _playbackService;
+    private readonly PlayHistoryService _playHistoryService;
+
     private ObservableCollection<SongDTO> _playbacklist = new();
     private readonly ObservableCollection<SongDTO> _shuffledPlaylist = new();
     private int _currentIndex;
@@ -78,6 +84,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         _adsService = AdsService.GetInstance(
                 App.Current.Services.GetRequiredService<IAdsDAO>()
             );
+        _playHistoryService = new PlayHistoryService(App.Current.Services.GetService<IPlayHistoryDAO>());
 
         // Initialize commands
         PlayPauseCommand = new RelayCommand(TogglePlayPause);
@@ -129,6 +136,27 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             }
         }
     }
+    public void AddToPlaybackList(ObservableCollection<SongDTO> songs, bool belongToPlaylist = false)
+    {
+        if (belongToPlaylist)
+        {
+            _playbacklist.Clear();
+            foreach (var song in songs)
+            {
+                _playbacklist.Add(song);
+            }
+            CurrentSong = _playbacklist[0];
+            _playbackService.Resume();
+        }
+        else
+        {
+            // FIX_LATTER
+            foreach (var song in songs)
+            {
+                _playbacklist.Add(song);
+            }
+        }
+    }
     // Current Song Properties
     public SongDTO CurrentSong
     {
@@ -140,18 +168,16 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
                 // Update total duration
                 _totalDuration = TimeSpan.FromSeconds(CurrentSongDurationInSeconds);
                 _playbackService.AddCurrentSong(value);
+
                 foreach (var song in _playbacklist)
                 {
-                    if (song == value)
-                    {
-                        song.IsCurrentSong = true;
-                    }
-                    else
-                    {
-                        song.IsCurrentSong = false;
-                    }
+                    song.IsCurrentSong = song == value;
                 }
 
+                // Save play history asynchronously
+                SavePlayHistory(value);
+
+                // Notify UI
                 OnPropertyChanged(nameof(CurrentSongTitle));
                 OnPropertyChanged(nameof(CurrentArtistName));
                 OnPropertyChanged(nameof(CurrentCoverArtUrl));
@@ -160,6 +186,24 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             }
         }
     }
+
+    private async void SavePlayHistory(SongDTO song)
+    {
+        try
+        {
+            var userID = App.Current.CurrentUser.Id;
+            var songID = song.Id.ToString();
+            var currentTime = DateTime.Now;
+
+            await _playHistoryService.SavePlayHistoryAsync(userID, songID, currentTime);
+        }
+        catch (Exception ex)
+        {
+            // Handle or log the exception
+            Console.WriteLine($"Error saving play history: {ex.Message}");
+        }
+    }
+
     public bool IsPlaying
     {
         get => _isPlaying;
@@ -231,6 +275,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
+
     // Playback Speed
     public string[] SpeedOptions => _speedOptions;
 
@@ -291,7 +336,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
     #region Command Implementations
 
-    private void TogglePlayPause()
+    public void TogglePlayPause()
     {
         if (_isAdPlaying) return;
 
@@ -312,7 +357,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
-    public void Play(SongDTO song)
+    public void Play(SongDTO song, bool belongToPlaylist = false)
     {
         if (_isAdPlaying) return;
 
@@ -322,7 +367,11 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
         else
         {
+            if (!belongToPlaylist) { _playbacklist.Clear(); }
+            //Save in playlist temporarily, not save in database
             _playbacklist.Insert(_currentIndex, song);
+            CurrentSong = song;
+            _playbackService.Play(new Uri(song.audio_url));
         }
         CurrentSong = song;
         _playbackService.Play(new Uri(song.audio_url));
@@ -331,7 +380,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         CheckForAd();
     }
 
-    private void Next()
+    public void Next()
     {
         if (_isAdPlaying) return; // Block action if ad is playing
 
@@ -361,7 +410,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         Play(playlist[_currentIndex]);
     }
 
-    private void Previous()
+    public void Previous()
     {
 
         if (_isAdPlaying) return; // Block action if ad is playing
@@ -442,14 +491,14 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         var shellWindow = App.Current.ShellWindow;
         Frame mainFrame = shellWindow.getMainFrame();
 
-        
+
         if (IsShowingLyricPage) // If we aren't showing the lyric page, navigate to it
         {
             mainFrame.Navigate(typeof(LyricPage), CurrentSong);
         }
         else // Otherwise, go back to the previous page
         {
-            if(mainFrame.CanGoBack)
+            if (mainFrame.CanGoBack)
                 mainFrame.GoBack();
         }
     }

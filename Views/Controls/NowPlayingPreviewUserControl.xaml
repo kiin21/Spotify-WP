@@ -52,7 +52,7 @@
             VerticalScrollBarVisibility="Auto">
             <TextBlock
                 FontSize="16"
-                Text="{x:Bind ViewModel.CurrentSong.plainLyrics}"
+                Text="{x:Bind ViewModel.CurrentSong.plainLyrics, Mode=OneWay}"
                 TextWrapping="Wrap" />
         </ScrollViewer>
     </Grid>

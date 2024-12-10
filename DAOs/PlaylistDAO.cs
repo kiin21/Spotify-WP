@@ -89,5 +89,16 @@ public class PlaylistDAO : BaseDAO, IPlaylistDAO
 
         return await _playlists.Find(filter).ToListAsync();
     }
+    public async Task UpdatePlaylistAsync(string playlistId, PlaylistDTO updatedPlaylist)
+    {
+        var filter = Builders<PlaylistDTO>.Filter.Eq(p => p.Id, playlistId);
+        var update = Builders<PlaylistDTO>.Update
+            .Set(p => p.Title, updatedPlaylist.Title)
+            .Set(p => p.Avatar, updatedPlaylist.Avatar)
+            .Set(p => p.ShareWithUsers, updatedPlaylist.ShareWithUsers)
+            .Set(p => p.IsDeleted, updatedPlaylist.IsDeleted);
+
+        await _playlists.UpdateOneAsync(filter, update);
+    }
 
 }

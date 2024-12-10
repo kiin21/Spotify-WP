@@ -86,18 +86,12 @@
                 <StackPanel Orientation="Horizontal" Spacing="32">
                     <!--  Play Button  -->
                     <Button
-                        Width="40"
                         Height="40"
                         Background="#1DB954"
                         BorderThickness="0"
-                        Click="OnPlayClick"
-                        CornerRadius="28"
-                        Style="{StaticResource AccentButtonStyle}">
-                        <FontIcon
-                            FontFamily="Segoe MDL2 Assets"
-                            FontSize="16"
-                            Glyph="&#xE768;" />
-                    </Button>
+                        Command="{x:Bind PlaylistPageVM.PlaySelectedPlaylistCommand}"
+                        Content="Play"
+                        Style="{StaticResource AccentButtonStyle}" />
 
                     <!--  More Options Button (3 dots)  -->
                     <Button
@@ -117,10 +111,8 @@
                         <Button.Flyout>
                             <MenuFlyout Placement="Right">
                                 <MenuFlyoutItem Icon="Add" Text="Add to queue" />
-                                <MenuFlyoutItem
-                                    Click="OnRemovePlaylistClick"
-                                    Icon="Remove"
-                                    Text="Remove playlist" />
+                                <MenuFlyoutItem Click="OnRemovePlaylistClick" Icon="Remove" Text="Remove playlist" />
+                                <MenuFlyoutItem Click="OnSharePlaylistClick" Icon="Share" Text="Share playlist" />
                             </MenuFlyout>
                         </Button.Flyout>
                     </Button>
@@ -155,9 +147,9 @@
                     <TextBlock
                         Grid.Row="0"
                         Grid.Column="0"
+                        HorizontalAlignment="Center"
                         FontSize="14"
                         Foreground="Gray"
-                        HorizontalAlignment="Center"
                         Text="#" />
                     <TextBlock
                         Grid.Row="0"
@@ -203,16 +195,16 @@
                                     <Setter.Value>
                                         <ControlTemplate TargetType="ListViewItem">
                                             <Grid>
-                                                <!-- Background for hover or selection -->
+                                                <!--  Background for hover or selection  -->
                                                 <Rectangle x:Name="BackgroundRectangle" Fill="Transparent" />
 
-                                                <!-- Content Presenter -->
+                                                <!--  Content Presenter  -->
                                                 <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Center" />
 
-                                                <!-- VisualStateManager -->
+                                                <!--  VisualStateManager  -->
                                                 <VisualStateManager.VisualStateGroups>
                                                     <VisualStateGroup>
-                                                        <!-- Normal State -->
+                                                        <!--  Normal State  -->
                                                         <VisualState x:Name="Normal">
                                                             <Storyboard>
                                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundRectangle" Storyboard.TargetProperty="Fill">
@@ -221,7 +213,7 @@
                                                             </Storyboard>
                                                         </VisualState>
 
-                                                        <!-- Pointer Over State -->
+                                                        <!--  Pointer Over State  -->
                                                         <VisualState x:Name="PointerOver">
                                                             <Storyboard>
                                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundRectangle" Storyboard.TargetProperty="Fill">
@@ -250,15 +242,15 @@
                                         <ColumnDefinition Width="50" />
                                     </Grid.ColumnDefinitions>
 
-                                    <!-- Position -->
+                                    <!--  Position  -->
                                     <TextBlock
                                         Grid.Column="0"
-                                        VerticalAlignment="Center"
                                         HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
                                         Foreground="#B3B3B3"
                                         Text="{x:Bind Index}" />
 
-                                    <!-- Title with Image Placeholder -->
+                                    <!--  Title with Image Placeholder  -->
                                     <StackPanel
                                         Grid.Column="1"
                                         Margin="12,0,0,0"
@@ -278,7 +270,7 @@
                                             Text="{x:Bind SongTitle}" />
                                     </StackPanel>
 
-                                    <!-- Artist -->
+                                    <!--  Artist  -->
                                     <TextBlock
                                         Grid.Column="2"
                                         VerticalAlignment="Center"
@@ -286,38 +278,38 @@
                                         Tapped="OnArtistTapped"
                                         Text="{x:Bind Artist}" />
 
-                                    <!-- Date Added -->
+                                    <!--  Date Added  -->
                                     <TextBlock
                                         Grid.Column="3"
                                         VerticalAlignment="Center"
                                         Foreground="#B3B3B3"
                                         Text="{x:Bind AddedAt, Converter={StaticResource DateConverter}}" />
 
-                                    <!-- Duration -->
+                                    <!--  Duration  -->
                                     <TextBlock
                                         Grid.Column="4"
                                         MinWidth="40"
                                         VerticalAlignment="Center"
                                         Foreground="#B3B3B3"
-                                        Text="{x:Bind Duration, Converter={StaticResource DurationConverter}}"
-                                        TextAlignment="Center" />
+                                        Text="{x:Bind Duration, Converter={StaticResource DurationConverter}}" />
 
-                                    <!-- More Options Button -->
+                                    <!--  More Options Button  -->
                                     <Button
                                         x:Name="MoreOptionsButton"
                                         Grid.Column="5"
-                                        VerticalAlignment="Center"
                                         HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Background="Transparent"
                                         Content="⋮"
                                         Foreground="White"
-                                        Background="Transparent"
                                         Visibility="Visible">
                                         <Button.Flyout>
                                             <MenuFlyout>
                                                 <MenuFlyoutItem Text="Remove from playlist"
                                                                 Click="OnRemoveFromPlaylistClick" />
                                                 <MenuFlyoutItem Text="Add to Liked Songs"
-                                                                Click="OnAddToLikedSongsClick" />
+                                                                Click="OnAddToLikedSongsClick" 
+                                                                Visibility="{Binding IsInLikedPlaylist, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Invert}"/>
                                             </MenuFlyout>
                                         </Button.Flyout>
                                     </Button>
@@ -327,6 +319,17 @@
                     </ListView>
                 </Grid>
             </Grid>
+            
+            <!-- TextBlock hiển thị thông báo -->
+            <TextBlock
+                x:Name="NotificationTextBlock"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Margin="0,20,0,0"
+                Foreground="White"
+                Padding="10,5"
+                Visibility="Collapsed"
+                TextAlignment="Center"/>
         </Grid>
     </ScrollViewer>
 </Page>

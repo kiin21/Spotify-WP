@@ -52,4 +52,19 @@ public class PlaylistSongDetailDAO : BaseDAO, IPlaylistSongDetailDAO
 
         return joinedData;
     }
+    public async Task DeleteOneAsync(string playlistId, string songId)
+    {
+        var filter = Builders<PlaylistSongDTO>.Filter.And(
+            Builders<PlaylistSongDTO>.Filter.Eq(ps => ps.PlaylistId, playlistId),
+            Builders<PlaylistSongDTO>.Filter.Eq(ps => ps.SongId, songId)
+        );
+
+        await _playlistSongs.DeleteOneAsync(filter);
+    }
+
+    public async Task InsertOneAsync(PlaylistSongDTO playlistSong)
+    {
+        await _playlistSongs.InsertOneAsync(playlistSong);
+    }
+
 }

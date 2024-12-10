@@ -11,18 +11,20 @@ public sealed partial class PaymentPage: Page
 
     public PaymentPage()
     {
-        this.InitializeComponent(); 
+        this.InitializeComponent();
+        ViewModel = new PaymentViewModel("", 0);  // Initialize with default values
+        DataContext = ViewModel;  // Set DataContext here
     }
-
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
         base.OnNavigatedTo(e);
 
+        // If e.Parameter contains valid data, update ViewModel
         if (e.Parameter is (string premiumType, decimal price))
         {
-            ViewModel = new PaymentViewModel(premiumType, price);
-            DataContext = ViewModel;
+            ViewModel.PremiumType = premiumType;  // Update properties if needed
+            ViewModel.Amount = price;
         }
     }
 }

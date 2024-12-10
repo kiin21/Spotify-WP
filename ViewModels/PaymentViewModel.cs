@@ -16,6 +16,8 @@ public class PaymentViewModel : INotifyPropertyChanged
     private readonly IPaymentStrategy _stripeStrategy;
     private readonly IPaymentStrategy _paypalStrategy;
     private IPaymentStrategy _currentStrategy;
+    
+    public string PremiumType;
 
     private bool _isStripeSelected;
     public bool IsStripeSelected
@@ -95,6 +97,7 @@ public class PaymentViewModel : INotifyPropertyChanged
         _paypalStrategy = new PayPalStrategy();
         _currentStrategy = _stripeStrategy;
 
+        PremiumType = premiumType;
         Amount = price;
 
         // Set initial selection
@@ -122,17 +125,15 @@ public class PaymentViewModel : INotifyPropertyChanged
     {
         try
         {
-            if (string.IsNullOrWhiteSpace(Message))
-            {
-                StatusMessage = "Please enter a message before proceeding with payment.";
-                return;
-            }
+            
 
             if (IsStripeSelected && (string.IsNullOrWhiteSpace(CardNumber) || string.IsNullOrWhiteSpace(CVV) || string.IsNullOrWhiteSpace(ExpirationDate)))
             {
                 StatusMessage = "Please provide complete card details.";
                 return;
             }
+
+            
 
             // Call the ProcessPayment method of the current strategy
             var paymentRequestDTO = new PaymentRequestDTO

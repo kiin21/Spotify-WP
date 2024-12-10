@@ -22,6 +22,12 @@ namespace Spotify.ViewModels
             PlayPauseCommand = new RelayCommand(TogglePlayPause);
             _playbackViewModel = PlaybackControlViewModel.Instance;
 
+            //_playbackViewModel.CurrentSong = song; //////////////////////////////
+
+            // Initialize with passed song details
+            Song = song;
+            Song.plainLyrics = song.plainLyrics ?? "No lyrics available";
+
             if (_playbackViewModel.IsAdPlaying)
             {
             //    _playbackViewModel.CurrentSong = _playbackViewModel.CurrentSong;
@@ -39,9 +45,11 @@ namespace Spotify.ViewModels
                 _playbackViewModel.PropertyChanged += PlaybackViewModel_PropertyChanged;
             }
 
-            _playbackViewModel.IsPlaying = false;
+            //_playbackViewModel.IsPlaying = false; //////////////////////////////
+
             // Set the initial play/pause glyph
-            PlayPauseGlyph = _playbackViewModel.IsPlaying ? "\uE769" : "\uE768"; // Play or Pause
+            //PlayPauseGlyph = _playbackViewModel.IsPlaying ? "\uE769" : "\uE768"; // Play or Pause //////////////////////////////
+            PlayPauseGlyph = "\uE768"; // Play or Pause
         }
 
         private void PlaybackViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -60,7 +68,7 @@ namespace Spotify.ViewModels
                     PlayPauseGlyph = "\uE768"; // Pause
                 }
             }
-            else if(e.PropertyName == nameof(PlaybackControlViewModel.PlayPauseIcon))
+            else if (e.PropertyName == nameof(PlaybackControlViewModel.PlayPauseIcon))
             {
                 // Update details if the current song changes
                 if (Song != _playbackViewModel.CurrentSong)
@@ -82,7 +90,8 @@ namespace Spotify.ViewModels
             }
             else
             {
-                _playbackViewModel.Play(Song);
+                bool belongToPlaylist = false;
+                _playbackViewModel.Play(Song, belongToPlaylist);
             }
             PlayPauseGlyph = _playbackViewModel.IsPlaying ? "\uE769" : "\uE768"; // Play or Pause
         }

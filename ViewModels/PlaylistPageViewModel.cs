@@ -1,9 +1,14 @@
-﻿using Spotify;
+﻿using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
+using Spotify;
+using Spotify.Contracts.DAO;
 using Spotify.Models.DTOs;
 using Spotify.Services;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,6 +20,7 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
     private ObservableCollection<PlaylistSongDetailDTO> _playlistSongs;
     private PlaylistDTO _selectedPlaylist;
 
+    public IRelayCommand PlaySelectedPlaylistCommand { get; }
     public ObservableCollection<PlaylistDTO> Playlists
     {
         get => _playlists;
@@ -40,7 +46,7 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
 
     public PlaylistDTO SelectedPlaylist
     {
-        get => _selectedPlaylist;
+        get => _selectedPlaylist; 
         set
         {
             if (_selectedPlaylist != value)
@@ -61,9 +67,37 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
         _playlistSongDetailService = playlistSongDetailService;
         _playlists = new ObservableCollection<PlaylistDTO>();
         _playlistSongs = new ObservableCollection<PlaylistSongDetailDTO>();
+
+        PlaySelectedPlaylistCommand = new RelayCommand(TogglePlay_Playlist);
     }
 
-    private async Task LoadPlaylistSongs(string playlistId)
+    private async void TogglePlay_Playlist()
+    {
+        List<string> song_ids = PlaylistSongs.Select(ps => ps.SongId).ToList();
+        SongService songService = App.Current.Services.GetService<SongService>();
+        List<SongDTO> songs = new List<SongDTO>();
+        foreach (var id in song_ids)
+        {
+            SongDTO song = await songService.GetSongByIdAsync(id);
+            songs.Add(song);
+        }
+
+        QueueService queueService = QueueService.GetInstance(
+                                                            App.Current.Services.GetRequiredService<IQueueDAO>(),
+                                                            App.Current.Services.GetRequiredService<ISongDAO>(),
+                                                            App.Current.CurrentUser);
+        
+        try
+        {
+            await queueService.UpdateQueueAsync(App.Current.CurrentUser.Id, song_ids);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+    }
+
+    public async Task LoadPlaylistSongs(string playlistId)
     {
         if (!string.IsNullOrEmpty(playlistId))
         {
@@ -72,6 +106,9 @@ public class PlaylistPageViewModel : INotifyPropertyChanged
             for (int i = 0; i < songs.Count; i++)
             {
                 songs[i].Index = i + 1; // Bắt đầu từ 1
+
+                // Kiểm tra xem bài hát có thuộc playlist "Liked Songs" không
+                songs[i].IsInLikedPlaylist = SelectedPlaylist?.IsLikedSong ?? false;
             }
 
             PlaylistSongs = new ObservableCollection<PlaylistSongDetailDTO>(songs);

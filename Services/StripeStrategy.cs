@@ -55,6 +55,7 @@ public class StripeStrategy : IPaymentStrategy
 
         var paymentMethodOptions = new PaymentMethodCreateOptions
         {
+            Type = "card", // Add the type here to specify it's a card payment method
             Card = new PaymentMethodCardOptions
             {
                 Number = paymentRequestDTO.CardNumber,
@@ -68,6 +69,7 @@ public class StripeStrategy : IPaymentStrategy
         var paymentMethod = await paymentMethodService.CreateAsync(paymentMethodOptions);
         return paymentMethod;
     }
+
 
     private async Task<PaymentIntent> CreatePaymentIntent(PaymentRequestDTO paymentRequestDTO, string paymentMethodId)
     {

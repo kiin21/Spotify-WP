@@ -20,8 +20,22 @@ public sealed partial class ShellWindow : WindowEx
 
     private readonly INavigationService _navigationService;
     private readonly QueueService _queueService;
-   
-    public ObservableCollection<SongDTO> Queue{get; set; }
+
+    private ObservableCollection<SongDTO> _queue = new ObservableCollection<SongDTO>();
+    public ObservableCollection<SongDTO> Queue
+    {
+        get => _queue;
+        set
+        {
+            if (_queue != value)
+            {
+                _queue = value;
+            }
+        }
+    }
+
+    // Event to notify subscribers when the queue is updated
+    public event EventHandler<QueueUpdatedEventArgs> QueueUpdated;
 
     public ShellWindow()
     {
@@ -37,7 +51,8 @@ public sealed partial class ShellWindow : WindowEx
             App.Current.Services.GetRequiredService<ISongDAO>(),
             App.Current.CurrentUser);
 
-
+        // Subscribe to the QueueChanged event
+        _queueService.QueueChanged += OnQueueChanged;
 
         InitializePages();
     }
@@ -66,6 +81,35 @@ public sealed partial class ShellWindow : WindowEx
         }
     }
 
+    private async void OnQueueChanged()
+    {
+        try
+        {
+            // Reload the queue for the current user
+            var updatedQueue = await _queueService.GetQueue();
+
+            // Update the UI thread
+            DispatcherQueue.GetForCurrentThread().TryEnqueue(() =>
+            {
+                Queue.Clear();
+                foreach (var song in updatedQueue)
+                {
+                    Queue.Add(song);
+                }
+
+                // Create the custom EventArgs with the updated queue
+                var eventArgs = new QueueUpdatedEventArgs(Queue);
+                QueueUpdated?.Invoke(this, eventArgs); // Notify listeners with the updated queue
+            });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error reloading queue: {ex.Message}");
+        }
+    }
+
+
+
     public void NavigateToPage(Type pageType, Frame frame, object parameter = null)
     {
         frame.Navigate(pageType, parameter);
@@ -73,4 +117,15 @@ public sealed partial class ShellWindow : WindowEx
 
     // Method to expose navigation service to other parts of the app
     public INavigationService GetNavigationService() => _navigationService;
+
+}
+
+public class QueueUpdatedEventArgs : EventArgs
+{
+    public ObservableCollection<SongDTO> UpdatedQueue { get; }
+
+    public QueueUpdatedEventArgs(ObservableCollection<SongDTO> updatedQueue)
+    {
+        UpdatedQueue = updatedQueue;
+    }
 }

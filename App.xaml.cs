@@ -75,6 +75,9 @@ namespace Spotify
             services.AddSingleton<IPlaylistSongDAO, PlaylistSongDAO>();
             services.AddSingleton<IPlaylistSongDetailDAO, PlaylistSongDetailDAO>();
             services.AddSingleton<IArtistDAO, ArtistDAO>();
+            services.AddSingleton<IPlayHistoryDAO, PlayHistoryDAO>();
+            
+            // Why AddScoped???????????
             services.AddScoped<IUserDAO, UserDAO>();
 
             // Register Services
@@ -85,6 +88,7 @@ namespace Spotify
             services.AddSingleton<PlaylistSongDetailService>();
             services.AddSingleton<UserService>();
             services.AddSingleton<LocalStorageService>();
+            services.AddSingleton<PlayHistoryService>();
             services.AddSingleton<AdsService>();
             services.AddSingleton<PlaylistSongService>();
             services.AddSingleton<PlaylistSongDetailService>();
@@ -92,6 +96,10 @@ namespace Spotify
             services.AddSingleton<ArtistService>();
             services.AddSingleton<PlaylistSongDetailService>();
             services.AddSingleton<ArtistService>();
+
+
+            // FIX_LATTER
+            services.AddSingleton<ShellWindow>();
 
 
 
