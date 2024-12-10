@@ -20,6 +20,7 @@ public sealed partial class ShellWindow : WindowEx
 
     private readonly INavigationService _navigationService;
     private readonly QueueService _queueService;
+   
     public ObservableCollection<SongDTO> Queue{get; set; }
 
     public ShellWindow()
@@ -35,6 +36,8 @@ public sealed partial class ShellWindow : WindowEx
             App.Current.Services.GetRequiredService<IQueueDAO>(),
             App.Current.Services.GetRequiredService<ISongDAO>(),
             App.Current.CurrentUser);
+
+
 
         InitializePages();
     }

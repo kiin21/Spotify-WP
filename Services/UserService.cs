@@ -36,6 +36,7 @@ public class UserService
             Username = username,
             HashedPassword = hashedPassword,
             Salt = salt,
+            IsPremium = false,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };

@@ -21,13 +21,23 @@ namespace Spotify.ViewModels
         {
             PlayPauseCommand = new RelayCommand(TogglePlayPause);
             _playbackViewModel = PlaybackControlViewModel.Instance;
-            _playbackViewModel.CurrentSong = song;
-            // Initialize with passed song details
-            Song = song;
-            Song.plainLyrics = song.plainLyrics ?? "No lyrics available";
 
-            // Subscribe to playback view model events
-            _playbackViewModel.PropertyChanged += PlaybackViewModel_PropertyChanged;
+            if (_playbackViewModel.IsAdPlaying)
+            {
+            //    _playbackViewModel.CurrentSong = _playbackViewModel.CurrentSong;
+                Song = _playbackViewModel.CurrentSong;
+                return;
+            }
+            else
+            {
+                _playbackViewModel.CurrentSong = song;
+                // Initialize with passed song details
+                Song = song;
+                Song.plainLyrics = song.plainLyrics ?? "No lyrics available";
+
+                // Subscribe to playback view model events
+                _playbackViewModel.PropertyChanged += PlaybackViewModel_PropertyChanged;
+            }
 
             _playbackViewModel.IsPlaying = false;
             // Set the initial play/pause glyph
@@ -36,6 +46,11 @@ namespace Spotify.ViewModels
 
         private void PlaybackViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            if (_playbackViewModel.IsAdPlaying)
+            {
+                return;
+            }
+
             // Check for changes in CurrentSong or PlaybackState
             if (e.PropertyName == nameof(PlaybackControlViewModel.CurrentSong))
             {

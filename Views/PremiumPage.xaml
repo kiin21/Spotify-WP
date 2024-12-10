@@ -1,0 +1,33 @@
+<Page
+    x:Class="Spotify.Views.PremiumPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d">
+
+    <Grid>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="20">
+
+            <!-- Premium Mini Container -->
+            <Border BorderBrush="Green" BorderThickness="2" CornerRadius="10" Padding="20" Width="250" Height="200">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="Premium Mini" FontSize="20" FontWeight="Bold" Margin="0,10" />
+                    <TextBlock Text="VND 10,500 for 1 week" FontSize="16" Margin="0,10" /> 
+                    <Button Content="Get Premium Mini" Click="OnGetPremiumMiniClicked" Width="180" Background="Green"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Premium Individual Container -->
+            <Border BorderBrush="DarkGoldenRod"  BorderThickness="2" CornerRadius="10" Padding="20" Width="250" Height="200">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="Premium Individual" FontSize="20" FontWeight="Bold" Margin="0,10" />
+                    <TextBlock Text="VND 29,500 for 1 month" FontSize="16" Margin="0,10" />
+                    <Button Content="Get Premium Individual" Click="OnGetPremiumIndividualClicked" Width="180" Background="DarkGoldenRod"/>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </Grid>
+</Page>

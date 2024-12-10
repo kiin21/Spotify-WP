@@ -12,7 +12,7 @@ public class BoolToColorConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        return (bool)value ? new SolidColorBrush(Colors.Green) : new SolidColorBrush(Colors.White);
+        return (bool)value ? new SolidColorBrush(Colors.Green) : new SolidColorBrush(Colors.Gray);
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, string language)

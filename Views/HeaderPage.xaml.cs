@@ -88,4 +88,11 @@ public sealed partial class HeaderPage : Page
             }
         }
     }
+
+    private void ExplorePremium_Click(object sender, RoutedEventArgs e)
+    {
+        var shellWindow = App.Current.ShellWindow;
+
+        shellWindow.GetNavigationService().Navigate(typeof(PremiumPage));
+    }
 }

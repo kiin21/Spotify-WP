@@ -30,11 +30,18 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
+    private static UserDTO CurrentUser => App.Current.CurrentUser;
+    private readonly AdsService _adsService;
     private readonly PlaybackControlService _playbackService;
     private ObservableCollection<SongDTO> _playbacklist = new();
     private readonly ObservableCollection<SongDTO> _shuffledPlaylist = new();
     private int _currentIndex;
     private bool _isQueueVisible = true;
+    private int _songsPlayedSinceLastAd = 0;
+    private bool _isAdPlaying = false;
+    private readonly bool _isPremium = CurrentUser.IsPremium;
+    private bool _hasReachedHalfway = false;
+    private AdsDTO _ads = new();
 
     // State fields
     private SongDTO _currentSong;
@@ -68,6 +75,9 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     private PlaybackControlViewModel()
     {
         _playbackService = PlaybackControlService.Instance;
+        _adsService = AdsService.GetInstance(
+                App.Current.Services.GetRequiredService<IAdsDAO>()
+            );
 
         // Initialize commands
         PlayPauseCommand = new RelayCommand(TogglePlayPause);
@@ -165,6 +175,8 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     public string CurrentArtistName => CurrentSong?.ArtistName ?? "Unknown artist";
     public string CurrentCoverArtUrl => CurrentSong?.CoverArtUrl ?? "default_cover.jpg";
     public int CurrentSongDurationInSeconds => CurrentSong?.Duration ?? 0;
+
+    public bool IsAdPlaying => _isAdPlaying;
 
     // Volume Control
     public double Volume
@@ -281,6 +293,8 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
     private void TogglePlayPause()
     {
+        if (_isAdPlaying) return;
+
         if (_isPlaying)
         {
             _playbackService.Pause();
@@ -300,6 +314,8 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
     public void Play(SongDTO song)
     {
+        if (_isAdPlaying) return;
+
         if (_playbacklist.Contains(song))
         {
             //Do nothing
@@ -310,10 +326,15 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
         CurrentSong = song;
         _playbackService.Play(new Uri(song.audio_url));
+
+        _hasReachedHalfway = false; // Reset halfway marker for the new song
+        CheckForAd();
     }
 
     private void Next()
     {
+        if (_isAdPlaying) return; // Block action if ad is playing
+
         var playlist = new ObservableCollection<SongDTO>();
         if (_isShuffleEnabled)
         {
@@ -342,6 +363,9 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
     private void Previous()
     {
+
+        if (_isAdPlaying) return; // Block action if ad is playing
+
         var playlist = new ObservableCollection<SongDTO>();
         if (_isShuffleEnabled)
         {
@@ -371,6 +395,8 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
     private void ToggleShuffle()
     {
+        if (_isAdPlaying) return; // Block action if ad is playing
+
         // Business logic
         _isShuffleEnabled = !_isShuffleEnabled;
         UpdateShuffledPlaylist();
@@ -383,6 +409,9 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
     private void ToggleRepeat()
     {
+
+        if (_isAdPlaying) return; // Block action if ad is playing
+
         // Turn off shuffle
         _isShuffleEnabled = false;
         OnPropertyChanged(nameof(ShuffleButtonColor));
@@ -400,11 +429,15 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     }
     private void ToggleQueue()
     {
+        if (_isAdPlaying) return; // Block action if ad is playing
+
         IsQueueVisible = !IsQueueVisible;
         Debug.WriteLine("Toggle queue");
     }
     private void ShowLyricControl()
     {
+        if (_isAdPlaying) return; // Block action if ad is playing
+
         IsShowingLyricPage = !IsShowingLyricPage;
         var shellWindow = App.Current.ShellWindow;
         Frame mainFrame = shellWindow.getMainFrame();
@@ -443,6 +476,32 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
+    private async Task CheckForAd()
+    {
+        if (_isPremium || _songsPlayedSinceLastAd < 3)
+        {
+            return;
+        }
+
+        // Play an ad
+        _isAdPlaying = true;
+        var ad = await _adsService.GetRandomAds();
+
+        var adSong = new SongDTO
+        {
+            title = ad.title,
+            ArtistName = ad.ArtistName,
+            CoverArtUrl = ad.CoverArtUrl,
+            audio_url = ad.audio_url,
+            Duration = ad.Duration
+        };
+
+        CurrentSong = adSong;
+        _playbackService.Play(new Uri(ad.audio_url));
+        _songsPlayedSinceLastAd = 0;
+
+        OnPropertyChanged(nameof(PlayPauseIcon));
+    }
 
     #endregion
 
@@ -456,21 +515,60 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
     private void OnPositionChanged(object sender, TimeSpan position)
     {
+        
+
         // Check if we should update the position
         if (!_isDraggingSlider && Math.Abs(_currentPosition.TotalSeconds - position.TotalSeconds) > 0.5)
         {
             _currentPosition = position;
+
+            // Check if the current song has reached half its duration
+            if (!_hasReachedHalfway && _currentSong != null && _currentPosition.TotalSeconds >= _totalDuration.TotalSeconds / 2)
+            {
+                _hasReachedHalfway = true; // Mark as having reached halfway
+                _songsPlayedSinceLastAd++;  // Increment the counter
+                Debug.WriteLine("Halfway reached, incrementing song count for ads.");
+            }
+
+
             OnPropertyChanged(nameof(CurrentPosition));
             OnPropertyChanged(nameof(CurrentPositionSeconds));
             OnPropertyChanged(nameof(CurrentPositionDisplay));
         }
+
+
     }
 
     private void OnMediaEnded(object sender, EventArgs e)
     {
+        if (_isAdPlaying)
+        {
+            _isAdPlaying = false;
+            OnPropertyChanged(nameof(PlayPauseIcon));
+
+            // Resume the next song automatically
+            if (_playbacklist.Count > _currentIndex)
+            {
+                Play(_playbacklist[_currentIndex]);
+            }
+            else
+            {
+                Play(_playbacklist[0]);
+            }
+
+            return;
+        }
+
         switch (this._repeatMode)
         {
             case RepeatMode.One:
+                
+                if (!_isPremium && _songsPlayedSinceLastAd > 2)
+                {
+                    CheckForAd();
+                    break;
+                }
+                _songsPlayedSinceLastAd++;
                 _playbackService.Seek(TimeSpan.Zero);
                 _playbackService.Resume();
                 break;
@@ -491,17 +589,19 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
     public void OnSliderDragStarted()
     {
+
         _isDraggingSlider = true;
     }
 
     public void OnSliderDragCompleted()
     {
-        if (_isDraggingSlider)
-        {
-            _isDraggingSlider = false;
-            _playbackService.Seek(_currentPosition);
-        }
+        //if (_isDraggingSlider)
+        //{
+        //    _isDraggingSlider = false;
+        //    _playbackService.Seek(_currentPosition);
+        //}
     }
+
 
     #endregion
 

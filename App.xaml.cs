@@ -68,6 +68,7 @@ namespace Spotify
             var services = new ServiceCollection();
 
             // Register DAOs
+            services.AddSingleton<IAdsDAO, AdsDAO>();
             services.AddSingleton<ISongDAO, SongDAO>();
             services.AddSingleton<IQueueDAO, QueueDAO>();
             services.AddSingleton<IPlaylistDAO, PlaylistDAO>();
@@ -84,7 +85,7 @@ namespace Spotify
             services.AddSingleton<PlaylistSongDetailService>();
             services.AddSingleton<UserService>();
             services.AddSingleton<LocalStorageService>();
-
+            services.AddSingleton<AdsService>();
             services.AddSingleton<PlaylistSongService>();
             services.AddSingleton<PlaylistSongDetailService>();
             services.AddSingleton<QueueService>();

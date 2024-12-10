@@ -23,6 +23,9 @@ namespace Spotify.Models.DTOs
         [BsonElement("salt")]
         public string Salt { get; set; }
 
+        [BsonElement("isPremium")]
+        public bool IsPremium { get; set; } = false;
+
         [BsonElement("createdAt")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
