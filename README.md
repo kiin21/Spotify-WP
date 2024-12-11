@@ -328,7 +328,7 @@ Kiểm thử thủ công
 
 ### Demo milestone 2
 
-- [Demo trên YouTube](https://www.youtube.com/watch?v=mV57ojbW5mU)
+- [Demo trên YouTube](https://www.youtube.com/watch?v=mV57ojbW5mU](https://www.youtube.com/watch?v=l39P_xqKiDE&feature=youtu.be)
 
 ## Link project và các demo
 
