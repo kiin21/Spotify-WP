@@ -10,9 +10,6 @@ public class QueueDTO
     [BsonId]
     public ObjectId Id { get; set; }
 
-    [BsonElement("queue_id")]
-    public string QueueId { get; set; }
-
     [BsonElement("user_id")]
     public string UserId { get; set; }
 

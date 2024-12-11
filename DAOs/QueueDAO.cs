@@ -47,12 +47,19 @@ public class QueueDAO : BaseDAO, IQueueDAO
 
         var updateResult = await _queues.UpdateOneAsync(filter, update);
 
-        //// Check if the update was successful
-        //if (updateResult.ModifiedCount == 0)
-        //{
-        //    throw new InvalidOperationException("No queue found for the given user_id or no changes made.");
-        //}
+        // Check if any document matched the filter
+        if (updateResult.MatchedCount == 0)
+        {
+            throw new InvalidOperationException("No queue found for the given user_id.");
+        }
+
+        // Check if the document was modified
+        if (updateResult.ModifiedCount == 0)
+        {
+            throw new InvalidOperationException("No changes were made to the queue. The provided data might be the same as the existing data.");
+        }
     }
+
 
 
     public async Task DeleteQueueAsync(string user_id)

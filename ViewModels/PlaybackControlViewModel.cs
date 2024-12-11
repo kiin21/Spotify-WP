@@ -332,6 +332,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     // Position and Duration
 
     /// <summary>
+    /// <summary>
     /// Gets or sets the current playback position in seconds.
     /// </summary>
     public double CurrentPositionSeconds
@@ -339,10 +340,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         get => _currentPosition.TotalSeconds;
         set
         {
-            if (!_isDraggingSlider)
-            {
-                CurrentPosition = TimeSpan.FromSeconds(value);
-            }
+            CurrentPosition = TimeSpan.FromSeconds(value);
         }
     }
 

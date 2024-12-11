@@ -130,4 +130,16 @@ public class QueueService
     {
         QueueChanged?.Invoke();
     }
+
+    /// HOT_FIX
+    public async Task AddQueueForNewUser(string userId)
+    {
+        QueueDTO queue = new QueueDTO
+        {
+            UserId = userId,
+            SongIds = new List<string>()
+        };
+        await AddQueueAsync(queue);
+    }
+    /// End HOT_FIX
 }

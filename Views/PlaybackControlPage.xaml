@@ -146,7 +146,6 @@
                     Minimum="0"
                     Value="{Binding CurrentPositionSeconds, Mode=TwoWay}" />
 
-
                 <TextBlock
                     Grid.Column="2"
                     FontSize="12"

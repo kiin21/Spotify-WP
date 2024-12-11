@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
 using Spotify.Models.DTOs;
 using Spotify.Services;
+using Spotify.Contracts.DAO;
 
 namespace Spotify.ViewModels;
 
@@ -83,6 +84,9 @@ public class SignupViewModel : INotifyPropertyChanged
     /// Executes the sign-up process asynchronously.
     /// </summary>
     /// <returns>A task that represents the asynchronous operation. The task result contains a tuple indicating whether the sign-up was successful and a message.</returns>
+    /// 
+
+    /// HOT_FIX
     public async Task<(bool success, string message)> ExecuteSignUpAsync()
     {
         try
@@ -105,6 +109,14 @@ public class SignupViewModel : INotifyPropertyChanged
             var (hashedPassword, salt) = PasswordHasher.HashPassword(Password);
 
             await _userService.AddUserAsync(Username, Password);
+            //FIXXX
+            UserDTO user = await _userService.getUserByUsernameAsync(Username);
+            QueueService queueService = QueueService.GetInstance(
+                                                    App.Current.Services.GetRequiredService<IQueueDAO>(),
+                                                    App.Current.Services.GetRequiredService<ISongDAO>(),
+                                                    App.Current.CurrentUser);
+            await queueService.AddQueueForNewUser(user.Id);
+
             NavigateToLogin();
             return (true, "Sign up successfully!");
         }
@@ -114,7 +126,7 @@ public class SignupViewModel : INotifyPropertyChanged
             return (false, $"An error occurred: {ex.Message}");
         }
     }
-
+    /// End HOT_FIX
     /// <summary>
     /// Validates the user input.
     /// </summary>

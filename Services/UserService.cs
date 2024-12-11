@@ -198,4 +198,9 @@ public class UserService
         // Generate a random salt for hashing; replace with a secure RNG implementation
         return Guid.NewGuid().ToString();
     }
+
+    public async Task<UserDTO> getUserByUsernameAsync(string username)
+    {
+        return await _userDAO.GetUserByUsernameAsync(username);
+    }
 }
