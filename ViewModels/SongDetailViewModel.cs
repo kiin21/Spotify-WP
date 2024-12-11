@@ -8,7 +8,7 @@ using Windows.Services.Maps;
 namespace Spotify.ViewModels
 {
     /// <summary>
-    /// ViewModel for managing song details and playback controls.
+    /// ViewModel for managing song details and playback control.
     /// </summary>
     public partial class SongDetailViewModel : ObservableObject
     {
@@ -21,14 +21,14 @@ namespace Spotify.ViewModels
         private string _playPauseGlyph;
 
         /// <summary>
-        /// Gets the command to toggle play/pause state.
+        /// Command to toggle play/pause state.
         /// </summary>
         public IRelayCommand PlayPauseCommand { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SongDetailViewModel"/> class.
         /// </summary>
-        /// <param name="song">The song to display details for.</param>
+        /// <param name="song">The song details.</param>
         public SongDetailViewModel(SongDTO song)
         {
             PlayPauseCommand = new RelayCommand(TogglePlayPause);
@@ -38,33 +38,20 @@ namespace Spotify.ViewModels
             Song = song;
             Song.plainLyrics = song.plainLyrics ?? "No lyrics available";
 
-            if (_playbackViewModel.IsAdPlaying)
-            {
-                Song = _playbackViewModel.CurrentSong;
-                return;
-            }
-            else
-            {
-                _playbackViewModel.CurrentSong = song;
-                // Initialize with passed song details
-                Song = song;
-                Song.plainLyrics = song.plainLyrics ?? "No lyrics available";
-
-                // Subscribe to playback view model events
-                _playbackViewModel.PropertyChanged += PlaybackViewModel_PropertyChanged;
-            }
+            // Subscribe to playback view model events
+            _playbackViewModel.PropertyChanged += PlaybackViewModel_PropertyChanged;
 
             // Set the initial play/pause glyph
             PlayPauseGlyph = "\uE768"; // Play or Pause
         }
 
+        /// <summary>
+        /// Handles property changes in the playback view model.
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
         private void PlaybackViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (_playbackViewModel.IsAdPlaying)
-            {
-                return;
-            }
-
             // Check for changes in CurrentSong or PlaybackState
             if (e.PropertyName == nameof(PlaybackControlViewModel.CurrentSong))
             {
@@ -88,6 +75,9 @@ namespace Spotify.ViewModels
             }
         }
 
+        /// <summary>
+        /// Toggles the play/pause state of the playback.
+        /// </summary>
         private void TogglePlayPause()
         {
             if (Song == _playbackViewModel.CurrentSong)
