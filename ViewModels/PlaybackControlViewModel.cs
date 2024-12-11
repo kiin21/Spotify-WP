@@ -595,132 +595,124 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     #endregion
 
 
-    #region Private Helper Methods
+#region Private Helper Methods
 
-    /// <summary>
-    /// Saves the play history for the specified song asynchronously.
-    /// </summary>
-    /// <param name="song">The song to save in the play history.</param>
-    private async void SavePlayHistory(SongDTO song)
+/// <summary>
+/// Saves the play history for the specified song asynchronously.
+/// </summary>
+/// <param name="song">The song to save in the play history.</param>
+private async void SavePlayHistory(SongDTO song)
+{
+    try
     {
-        try
-        {
-            var userID = App.Current.CurrentUser.Id;
-            var songID = song.Id.ToString();
-            var currentTime = DateTime.Now;
+        var userID = App.Current.CurrentUser.Id;
+        var songID = song.Id.ToString();
+        var currentTime = DateTime.Now;
 
-            await _playHistoryService.SavePlayHistoryAsync(userID, songID, currentTime);
-        }
-        catch (Exception ex)
+        await _playHistoryService.SavePlayHistoryAsync(userID, songID, currentTime);
+    }
+    catch (Exception ex)
+    {
+        // Handle or log the exception
+        Console.WriteLine($"Error saving play history: {ex.Message}");
+    }
+}
+
+/// <summary>
+/// Adds the specified songs to the playback list.
+/// </summary>
+/// <param name="songs">The collection of songs to add.</param>
+/// <param name="belongToPlaylist">Indicates whether the songs belong to a playlist.</param>
+public void AddToPlaybackList(ObservableCollection<SongDTO> songs, bool belongToPlaylist = false)
+{
+    if (belongToPlaylist)
+    {
+        _playbacklist.Clear();
+        foreach (var song in songs)
         {
-            // Handle or log the exception
-            Console.WriteLine($"Error saving play history: {ex.Message}");
+            _playbacklist.Add(song);
+        }
+        CurrentSong = _playbacklist[0];
+        _playbackService.Resume();
+    }
+    else
+    {
+        // FIX_LATTER
+        foreach (var song in songs)
+        {
+            _playbacklist.Add(song);
         }
     }
+}
 
-    /// <summary>
-    /// Adds the specified songs to the playback list.
-    /// </summary>
-    /// <param name="songs">The collection of songs to add.</param>
-    /// <param name="belongToPlaylist">Indicates whether the songs belong to a playlist.</param>
-    public void AddToPlaybackList(ObservableCollection<SongDTO> songs, bool belongToPlaylist = false)
+/// <summary>
+/// Updates the shuffled playlist based on the current playback list.
+/// </summary>
+private void UpdateShuffledPlaylist()
+{
+    _shuffledPlaylist.Clear();
+
+    foreach (var song in _playbacklist)
     {
-        if (belongToPlaylist)
-        {
-            _playbacklist.Clear();
-            foreach (var song in songs)
-            {
-                _playbacklist.Add(song);
-            }
-            CurrentSong = _playbacklist[0];
-            _playbackService.Resume();
-        }
-        else
-        {
-            // FIX_LATTER
-            foreach (var song in songs)
-            {
-                _playbacklist.Add(song);
-            }
-        }
+        _shuffledPlaylist.Add(song);
     }
 
-    /// <summary>
-    /// Updates the shuffled playlist based on the current playback list.
-    /// </summary>
-    private void UpdateShuffledPlaylist()
+    if (_isShuffleEnabled)
     {
-        _shuffledPlaylist.Clear();
-
-        foreach (var song in _playbacklist)
+        for (int i = _shuffledPlaylist.Count - 1; i > 0; i--)
         {
-            _shuffledPlaylist.Add(song);
-        }
-
-        if (_isShuffleEnabled)
-        {
-            for (int i = _shuffledPlaylist.Count - 1; i > 0; i--)
-            {
-                int j = Random.Shared.Next(i + 1);
-                (_shuffledPlaylist[i], _shuffledPlaylist[j]) = (_shuffledPlaylist[j], _shuffledPlaylist[i]);
-            }
+            int j = Random.Shared.Next(i + 1);
+            (_shuffledPlaylist[i], _shuffledPlaylist[j]) = (_shuffledPlaylist[j], _shuffledPlaylist[i]);
         }
     }
+}
 
-    /// <summary>
-    /// Checks if an advertisement should be played and plays it if necessary.
-    /// </summary>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    private async Task CheckForAd()
+/// <summary>
+/// Checks if an advertisement should be played and plays it if necessary.
+/// </summary>
+/// <returns>A task that represents the asynchronous operation.</returns>
+private async Task CheckForAd()
+{
+    if (_isPremium || _songsPlayedSinceLastAd < 3)
     {
-        if (_isPremium || _songsPlayedSinceLastAd < 3)
-        {
-            return;
-        }
-
-        // Play an ad
-        _isAdPlaying = true;
-        var ad = await _adsService.GetRandomAds();
-
-        var adSong = new SongDTO
-        {
-            title = ad.title,
-            ArtistName = ad.ArtistName,
-            CoverArtUrl = ad.CoverArtUrl,
-            audio_url = ad.audio_url,
-            Duration = ad.Duration
-        };
-
-        CurrentSong = adSong;
-        _playbackService.Play(new Uri(ad.audio_url));
-        _songsPlayedSinceLastAd = 0;
-
-        OnPropertyChanged(nameof(PlayPauseIcon));
+        return;
     }
 
-    #endregion
+    // Play an ad
+    _isAdPlaying = true;
+    var ad = await _adsService.GetRandomAds();
+
+    var adSong = new SongDTO
+    {
+        title = ad.title,
+        ArtistName = ad.ArtistName,
+        CoverArtUrl = ad.CoverArtUrl,
+        audio_url = ad.audio_url,
+        Duration = ad.Duration
+    };
+
+    CurrentSong = adSong;
+    _playbackService.Play(new Uri(ad.audio_url));
+    _songsPlayedSinceLastAd = 0;
+
+    OnPropertyChanged(nameof(PlayPauseIcon));
+}
+
+#endregion
 
 
     #region Event Handlers
 
-    /// <summary>
-    /// Handles the playback state change event.
-    /// </summary>
-    /// <param name="sender">The event sender.</param>
-    /// <param name="isPlaying">Indicates whether the media is currently playing.</param>
     private void OnPlaybackStateChanged(object sender, bool isPlaying)
     {
         _isPlaying = isPlaying;
         OnPropertyChanged(nameof(PlayPauseIcon));
     }
 
-    /// <summary>
-    /// Handles the position changed event.
-    /// </summary>
-    /// <param name="sender">The event sender.</param>
-    /// <param name="position">The new playback position.</param>
     private void OnPositionChanged(object sender, TimeSpan position)
     {
+        
+
         // Check if we should update the position
         if (!_isDraggingSlider && Math.Abs(_currentPosition.TotalSeconds - position.TotalSeconds) > 0.5)
         {
@@ -734,17 +726,15 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
                 Debug.WriteLine("Halfway reached, incrementing song count for ads.");
             }
 
+
             OnPropertyChanged(nameof(CurrentPosition));
             OnPropertyChanged(nameof(CurrentPositionSeconds));
             OnPropertyChanged(nameof(CurrentPositionDisplay));
         }
+
+
     }
 
-    /// <summary>
-    /// Handles the media ended event.
-    /// </summary>
-    /// <param name="sender">The event sender.</param>
-    /// <param name="e">The event arguments.</param>
     private void OnMediaEnded(object sender, EventArgs e)
     {
         if (_isAdPlaying)
@@ -768,6 +758,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         switch (this._repeatMode)
         {
             case RepeatMode.One:
+                
                 if (!_isPremium && _songsPlayedSinceLastAd > 2)
                 {
                     CheckForAd();
@@ -780,6 +771,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
             case RepeatMode.None:
                 Next();
+
                 break;
 
             default:
@@ -791,17 +783,12 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
     #region Slider Interaction Methods
 
-    /// <summary>
-    /// Handles the slider drag started event.
-    /// </summary>
     public void OnSliderDragStarted()
     {
+
         _isDraggingSlider = true;
     }
 
-    /// <summary>
-    /// Handles the slider drag completed event.
-    /// </summary>
     public void OnSliderDragCompleted()
     {
         //if (_isDraggingSlider)
@@ -811,13 +798,11 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         //}
     }
 
+
     #endregion
 
     #region IDisposable Implementation
 
-    /// <summary>
-    /// Disposes the resources used by the <see cref="PlaybackControlViewModel"/>.
-    /// </summary>
     public void Dispose()
     {
         _playbackService.PlaybackStateChanged -= OnPlaybackStateChanged;
@@ -826,5 +811,4 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     }
 
     #endregion
-
 }
