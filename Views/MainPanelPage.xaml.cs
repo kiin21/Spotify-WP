@@ -4,23 +4,35 @@ using Microsoft.Extensions.DependencyInjection;
 using Spotify.Services;
 using Spotify.Models.DTOs;
 
-namespace Spotify.Views;
-public sealed partial class MainPanelPage : Page
+namespace Spotify.Views
 {
-    public MainPanelViewModel ViewModel { get; set; }
-    public MainPanelPage()
+    public sealed partial class MainPanelPage : Page
     {
-        this.InitializeComponent();
-        var songService = (App.Current as App).Services.GetRequiredService<SongService>();
-        ViewModel = new MainPanelViewModel(songService);
-        this.DataContext = ViewModel;
-    }
+        public MainPanelViewModel ViewModel { get; set; }
 
-    private void Item_Selected(object sender, ItemClickEventArgs e)
-    {
-        if (e.ClickedItem is SongDTO song)
+        public MainPanelPage()
         {
-            Frame.Navigate(typeof(SongDetailPage), song);
+            this.InitializeComponent();
+            var songService = (App.Current as App).Services.GetRequiredService<SongService>();
+            ViewModel = new MainPanelViewModel(songService);
+            this.DataContext = ViewModel;
+        }
+
+        private void Item_Selected(object sender, ItemClickEventArgs e)
+        {
+            if (e.ClickedItem is SongDTO song)
+            {
+                Frame.Navigate(typeof(SongDetailPage), song);
+            }
+        }
+
+        private void AddToQueueItem_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            if (sender is Button button && button.DataContext is SongDTO song)
+            {
+                // Call ViewModel to add the song to the queue
+                ViewModel.AddToQueueCommand(song);
+            }
         }
     }
 }

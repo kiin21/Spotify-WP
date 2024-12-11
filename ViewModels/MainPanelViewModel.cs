@@ -59,6 +59,14 @@ public class MainPanelViewModel : INotifyPropertyChanged
         }
     }
 
+    public void AddToQueueCommand(SongDTO song)
+    {
+        var playbackViewModel = PlaybackControlViewModel.Instance;
+        var collection  = new ObservableCollection<SongDTO>();
+        collection.Add(song);
+        playbackViewModel.AddToPlaybackList(collection, false);
+    }
+
     /// <summary>
     /// Occurs when a property value changes.
     /// </summary>
