@@ -212,7 +212,7 @@ Project sử dụng mô hình **MVVM**, với các thành phần chính:
     ![s14102912112024](https://a.okmd.dev/md/67593ae67fd41.png)
     ![s15343212112024](https://a.okmd.dev/md/67594e9a31e39.png)
   - Sau khi ấn Pay thì sẽ thanh toán thành công và user sẽ trở thành premium, có thể nghe nhạc không quảng cáo
-    (thêm ảnh)
+    ![s20593912112024](https://a.okmd.dev/md/67599acee4575.png)
   - Ở đây chỉ làm xác nhận thanh toán thành công luôn, còn việc liên kết qua các cổng thanh toán thì chưa thực hiện được, nếu còn thời gian sẽ tìm hiểu thêm.
 
 ---
