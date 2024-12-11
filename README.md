@@ -192,8 +192,8 @@ Project sử dụng mô hình **MVVM**, với các thành phần chính:
 - **Xem trang ca sĩ** - 1 giờ - Khánh
 - **Thông báo khi nghệ sĩ được theo dõi có bài hát mới** - 1 giờ - Khánh
 - **Chia sẻ playlist với các user khác** - 2 giờ - Khánh
-- **Đăng ký premium để loại bỏ quảng cáo, trước đó có hiển thị quảng cáo** - 2 giờ - Hưng
-- **Thanh toán tài khoản premium thông qua các Pay** - 2 giờ - Hưng
+- **Hiển thị quảng cáo** - 2 giờ - Hưng
+- **Đăng ký, thanh toán tài khoản premium để loại bỏ quảng cáo** - 2 giờ - Hưng
 **Links**:
 
 - [Demo mileston 2 trên YouTube](https://www.youtube.com/watch?v=mV57ojbW5mU)
@@ -203,8 +203,25 @@ Project sử dụng mô hình **MVVM**, với các thành phần chính:
 
 #### 1. **22120120 - Đặng Phúc Hưng**
 
-- **Hiển thị ads, sau đó nếu tài khoản là premium thì sẽ loại bỏ ads**:
-	Chưa test oke chưa viết
+- **Hiển thị quảng cáo**:
+	- Hiển thị quảng cáo sau khi nghe 3 bài hát, với điều kiện là mỗi bài hát phải nghe được hơn 1 nửa bài. Quảng cáo không thể tua, bắt buộc người dùng phải nghe hết.
+		![s15372612112024](https://a.okmd.dev/md/67594f47cd5c2.png)
+		
+		![s15262912112024](https://a.okmd.dev/md/67594cb77b986.png)
+	
+- **Đăng ký, thanh toán tài khoản premium để loại bỏ quảng cáo**:
+	- Nếu muốn loại bỏ quảng cáo thì tiến hành mua gói premium.  Tiến hành chọn gói cần mua
+		![s14092712112024](https://a.okmd.dev/md/67593aa9c618a.png)
+		![s15301212112024](https://a.okmd.dev/md/67594d961c50c.png)
+		
+	- Sau khi chọn Proceed thì điền thông tin thanh toán vào form bên dưới
+		![s14102912112024](https://a.okmd.dev/md/67593ae67fd41.png)
+		![s15343212112024](https://a.okmd.dev/md/67594e9a31e39.png)
+
+	- Sau khi ấn Pay thì sẽ thanh toán thành công và user sẽ trở thành premium, có thể nghe nhạc không quảng cáo
+		(thêm ảnh)
+
+	- Ở đây chỉ làm xác nhận thanh toán thành công luôn, còn việc liên kết qua các cổng thanh toán thì chưa thực hiện được, nếu còn thời gian sẽ tìm hiểu thêm.
 
 ---
 
@@ -285,16 +302,13 @@ Project sử dụng mô hình **MVVM**, với các thành phần chính:
 		 ![s10290712112024](https://a.okmd.dev/md/67590704940bf.png)
 		![s10292612112024](https://a.okmd.dev/md/675907179c7f1.png)
 		
-		
----
-
 
 ---
 
 ### Advanced Topics Milestone 2
 
 1. **Lưu vào biến có chức năng như cache**: 
-	Làm thông báo nghệ sĩ ra bài hát mới bằng cách ban đầu lưu các bài hát của Artist mà User hiện tại đang follow vào 1 biến cache, sau đó mỗi lần Artist thêm bài hát mới thì sẽ so sánh những bài hát có trong database với những bài hát lưu vào cache trước đó, nếu khác cache thì lấy phần khác ra - đó là bài hát mới, đồng thời dùng ProperyChanged và ObservableCollection để lắng nghe sự thay đổi.
+	Làm thông báo nghệ sĩ ra bài hát mới bằng cách ban đầu lưu các bài hát của Artist mà User hiện tại đang follow vào 1 biến cache, sau đó mỗi lần Artist thêm bài hát mới thì sẽ so sánh những bài hát có trong database với những bài hát lưu vào cache trước đó, nếu khác cache thì lấy phần khác ra - đó là bài hát mới, đồng thời dùng ProperyChanged và ObservableCollection để lắng nghe sự thay đổi. Ở đây làm chưa hiệu quả lắm, đáng lẽ biến cache đó phải được lưu ở localStorage, sẽ sửa lại ở milestone sau
 	
 	![s10443012112024](https://a.okmd.dev/md/67590a9f34454.png)
 
