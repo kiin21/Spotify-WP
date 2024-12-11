@@ -147,6 +147,7 @@
                     PointerReleased="Slider_PointerReleased"
                     Value="{x:Bind ViewModel.CurrentPositionSeconds, Mode=TwoWay}" />
 
+
                 <TextBlock
                     Grid.Column="2"
                     FontSize="12"
