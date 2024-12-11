@@ -6,18 +6,19 @@
 2. [Milestone 1](#milestone-1)
    - [Các tính năng chính đã hoàn thành](#các-tính-năng-chính-hoàn-thành-milestone-1)
    - [Cấu trúc project](#cấu-trúc-project)
-   - [Mô tả các chức năng](#mô-tả-các-chức-năng)
+   - [Mô tả các chức năng](#mô-tả-các-chức-năng-milestone-1)
    - [Advanced Topics](#advanced-topics-milestone-1)
    - [Phương pháp đảm bảo chất lượng](#phương-pháp-đảm-bảo-chất-lượng-milestone-1)
    - [Giao diện hoàn chỉnh](#giao-diện-khi-hoàn-thành-milestone-1)
    - [Demo](#demo-milestone-1)
 3. [Milestone 2](#milestone-2)
-   - [Các tính năng chính đã hoàn thành](#các-tính-năng-chính-đã-hoàn-thành-ở-milestone-2)
+   - [Các tính năng chính đã hoàn thành](#các-tính-năng-chính-đã-hoàn-thành-milestone-2)
    - [Mô tả các chức năng](#mô-tả-các-chức-năng-milestone-2)
    - [Advanced Topics](#advanced-topics-milestone-2)
    - [Phương pháp đảm bảo chất lượng](#phương-pháp-đảm-bảo-chất-lượng-milestone-2)
    - [Giao diện hoàn chỉnh](#giao-diện-khi-hoàn-thành-milestone-2)
    - [Demo](demo-milestone-2)
+4. [Link project và các demo](#link-project-và-các-demo)
 
 ## Thành viên nhóm
 
@@ -73,7 +74,7 @@ Project sử dụng mô hình **MVVM**, với các thành phần chính:
 
 ---
 
-### Mô tả các chức năng
+### Mô tả các chức năng milestone 1
 Đầu tiên sẽ tạo cấu trúc thư mục giống như ở phần trên và dựng layout cơ bản như hình: 
 [![s21130211062024](https://camo.githubusercontent.com/9ed265685946fc464709446815e30c1d1372c666da805d165328c3a858331adb/68747470733a2f2f612e6f6b6d642e6465762f6d642f363732623739373065666532312e706e67)](https://camo.githubusercontent.com/9ed265685946fc464709446815e30c1d1372c666da805d165328c3a858331adb/68747470733a2f2f612e6f6b6d642e6465762f6d642f363732623739373065666532312e706e67)
 Đến đây sẽ phân công công việc
@@ -184,7 +185,7 @@ Project sử dụng mô hình **MVVM**, với các thành phần chính:
 
 ## Milestone 2
 
-### Các tính năng chính đã hoàn thành ở milestone 2 
+### Các tính năng chính đã hoàn thành milestone 2 
 
 - **Hiển thị lời bài hát trong lúc phát theo thời gian thực**  - 2 giờ - Khoa
 - **Lịch sử phát của người dùng** - 2 giờ - Khoa
@@ -195,7 +196,7 @@ Project sử dụng mô hình **MVVM**, với các thành phần chính:
 - **Thanh toán tài khoản premium thông qua các Pay** - 2 giờ - Hưng
 **Links**:
 
-- [Demo trên YouTube](https://www.youtube.com/watch?v=mV57ojbW5mU)
+- [Demo mileston 2 trên YouTube](https://www.youtube.com/watch?v=mV57ojbW5mU)
 - [Repository trên GitHub](https://github.com/kiin21/Spotify-WP)
 ---
 ### Mô tả các chức năng milestone 2
@@ -311,7 +312,7 @@ Project sử dụng mô hình **MVVM**, với các thành phần chính:
 	![s10582712112024](https://a.okmd.dev/md/67590de45c27c.png)
 		
 ---
-### Phương pháp đảm bảo chất lượng milestone2
+### Phương pháp đảm bảo chất lượng milestone 2
 Kiểm thử thủ công
 
 ### Giao diện khi hoàn thành milestone 2
@@ -324,7 +325,7 @@ Kiểm thử thủ công
 
 
 ## Link project và các demo
-- [Link demo 1 youtube](https://www.youtube.com/watch?v=mV57ojbW5mU)
+- [Link demo milstone 1 youtube](https://www.youtube.com/watch?v=mV57ojbW5mU)
     
 - [Link github](https://github.com/kiin21/Spotify-WP)
     
