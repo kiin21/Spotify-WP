@@ -11,15 +11,21 @@ using Spotify.Models.DTOs;
 using Spotify;
 using Spotify.Contracts.DAO;
 
+/// <summary>
+/// ViewModel for managing payment processing.
+/// </summary>
 public class PaymentViewModel : INotifyPropertyChanged
 {
     private readonly IPaymentStrategy _stripeStrategy;
     private readonly IPaymentStrategy _paypalStrategy;
     private IPaymentStrategy _currentStrategy;
-    
+
     public string PremiumType;
 
     private bool _isStripeSelected;
+    /// <summary>
+    /// Gets or sets a value indicating whether Stripe is selected as the payment method.
+    /// </summary>
     public bool IsStripeSelected
     {
         get => _isStripeSelected;
@@ -27,17 +33,34 @@ public class PaymentViewModel : INotifyPropertyChanged
     }
 
     private bool _isPaypalSelected;
+    /// <summary>
+    /// Gets or sets a value indicating whether PayPal is selected as the payment method.
+    /// </summary>
     public bool IsPaypalSelected
     {
         get => _isPaypalSelected;
         set => SetProperty(ref _isPaypalSelected, value);
     }
 
+    /// <summary>
+    /// Gets the command to choose Stripe as the payment method.
+    /// </summary>
     public ICommand ChooseStripeCommand { get; }
+
+    /// <summary>
+    /// Gets the command to choose PayPal as the payment method.
+    /// </summary>
     public ICommand ChoosePaypalCommand { get; }
+
+    /// <summary>
+    /// Gets the command to process the payment.
+    /// </summary>
     public ICommand PayCommand { get; }
 
     private string _cardNumber;
+    /// <summary>
+    /// Gets or sets the card number.
+    /// </summary>
     public string CardNumber
     {
         get => _cardNumber;
@@ -45,6 +68,9 @@ public class PaymentViewModel : INotifyPropertyChanged
     }
 
     private string _cvv;
+    /// <summary>
+    /// Gets or sets the CVV code.
+    /// </summary>
     public string CVV
     {
         get => _cvv;
@@ -52,6 +78,9 @@ public class PaymentViewModel : INotifyPropertyChanged
     }
 
     private string _expirationDate;
+    /// <summary>
+    /// Gets or sets the expiration date of the card.
+    /// </summary>
     public string ExpirationDate
     {
         get => _expirationDate;
@@ -59,6 +88,9 @@ public class PaymentViewModel : INotifyPropertyChanged
     }
 
     private decimal _amount;
+    /// <summary>
+    /// Gets or sets the payment amount.
+    /// </summary>
     public decimal Amount
     {
         get => _amount;
@@ -66,6 +98,9 @@ public class PaymentViewModel : INotifyPropertyChanged
     }
 
     private string _statusMessage;
+    /// <summary>
+    /// Gets or sets the status message of the payment process.
+    /// </summary>
     public string StatusMessage
     {
         get => _statusMessage;
@@ -73,16 +108,21 @@ public class PaymentViewModel : INotifyPropertyChanged
     }
 
     private string _paymentStatus;
+    /// <summary>
+    /// Gets or sets the payment status.
+    /// </summary>
     public string PaymentStatus
     {
         get => _paymentStatus;
         set => SetProperty(ref _paymentStatus, value);
     }
 
-    // New field: Message entered by the user
     private string _message;
     private readonly IUserDAO _userDAO;
 
+    /// <summary>
+    /// Gets or sets the message entered by the user.
+    /// </summary>
     public string Message
     {
         get => _message;
@@ -91,6 +131,11 @@ public class PaymentViewModel : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler PropertyChanged;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PaymentViewModel"/> class.
+    /// </summary>
+    /// <param name="premiumType">The type of premium subscription.</param>
+    /// <param name="price">The price of the premium subscription.</param>
     public PaymentViewModel(string premiumType, decimal price)
     {
         _stripeStrategy = new StripeStrategy();
@@ -121,19 +166,19 @@ public class PaymentViewModel : INotifyPropertyChanged
         PayCommand = new AsyncRelayCommand(ProcessPayment);
     }
 
+    /// <summary>
+    /// Processes the payment asynchronously.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     private async Task ProcessPayment()
     {
         try
         {
-            
-
             if (IsStripeSelected && (string.IsNullOrWhiteSpace(CardNumber) || string.IsNullOrWhiteSpace(CVV) || string.IsNullOrWhiteSpace(ExpirationDate)))
             {
                 StatusMessage = "Please provide complete card details.";
                 return;
             }
-
-            
 
             // Call the ProcessPayment method of the current strategy
             var paymentRequestDTO = new PaymentRequestDTO
@@ -168,6 +213,12 @@ public class PaymentViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Polls the payment status asynchronously.
+    /// </summary>
+    /// <param name="paymentIntentId">The payment intent ID.</param>
+    /// <param name="token">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     private async Task PollPaymentStatus(string paymentIntentId, CancellationToken token)
     {
         while (!token.IsCancellationRequested)
@@ -202,7 +253,6 @@ public class PaymentViewModel : INotifyPropertyChanged
 
                         // Update the user's profile in the database
                         await _userDAO.UpdateUserAsync(currentUser.Id, currentUser);
-
                     }
 
                     break; // Exit the polling loop
@@ -220,6 +270,11 @@ public class PaymentViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Extracts the payment intent ID from the client secret.
+    /// </summary>
+    /// <param name="clientSecret">The client secret.</param>
+    /// <returns>The payment intent ID.</returns>
     private string ExtractPaymentIntentId(string clientSecret)
     {
         // Logic to extract Payment Intent ID from the client secret.
@@ -227,11 +282,22 @@ public class PaymentViewModel : INotifyPropertyChanged
         return clientSecret.Split('_')[1];
     }
 
+    /// <summary>
+    /// Notifies listeners that a property value has changed.
+    /// </summary>
+    /// <param name="propertyName">The name of the property that changed.</param>
     protected virtual void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
+    /// <summary>
+    /// Sets the property value and notifies listeners if the value has changed.
+    /// </summary>
+    /// <typeparam name="T">The type of the property value.</typeparam>
+    /// <param name="storage">The storage field for the property value.</param>
+    /// <param name="value">The new value.</param>
+    /// <param name="propertyName">The name of the property that changed.</param>
     private void SetProperty<T>(ref T storage, T value, [System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
     {
         if (!EqualityComparer<T>.Default.Equals(storage, value))
@@ -241,4 +307,3 @@ public class PaymentViewModel : INotifyPropertyChanged
         }
     }
 }
-

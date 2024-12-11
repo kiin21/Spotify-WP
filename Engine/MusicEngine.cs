@@ -4,39 +4,62 @@ using Windows.Media.Playback;
 
 namespace Spotify.Engine;
 
+/// <summary>
+/// Provides functionality to manage music playback.
+/// </summary>
 public class MusicEngine : IDisposable
 {
     private readonly MediaPlayer _mediaPlayer;
     private bool _isDisposed;
 
+    /// <summary>
+    /// Occurs when media playback ends.
+    /// </summary>
     public event EventHandler MediaEnded;
+
+    /// <summary>
+    /// Occurs when the playback position changes.
+    /// </summary>
     public event EventHandler<TimeSpan> PositionChanged;
+
+    /// <summary>
+    /// Occurs when the volume changes.
+    /// </summary>
     public event EventHandler<double> VolumeChanged;
+
+    /// <summary>
+    /// Occurs when the playback rate changes.
+    /// </summary>
     public event EventHandler<double> PlaybackRateChanged;
+
+    /// <summary>
+    /// Occurs when the playback state changes.
+    /// </summary>
     public event EventHandler<bool> PlaybackStateChanged;
+
+    /// <summary>
+    /// Occurs when media playback fails.
+    /// </summary>
     public event EventHandler<Exception> MediaFailed;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MusicEngine"/> class.
+    /// </summary>
     public MusicEngine()
     {
         _mediaPlayer = new MediaPlayer();
         InitializeMediaPlayer();
     }
 
-    private void InitializeMediaPlayer()
-    {
-        // Set up event handlers
-        _mediaPlayer.MediaEnded += OnMediaEnded;
-        _mediaPlayer.MediaFailed += OnMediaFailed;
-        _mediaPlayer.PlaybackSession.PlaybackStateChanged += OnPlaybackStateChanged;
-        _mediaPlayer.VolumeChanged += OnVolumeChanged;
-
-        // Set default properties
-        _mediaPlayer.AutoPlay = false;
-        _mediaPlayer.Volume = 0.5; // 50% default volume
-    }
-
+    /// <summary>
+    /// Gets a value indicating whether the media is currently playing.
+    /// </summary>
     public bool IsPlaying => _mediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Playing;
 
+    /// <summary>
+    /// Starts media playback.
+    /// </summary>
+    /// <exception cref="ObjectDisposedException">Thrown when the object is disposed.</exception>
     public void Play()
     {
         ThrowIfDisposed();
@@ -47,6 +70,10 @@ public class MusicEngine : IDisposable
         }
     }
 
+    /// <summary>
+    /// Pauses media playback.
+    /// </summary>
+    /// <exception cref="ObjectDisposedException">Thrown when the object is disposed.</exception>
     public void Pause()
     {
         ThrowIfDisposed();
@@ -54,6 +81,10 @@ public class MusicEngine : IDisposable
         PlaybackStateChanged?.Invoke(this, false);
     }
 
+    /// <summary>
+    /// Stops media playback and resets the position to the beginning.
+    /// </summary>
+    /// <exception cref="ObjectDisposedException">Thrown when the object is disposed.</exception>
     public void Stop()
     {
         ThrowIfDisposed();
@@ -62,6 +93,13 @@ public class MusicEngine : IDisposable
         PlaybackStateChanged?.Invoke(this, false);
     }
 
+    /// <summary>
+    /// Sets the media source to the specified URI.
+    /// </summary>
+    /// <param name="uri">The URI of the media source.</param>
+    /// <exception cref="ObjectDisposedException">Thrown when the object is disposed.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when the URI is null.</exception>
+    /// <exception cref="Exception">Thrown when setting the media source fails.</exception>
     public void SetSource(Uri uri)
     {
         ThrowIfDisposed();
@@ -87,6 +125,11 @@ public class MusicEngine : IDisposable
         }
     }
 
+    /// <summary>
+    /// Sets the volume to the specified level.
+    /// </summary>
+    /// <param name="volume">The volume level (0.0 to 1.0).</param>
+    /// <exception cref="ObjectDisposedException">Thrown when the object is disposed.</exception>
     public void SetVolume(double volume)
     {
         ThrowIfDisposed();
@@ -97,6 +140,11 @@ public class MusicEngine : IDisposable
         VolumeChanged?.Invoke(this, volume);
     }
 
+    /// <summary>
+    /// Sets the playback rate to the specified value.
+    /// </summary>
+    /// <param name="rate">The playback rate (0.5 to 2.0).</param>
+    /// <exception cref="ObjectDisposedException">Thrown when the object is disposed.</exception>
     public void SetPlaybackRate(double rate)
     {
         ThrowIfDisposed();
@@ -107,6 +155,11 @@ public class MusicEngine : IDisposable
         PlaybackRateChanged?.Invoke(this, rate);
     }
 
+    /// <summary>
+    /// Sets the playback position to the specified time.
+    /// </summary>
+    /// <param name="position">The playback position.</param>
+    /// <exception cref="ObjectDisposedException">Thrown when the object is disposed.</exception>
     public void SetPosition(TimeSpan position)
     {
         ThrowIfDisposed();
@@ -123,31 +176,84 @@ public class MusicEngine : IDisposable
         }
     }
 
+    /// <summary>
+    /// Gets the current playback position.
+    /// </summary>
+    /// <returns>The current playback position.</returns>
+    /// <exception cref="ObjectDisposedException">Thrown when the object is disposed.</exception>
     public TimeSpan GetPosition()
     {
         ThrowIfDisposed();
         return _mediaPlayer.PlaybackSession.Position;
     }
 
+    /// <summary>
+    /// Gets the duration of the media.
+    /// </summary>
+    /// <returns>The duration of the media.</returns>
+    /// <exception cref="ObjectDisposedException">Thrown when the object is disposed.</exception>
     public TimeSpan GetDuration()
     {
         ThrowIfDisposed();
         return _mediaPlayer.PlaybackSession.NaturalDuration;
     }
 
+    /// <summary>
+    /// Gets the current volume level.
+    /// </summary>
+    /// <returns>The current volume level.</returns>
+    /// <exception cref="ObjectDisposedException">Thrown when the object is disposed.</exception>
     public double GetVolume()
     {
         ThrowIfDisposed();
         return _mediaPlayer.Volume;
     }
 
+    /// <summary>
+    /// Gets the current playback rate.
+    /// </summary>
+    /// <returns>The current playback rate.</returns>
+    /// <exception cref="ObjectDisposedException">Thrown when the object is disposed.</exception>
     public double GetPlaybackRate()
     {
         ThrowIfDisposed();
         return _mediaPlayer.PlaybackSession.PlaybackRate;
     }
 
-    // Event handlers
+    /// <summary>
+    /// Releases all resources used by the <see cref="MusicEngine"/>.
+    /// </summary>
+    public void Dispose()
+    {
+        if (!_isDisposed)
+        {
+            // Unsubscribe from events
+            _mediaPlayer.MediaEnded -= OnMediaEnded;
+            _mediaPlayer.MediaFailed -= OnMediaFailed;
+            _mediaPlayer.PlaybackSession.PlaybackStateChanged -= OnPlaybackStateChanged;
+            _mediaPlayer.VolumeChanged -= OnVolumeChanged;
+
+            // Stop playback and dispose
+            Stop();
+            _mediaPlayer.Dispose();
+
+            _isDisposed = true;
+        }
+    }
+
+    private void InitializeMediaPlayer()
+    {
+        // Set up event handlers
+        _mediaPlayer.MediaEnded += OnMediaEnded;
+        _mediaPlayer.MediaFailed += OnMediaFailed;
+        _mediaPlayer.PlaybackSession.PlaybackStateChanged += OnPlaybackStateChanged;
+        _mediaPlayer.VolumeChanged += OnVolumeChanged;
+
+        // Set default properties
+        _mediaPlayer.AutoPlay = false;
+        _mediaPlayer.Volume = 0.5; // 50% default volume
+    }
+
     private void OnMediaEnded(MediaPlayer sender, object args)
     {
         MediaEnded?.Invoke(this, EventArgs.Empty);
@@ -173,24 +279,6 @@ public class MusicEngine : IDisposable
         if (_isDisposed)
         {
             throw new ObjectDisposedException(nameof(MusicEngine));
-        }
-    }
-
-    public void Dispose()
-    {
-        if (!_isDisposed)
-        {
-            // Unsubscribe from events
-            _mediaPlayer.MediaEnded -= OnMediaEnded;
-            _mediaPlayer.MediaFailed -= OnMediaFailed;
-            _mediaPlayer.PlaybackSession.PlaybackStateChanged -= OnPlaybackStateChanged;
-            _mediaPlayer.VolumeChanged -= OnVolumeChanged;
-
-            // Stop playback and dispose
-            Stop();
-            _mediaPlayer.Dispose();
-
-            _isDisposed = true;
         }
     }
 }

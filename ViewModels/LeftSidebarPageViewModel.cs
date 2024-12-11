@@ -9,11 +9,17 @@ using System.Threading.Tasks;
 
 namespace Spotify.ViewModels
 {
+    /// <summary>
+    /// ViewModel for managing the left sidebar, including playlists.
+    /// </summary>
     public class LeftSidebarPageViewModel : INotifyPropertyChanged
     {
         private readonly PlaylistService _playlistService;
         private ObservableCollection<PlaylistDTO> _playlists { get; set; }
 
+        /// <summary>
+        /// Gets or sets the collection of playlists.
+        /// </summary>
         public ObservableCollection<PlaylistDTO> Playlists
         {
             get => _playlists;
@@ -25,6 +31,9 @@ namespace Spotify.ViewModels
         }
 
         private PlaylistDTO _selectedPlaylist;
+        /// <summary>
+        /// Gets or sets the selected playlist.
+        /// </summary>
         public PlaylistDTO SelectedPlaylist
         {
             get => _selectedPlaylist;
@@ -35,6 +44,10 @@ namespace Spotify.ViewModels
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LeftSidebarPageViewModel"/> class.
+        /// </summary>
+        /// <param name="playlistService">The service for managing playlists.</param>
         public LeftSidebarPageViewModel(PlaylistService playlistService)
         {
             _playlistService = playlistService;
@@ -50,25 +63,30 @@ namespace Spotify.ViewModels
                 throw new InvalidOperationException("User is not logged in or user ID is invalid.");
             }
 
-            // Đảm bảo user có playlist "Liked Songs"
+            // Ensure the user has a "Liked Songs" playlist
             await _playlistService.EnsureLikedSongsPlaylistAsync(currentUser.Id, currentUser.Username);
 
-            // Lấy danh sách playlist của user
+            // Get the user's playlists
             var playlists = await _playlistService.GetPlaylistsByUserIdAsync(currentUser.Id);
 
-            // Lấy danh sách playlist được chia sẻ với user
+            // Get playlists shared with the user
             var sharedPlaylists = await _playlistService.GetSharedPlaylistsAsync(currentUser.Id);
 
-            // Hợp nhất cả hai danh sách
+            // Merge both lists
             var allPlaylists = playlists.Concat(sharedPlaylists).ToList();
 
-            // Gán vào ObservableCollection
+            // Assign to ObservableCollection
             Playlists = new ObservableCollection<PlaylistDTO>(allPlaylists);
 
-            // Chọn playlist đầu tiên (nếu có)
+            // Select the first playlist (if any)
             SelectedPlaylist = Playlists.FirstOrDefault();
         }
 
+        /// <summary>
+        /// Adds a new playlist asynchronously.
+        /// </summary>
+        /// <param name="playlistName">The name of the new playlist.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public async Task AddPlaylistAsync(string playlistName)
         {
             var newPlaylist = new PlaylistDTO
@@ -86,6 +104,10 @@ namespace Spotify.ViewModels
             Playlists.Add(newPlaylist);
         }
 
+        /// <summary>
+        /// Removes a playlist by its ID.
+        /// </summary>
+        /// <param name="playlistId">The ID of the playlist to remove.</param>
         public void RemovePlaylist(string playlistId)
         {
             var playlistToRemove = Playlists.FirstOrDefault(p => p.Id == playlistId);
@@ -95,7 +117,15 @@ namespace Spotify.ViewModels
             }
         }
 
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Notifies listeners that a property value has changed.
+        /// </summary>
+        /// <param name="propertyName">The name of the property that changed.</param>
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

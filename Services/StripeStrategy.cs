@@ -7,8 +7,16 @@ using System.Threading.Tasks;
 
 namespace Spotify.Services;
 
+/// <summary>
+/// Provides a strategy for processing payments using Stripe.
+/// </summary>
 public class StripeStrategy : IPaymentStrategy
 {
+    /// <summary>
+    /// Processes the payment using Stripe.
+    /// </summary>
+    /// <param name="paymentRequestDTO">The payment request data transfer object.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the client secret for further payment confirmation.</returns>
     public async Task<string> ProcessPayment(PaymentRequestDTO paymentRequestDTO)
     {
         // Retrieve the API key from environment variables
@@ -27,6 +35,11 @@ public class StripeStrategy : IPaymentStrategy
         return paymentIntent.ClientSecret;
     }
 
+    /// <summary>
+    /// Validates the card details in the payment request.
+    /// </summary>
+    /// <param name="paymentRequestDTO">The payment request data transfer object.</param>
+    /// <exception cref="ArgumentException">Thrown when the card details are incomplete or invalid.</exception>
     private void ValidateCardDetails(PaymentRequestDTO paymentRequestDTO)
     {
         if (string.IsNullOrWhiteSpace(paymentRequestDTO.CardNumber) ||
@@ -46,6 +59,11 @@ public class StripeStrategy : IPaymentStrategy
         }
     }
 
+    /// <summary>
+    /// Creates a payment method using the card details in the payment request.
+    /// </summary>
+    /// <param name="paymentRequestDTO">The payment request data transfer object.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the created payment method.</returns>
     private async Task<PaymentMethod> CreatePaymentMethod(PaymentRequestDTO paymentRequestDTO)
     {
         // Convert expiration date to month/year
@@ -70,7 +88,12 @@ public class StripeStrategy : IPaymentStrategy
         return paymentMethod;
     }
 
-
+    /// <summary>
+    /// Creates a payment intent using the payment request and payment method ID.
+    /// </summary>
+    /// <param name="paymentRequestDTO">The payment request data transfer object.</param>
+    /// <param name="paymentMethodId">The ID of the payment method.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the created payment intent.</returns>
     private async Task<PaymentIntent> CreatePaymentIntent(PaymentRequestDTO paymentRequestDTO, string paymentMethodId)
     {
         var paymentIntentOptions = new PaymentIntentCreateOptions
@@ -87,6 +110,11 @@ public class StripeStrategy : IPaymentStrategy
         return paymentIntent;
     }
 
+    /// <summary>
+    /// Gets the payment status for the specified payment intent ID.
+    /// </summary>
+    /// <param name="paymentIntentId">The payment intent ID.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the payment response.</returns>
     public async Task<PaymentResponseDTO> GetPaymentStatus(string paymentIntentId)
     {
         var service = new PaymentIntentService();

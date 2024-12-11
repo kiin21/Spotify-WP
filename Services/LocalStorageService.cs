@@ -10,15 +10,27 @@ using Spotify.Models.DTOs;
 
 namespace Spotify.Services;
 
+/// <summary>
+/// Provides services for managing local storage.
+/// </summary>
 public class LocalStorageService
 {
     private readonly ApplicationDataContainer _localSettings;
     private const string USERS_KEY = "users";
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LocalStorageService"/> class.
+    /// </summary>
     public LocalStorageService()
     {
         _localSettings = ApplicationData.Current.LocalSettings;
     }
 
+    /// <summary>
+    /// Saves a user asynchronously.
+    /// </summary>
+    /// <param name="user">The user to save.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task SaveUserAsync(UserDTO user)
     {
         try
@@ -40,6 +52,10 @@ public class LocalStorageService
         }
     }
 
+    /// <summary>
+    /// Gets all users asynchronously.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the list of users.</returns>
     public Task<List<UserDTO>> GetUsersAsync()
     {
         try

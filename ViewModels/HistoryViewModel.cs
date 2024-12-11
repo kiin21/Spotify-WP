@@ -8,9 +8,16 @@ using Spotify.Models.DTOs;
 
 namespace Spotify.ViewModels
 {
+    /// <summary>
+    /// ViewModel for managing play history and grouping songs.
+    /// </summary>
     public class HistoryViewModel : INotifyPropertyChanged
     {
         private ObservableCollection<PlayHistoryWithSongDTO> _songs = new ObservableCollection<PlayHistoryWithSongDTO>();
+
+        /// <summary>
+        /// Gets or sets the collection of play history songs.
+        /// </summary>
         public ObservableCollection<PlayHistoryWithSongDTO> Songs
         {
             get => _songs;
@@ -23,6 +30,10 @@ namespace Spotify.ViewModels
         }
 
         private ObservableCollection<GroupedPlayHistory> _groupedSongs = new ObservableCollection<GroupedPlayHistory>();
+
+        /// <summary>
+        /// Gets or sets the grouped collection of play history songs.
+        /// </summary>
         public ObservableCollection<GroupedPlayHistory> GroupedSongs
         {
             get => _groupedSongs;
@@ -33,9 +44,12 @@ namespace Spotify.ViewModels
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HistoryViewModel"/> class.
+        /// </summary>
         public HistoryViewModel()
         {
-            // What to d
+            // Initialization logic if needed
         }
 
         private void LoadAndGroupSongs()
@@ -63,18 +77,41 @@ namespace Spotify.ViewModels
             return date.ToString("MMM-yyyy");
         }
 
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Notifies listeners that a property value has changed.
+        /// </summary>
+        /// <param name="propertyName">The name of the property that changed.</param>
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 
+    /// <summary>
+    /// Represents a grouped collection of play history songs.
+    /// </summary>
     public class GroupedPlayHistory
     {
+        /// <summary>
+        /// Gets the key for the group.
+        /// </summary>
         public string Key { get; }
+
+        /// <summary>
+        /// Gets the collection of play history songs in the group.
+        /// </summary>
         public ObservableCollection<PlayHistoryWithSongDTO> Items { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GroupedPlayHistory"/> class.
+        /// </summary>
+        /// <param name="key">The key for the group.</param>
+        /// <param name="items">The collection of play history songs in the group.</param>
         public GroupedPlayHistory(string key, ObservableCollection<PlayHistoryWithSongDTO> items)
         {
             Key = key;
