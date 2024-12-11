@@ -308,7 +308,7 @@ Project sử dụng mô hình **MVVM**, với các thành phần chính:
    ![s10580212112024](https://a.okmd.dev/md/67590dcb32060.png)
 
    ![s10582712112024](https://a.okmd.dev/md/67590de45c27c.png)
-4. Sử dựng Aggregation pipeline - một kiểu truy vấn SQL của non relational database
+4. Sử dụng Aggregation pipeline - một kiểu truy vấn SQL của non relational database
 
    ![image](https://github.com/user-attachments/assets/deb54bd2-8702-40fc-b3bb-b031592defe4)
    
