@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stripe Payment</title>
+    <script src='https://js.stripe.com/v3/'></script>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            background-color: #f0f0f0; 
+        }
+        #payment-form { 
+            width: 400px; 
+            padding: 20px; 
+            background-color: white; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+        }
+        .form-row { 
+            margin-bottom: 15px; 
+        }
+        .form-row label { 
+            display: block; 
+            margin-bottom: 5px; 
+            font-weight: bold; 
+        }
+        .form-row input, 
+        .form-row #card-element { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 4px; 
+        }
+        #submit { 
+            width: 100%; 
+            padding: 10px; 
+            background-color: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+        }
+        #card-errors {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <form id='payment-form'>
+        <div class='form-row'>
+            <label for='card-element'>Credit or debit card</label>
+            <div id='card-element'></div>
+            <div id='card-errors' role='alert'></div>
+        </div>
+        <button id='submit'>Pay {AMOUNT}</button>
+    </form>
+
+    <script>
+        var stripe = Stripe('{PUBLISHABLE_KEY}');
+        var elements = stripe.elements();
+
+        var style = {
+            base: {
+                color: "#32325d",
+                fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                fontSmoothing: "antialiased",
+                fontSize: "16px",
+                "::placeholder": {
+                    color: "#aab7c4"
+                }
+            },
+            invalid: {
+                color: "#fa755a",
+                iconColor: "#fa755a"
+            }
+        };
+
+        var cardElement = elements.create('card', { style: style });
+        cardElement.mount('#card-element');
+
+        // Handle real-time validation errors from the card Element
+        cardElement.addEventListener('change', function(event) {
+            var displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        var form = document.getElementById('payment-form');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            try {
+                const response = await fetch('/create-payment-intent', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: {AMOUNT} })
+                });
+        
+                const { clientSecret } = await response.json();
+
+                const result = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: cardElement,
+                        billing_details: {
+                            name: 'Customer Name' // You can customize this
+                        }
+                    }
+                });
+
+                if (result.error) {
+                    // Show error in card-errors div
+                    var errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = result.error.message;
+
+                    window.chrome.webview.postMessage(JSON.stringify({
+                        type: 'paymentError',
+                        message: result.error.message
+                    }));
+                } else if (result.paymentIntent.status === 'succeeded') {
+                    window.chrome.webview.postMessage(JSON.stringify({
+                        type: 'paymentSuccess',
+                        paymentIntentId: result.paymentIntent.id
+                    }));
+                }
+            } catch (error) {
+                var errorElement = document.getElementById('card-errors');
+                errorElement.textContent = error.message;
+
+                window.chrome.webview.postMessage(JSON.stringify({
+                    type: 'paymentError',
+                    message: error.message
+                }));
+            }
+        });
+    </script>
+</body>
+</html>

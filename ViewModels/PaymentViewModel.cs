@@ -10,6 +10,10 @@ using System;
 using Spotify.Models.DTOs;
 using Spotify;
 using Spotify.Contracts.DAO;
+using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
+using Spotify.Views;
+using Microsoft.UI.Xaml.Controls;
 
 public class PaymentViewModel : INotifyPropertyChanged
 {
@@ -58,8 +62,8 @@ public class PaymentViewModel : INotifyPropertyChanged
         set => SetProperty(ref _expirationDate, value);
     }
 
-    private decimal _amount;
-    public decimal Amount
+    private string _amount;
+    public string Amount
     {
         get => _amount;
         set => SetProperty(ref _amount, value);
@@ -91,12 +95,13 @@ public class PaymentViewModel : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler PropertyChanged;
 
-    public PaymentViewModel(string premiumType, decimal price)
+    public PaymentViewModel(string premiumType, string price)
     {
-        _stripeStrategy = new StripeStrategy();
-        _paypalStrategy = new PayPalStrategy();
-        _currentStrategy = _stripeStrategy;
+        //    _stripeStrategy = new StripeStrategy();
+        //    _paypalStrategy = new PayPalStrategy();
+        //    _currentStrategy = _stripeStrategy;
 
+        _userDAO = (App.Current as App).Services.GetRequiredService<IUserDAO>();
         PremiumType = premiumType;
         Amount = price;
 
@@ -125,8 +130,7 @@ public class PaymentViewModel : INotifyPropertyChanged
     {
         try
         {
-            
-
+            // Validate card details if Stripe is selected
             if (IsStripeSelected && (string.IsNullOrWhiteSpace(CardNumber) || string.IsNullOrWhiteSpace(CVV) || string.IsNullOrWhiteSpace(ExpirationDate)))
             {
                 StatusMessage = "Please provide complete card details.";
@@ -134,32 +138,51 @@ public class PaymentViewModel : INotifyPropertyChanged
             }
 
             
-
-            // Call the ProcessPayment method of the current strategy
-            var paymentRequestDTO = new PaymentRequestDTO
+            // Prompt user for confirmation
+            var dialog = new ContentDialog
             {
-                Amount = Amount,
-                CardNumber = CardNumber,
-                CVV = CVV,
-                ExpirationDate = ExpirationDate,
-                Message = Message,
-                ReturnUrl = "your-return-url",
-                TransactionId = Guid.NewGuid().ToString()
+                Title = "Confirm Payment",
+                Content = "Do you want to proceed with the payment?",
+                PrimaryButtonText = "OK",
+                CloseButtonText = "Cancel",
+                XamlRoot = App.Current.ShellWindow.Content.XamlRoot
             };
 
-            string clientSecret = await _currentStrategy.ProcessPayment(paymentRequestDTO);
+            var result = await dialog.ShowAsync();
 
-            // Extract the Payment Intent ID from the client secret (if available)
-            string paymentIntentId = ExtractPaymentIntentId(clientSecret);
-
-            if (!string.IsNullOrEmpty(paymentIntentId))
+            if (result == ContentDialogResult.Primary)
             {
-                using var cts = new CancellationTokenSource();
-                await PollPaymentStatus(paymentIntentId, cts.Token);
+                // Simulate payment processing (replace with actual payment logic)
+                bool paymentSuccess = true; // Replace with real payment status
+
+                if (paymentSuccess)
+                {
+                    // Update user's premium status
+                    var currentUser = (App.Current as App)?.CurrentUser;
+
+                    if (currentUser == null)
+                        throw new InvalidOperationException("User not found");
+
+                    currentUser.IsPremium = true;
+
+                    // Update the user's profile in the database
+                    await _userDAO.UpdateUserAsync(currentUser.Id, currentUser);
+
+                    StatusMessage = "Payment successful! You are now a premium user.";
+
+                    var shellWindow = App.Current.ShellWindow;
+
+                    // Điều hướng đến ArtistPage và truyền artist
+                    shellWindow.GetNavigationService().Navigate(typeof(MainPanelPage));
+                }
+                else
+                {
+                    StatusMessage = "Payment failed. Please try again.";
+                }
             }
             else
             {
-                StatusMessage = "Could not extract Payment Intent ID.";
+                StatusMessage = "Payment canceled by user.";
             }
         }
         catch (Exception ex)
@@ -167,6 +190,55 @@ public class PaymentViewModel : INotifyPropertyChanged
             StatusMessage = $"Payment failed: {ex.Message}";
         }
     }
+
+
+    //private async Task ProcessPayment()
+    //{
+    //    try
+    //    {
+
+
+    //        if (IsStripeSelected && (string.IsNullOrWhiteSpace(CardNumber) || string.IsNullOrWhiteSpace(CVV) || string.IsNullOrWhiteSpace(ExpirationDate)))
+    //        {
+    //            StatusMessage = "Please provide complete card details.";
+    //            return;
+    //        }
+
+
+
+
+    // Call the ProcessPayment method of the current strategy
+    //var paymentRequestDTO = new PaymentRequestDTO
+    //{
+    //    Amount = Amount,
+    //    CardNumber = CardNumber,
+    //    CVV = CVV,
+    //    ExpirationDate = ExpirationDate,
+    //    Message = Message,
+    //    ReturnUrl = "your-return-url",
+    //    TransactionId = Guid.NewGuid().ToString()
+    //};
+
+    //string clientSecret = await _currentStrategy.ProcessPayment(paymentRequestDTO);
+
+    //// Extract the Payment Intent ID from the client secret (if available)
+    //string paymentIntentId = ExtractPaymentIntentId(clientSecret);
+
+    //if (!string.IsNullOrEmpty(paymentIntentId))
+    //{
+    //    using var cts = new CancellationTokenSource();
+    //    await PollPaymentStatus(paymentIntentId, cts.Token);
+    //}
+    //else
+    //{
+    //    StatusMessage = "Could not extract Payment Intent ID.";
+    //}
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        StatusMessage = $"Payment failed: {ex.Message}";
+    //    }
+    //}
 
     private async Task PollPaymentStatus(string paymentIntentId, CancellationToken token)
     {

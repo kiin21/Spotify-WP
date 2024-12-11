@@ -45,7 +45,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     private bool _isQueueVisible = true;
     private int _songsPlayedSinceLastAd = 0;
     private bool _isAdPlaying = false;
-    private readonly bool _isPremium = CurrentUser.IsPremium;
+    private readonly bool _isPremium = false;
     private bool _hasReachedHalfway = false;
     private AdsDTO _ads = new();
 
@@ -80,6 +80,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
     private PlaybackControlViewModel()
     {
+        _isPremium = CurrentUser.IsPremium;
         _playbackService = PlaybackControlService.Instance;
         _adsService = AdsService.GetInstance(
                 App.Current.Services.GetRequiredService<IAdsDAO>()
@@ -298,7 +299,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         get => _currentPosition.TotalSeconds;
         set
         {
-            if (!_isDraggingSlider)
+            if (!IsAdPlaying || _isPremium)
             {
                 CurrentPosition = TimeSpan.FromSeconds(value);
             }

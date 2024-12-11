@@ -3,17 +3,14 @@ using System;
 using Microsoft.UI.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using Spotify.ViewModels;
-using Spotify.Contracts.Services;
 using Spotify.Services;
 using Spotify.Contracts.DAO;
-using DotNetEnv;
-using Spotify.Views;
+
 using System.Diagnostics;
 using System.IO;
 using Spotify.DAOs;
 using Spotify.Models.DTOs;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+
 
 namespace Spotify
 {

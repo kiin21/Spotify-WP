@@ -12,7 +12,7 @@ public sealed partial class PaymentPage: Page
     public PaymentPage()
     {
         this.InitializeComponent();
-        ViewModel = new PaymentViewModel("", 0);  // Initialize with default values
+        ViewModel = new PaymentViewModel("", "0");  // Initialize with default values
         DataContext = ViewModel;  // Set DataContext here
     }
 
@@ -21,7 +21,7 @@ public sealed partial class PaymentPage: Page
         base.OnNavigatedTo(e);
 
         // If e.Parameter contains valid data, update ViewModel
-        if (e.Parameter is (string premiumType, decimal price))
+        if (e.Parameter is (string premiumType, string price))
         {
             ViewModel.PremiumType = premiumType;  // Update properties if needed
             ViewModel.Amount = price;

@@ -16,6 +16,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="Assets\App.ico" />
+    <Content Remove="Assets\stripe_payment.html" />
   </ItemGroup>
   <ItemGroup>
     <None Remove=".env" />
@@ -35,6 +36,7 @@
     <None Remove="Views\MainPanelPage.xaml" />
     <None Remove="Views\NowPlayingPreviewUserControl.xaml" />
     <None Remove="Views\PaymentPage.xaml" />
+    <None Remove="Views\PaymentWindow.xaml" />
     <None Remove="Views\PlaybackControlPage.xaml" />
     <None Remove="Views\PlaylistPage.xaml" />
     <None Remove="Views\PremiumPage.xaml" />
@@ -42,6 +44,7 @@
     <None Remove="Views\SharePlaylistDialog.xaml" />
     <None Remove="Views\SignupPage.xaml" />
     <None Remove="Views\SongDetailPage.xaml" />
+    <None Remove="Views\SuccessPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -61,6 +64,7 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
     <PackageReference Include="DotNetEnv" Version="3.1.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="Microsoft.NETCore.Platforms" Version="7.0.4" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240923002" />
     <PackageReference Include="MongoDB.Bson" Version="3.0.0" />
@@ -69,6 +73,7 @@
     <PackageReference Include="NAudio.Extras" Version="2.2.1" />
     <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" />
     <PackageReference Include="Stripe.net" Version="47.1.0" />
+    <PackageReference Include="System.Text.Encodings.Web" Version="6.0.0" />
     <PackageReference Include="WinUIEx" Version="2.4.2" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
@@ -96,6 +101,12 @@
     <None Update="Assets\App.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\SuccessPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\PaymentWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\SharePlaylistDialog.xaml">
 		<Generator>MSBuild:Compile</Generator>
 	</Page>
@@ -163,6 +174,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <WebView2UseWinRT>False</WebView2UseWinRT>
+  </PropertyGroup>
 
   <!--
     Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution

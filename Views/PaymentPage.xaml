@@ -13,14 +13,14 @@
 
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
         <TextBlock Text="Choose Payment Method" FontWeight="Bold" />
-
+<!--
         <StackPanel Orientation="Horizontal" Spacing="10">
             <Button Content="Stripe" Command="{Binding ChooseStripeCommand}" 
                 Background="{Binding IsStripeSelected, Converter={StaticResource BoolToColorConverter}}"/>
             <Button Content="PayPal" Command="{Binding ChoosePaypalCommand}" 
                 Background="{Binding IsPaypalSelected, Converter={StaticResource BoolToColorConverter}}"/>
         </StackPanel>
-
+-->
         <TextBlock Text="Enter Card Details" FontWeight="Bold" />
 
         <!-- Cardholder Name Field -->
@@ -29,7 +29,7 @@
         <!-- Card Number Field -->
         <TextBox Header="Card Number" Text="{Binding CardNumber, Mode=TwoWay}" Width="300" />
 
-        <!-- Expiry Date Field (MM/YY) -->
+        <!-- Expiry Date Field (MM/YYYY) -->
 
         <TextBox Header="MM/YY" Text="{Binding ExpirationDate, Mode=TwoWay}" Width="100" Margin="0 0 200 0" />
      

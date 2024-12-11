@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stripe Payment</title>
+    <script src='https://js.stripe.com/v3/'></script>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            background-color: #f0f0f0; 
+        }
+        #payment-form { 
+            width: 400px; 
+            padding: 20px; 
+            background-color: white; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+        }
+        .form-row { 
+            margin-bottom: 15px; 
+        }
+        .form-row label { 
+            display: block; 
+            margin-bottom: 5px; 
+            font-weight: bold; 
+        }
+        .form-row input, 
+        .form-row #card-element { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 4px; 
+        }
+        #submit { 
+            width: 100%; 
+            padding: 10px; 
+            background-color: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            transition: background-color 0.3s ease;
+        }
+        #submit:hover {
+            background-color: #0056b3;
+        }
+        #submit:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #card-errors {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #ffffff;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <form id='payment-form'>
+        <div class='form-row'>
+            <label for='card-element'>Payment Details</label>
+            <div id='card-errors' role='alert'></div>
+        </div>
+         <div class='form-row'>
+             <label for='card-name'>Card Number</label>
+             <input id='card-name' type='text' placeholder='4242 4242  4242' required>
+         </div>
+         <div class='form-row'>
+            <label for='card-name'>CVV</label>
+            <input id='card-name' type='text' placeholder='234' required>
+        </div>
+        <div class='form-row'>
+            <label for='card-name'>Name on Card</label>
+            <input id='card-name' type='text' placeholder='John Doe' required>
+        </div>
+        <button id='submit'>
+            Pay ${amount}
+            <div class='spinner' style='display:none;'></div>
+        </button>
+    </form>
+
+    <script>
+        // Replace these with your actual Stripe publishable key and amount
+        const PUBLISHABLE_KEY = 'your_stripe_publishable_key';
+        const amount = 100.00; // Amount in dollars
+
+        var stripe = Stripe(PUBLISHABLE_KEY);
+        var elements = stripe.elements();
+
+        var style = {
+            base: {
+                color: "#32325d",
+                fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                fontSmoothing: "antialiased",
+                fontSize: "16px",
+                "::placeholder": {
+                    color: "#aab7c4"
+                }
+            },
+            invalid: {
+                color: "#fa755a",
+                iconColor: "#fa755a"
+            }
+        };
+
+        var cardElement = elements.create('card', { style: style });
+        cardElement.mount('#card-element');
+
+        // Handle real-time validation errors from the card Element
+        cardElement.addEventListener('change', function(event) {
+            var displayError = document.getElementById('card-errors');
+            var submitButton = document.getElementById('submit');
+            
+            if (event.error) {
+                displayError.textContent = event.error.message;
+                submitButton.disabled = true;
+            } else {
+                displayError.textContent = '';
+                submitButton.disabled = false;
+            }
+        });
+
+        var form = document.getElementById('payment-form');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            // Disable submit button and show spinner
+            var submitButton = document.getElementById('submit');
+            var spinner = submitButton.querySelector('.spinner');
+            submitButton.disabled = true;
+            spinner.style.display = 'inline-block';
+
+            // Get card holder name
+            var cardName = document.getElementById('card-name').value;
+
+            try {
+                // This is a placeholder for your backend endpoint
+                const response = await fetch('/create-payment-intent', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        amount: amount,
+                        cardHolderName: cardName 
+                    })
+                });
+        
+                const { clientSecret } = await response.json();
+
+                const result = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: cardElement,
+                        billing_details: {
+                            name: cardName
+                        }
+                    }
+                });
+
+                if (result.error) {
+                    // Show error in card-errors div
+                    var errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = result.error.message;
+
+                    // Re-enable submit button and hide spinner
+                    submitButton.disabled = false;
+                    spinner.style.display = 'none';
+
+                    // Optionally send error message via webview if needed
+                    if (window.chrome && window.chrome.webview) {
+                        window.chrome.webview.postMessage(JSON.stringify({
+                            type: 'paymentError',
+                            message: result.error.message
+                        }));
+                    }
+                } else if (result.paymentIntent.status === 'succeeded') {
+                    // Payment successful
+                    var successMessage = 'Payment of $' + amount + ' successful!';
+                    document.getElementById('card-errors').textContent = successMessage;
+                    document.getElementById('card-errors').style.color = 'green';
+
+                    // Optionally send success message via webview
+                    if (window.chrome && window.chrome.webview) {
+                        window.chrome.webview.postMessage(JSON.stringify({
+                            type: 'paymentSuccess',
+                            paymentIntentId: result.paymentIntent.id
+                        }));
+                    }
+
+                    // Optionally reset form or redirect
+                    setTimeout(() => {
+                        form.reset();
+                        submitButton.disabled = false;
+                        spinner.style.display = 'none';
+                    }, 2000);
+                }
+            } catch (error) {
+                var errorElement = document.getElementById('card-errors');
+                errorElement.textContent = error.message;
+
+                // Re-enable submit button and hide spinner
+                submitButton.disabled = false;
+                spinner.style.display = 'none';
+
+                // Optionally send error message via webview
+                if (window.chrome && window.chrome.webview) {
+                    window.chrome.webview.postMessage(JSON.stringify({
+                        type: 'paymentError',
+                        message: error.message
+                    }));
+                }
+            }
+        });
+    </script>
+</body>
+</html>
