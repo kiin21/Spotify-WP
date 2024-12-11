@@ -7,6 +7,7 @@
    - [Các tính năng chính hoàn thành](#các-tính-năng-chính-hoàn-thành-milestone-1)
    - [Cấu trúc project](#cấu-trúc-project)
    - [Mô tả các chức năng](#mô-tả-các-chức-năng)
+   - [Advanced Topics](#advanced-topics-milestone-1)
 3. [Milestone 2](#milestone-2)
    - [Các tính năng chính đã hoàn thành](#các-tính-năng-chính-đã-hoàn-thành-ở-milestone-2)
    - [Mô tả các chức năng milestone 2](#mô-tả-các-chức-năng-milestone-2)
@@ -121,7 +122,7 @@ Project sử dụng mô hình **MVVM**, với các thành phần chính:
 
 ---
 
-### Advanced Topics
+### Advanced Topics Milestone 1
 
 1. **Sử dụng ORM để map dữ liệu**: Map các trường trong object với các thuộc tính trong database MongoDB.  
     ![ORM 1](https://a.okmd.dev/md/67584d1505b28.png)  
