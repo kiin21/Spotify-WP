@@ -17,7 +17,7 @@
    - [Advanced Topics](#advanced-topics-milestone-2)
    - [Phương pháp đảm bảo chất lượng](#phương-pháp-đảm-bảo-chất-lượng-milestone-2)
    - [Giao diện hoàn chỉnh](#giao-diện-khi-hoàn-thành-milestone-2)
-   - [Demo](demo-milestone-2)
+   - [Demo](#demo-milestone-2)
 4. [Link project và các demo](#link-project-và-các-demo)
 
 ## Thành viên nhóm
