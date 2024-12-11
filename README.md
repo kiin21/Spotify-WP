@@ -359,7 +359,8 @@ Kiểm thử thủ công
 ### Demo milestone 2
 
 - [Demo trên YouTube](https://youtu.be/l39P_xqKiDE)
-
+- [Demo du phong](https://drive.google.com/file/d/19MjbKHEmWo7_i0g_mRdVU5avVvAmoBUO/view?usp=sharing)
+- 
 ### Document
 
 - file index.html trong thư mục doxygen
