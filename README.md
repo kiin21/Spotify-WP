@@ -285,9 +285,8 @@ Project sử dụng mô hình **MVVM**, với các thành phần chính:
     ![s10290712112024](https://a.okmd.dev/md/67590704940bf.png)
     ![s10292612112024](https://a.okmd.dev/md/675907179c7f1.png)
   - Thêm một bài hát vào queue ở trang home
-
-    ![1733910102839](image/README/1733910102839.png)
-
+    ![image](https://github.com/user-attachments/assets/4f997a68-ec6c-44c8-98f7-939f5332805a)
+    
 ---
 
 ### Advanced Topics Milestone 2
@@ -311,8 +310,8 @@ Project sử dụng mô hình **MVVM**, với các thành phần chính:
    ![s10582712112024](https://a.okmd.dev/md/67590de45c27c.png)
 4. Sử dựng Aggregation pipeline - một kiểu truy vấn SQL của non relational database
 
-   ![1733910762686](image/README/1733910762686.png)
-
+   ![image](https://github.com/user-attachments/assets/deb54bd2-8702-40fc-b3bb-b031592defe4)
+   
    Đoạn mã trên thực hiện lọc record trong collection **_playHistory** có user_id = userID, chuyển trường song_id của record sang string để tiện so sánh. "JOIN" với collection "Songs" với điều kiện localField=foreignFeild và đặt kết quả và field có tên là songDetails, $unwind để phân rã mảng (biến songDetails từ Array thành nested document), sau đó sắp xếp kết quả theo trường played_at và đổi lại kiểu của song_id thành string. Đây là một cú pháp xử lý theo tư duy **functional programming,** giúp chia nhỏ quá trình xử lý thành các stages.
 
 ---
