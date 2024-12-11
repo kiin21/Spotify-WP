@@ -1,5 +1,20 @@
 # Spotify-WP Project
 
+## Mục lục
+
+1. [Thành viên nhóm](#thành-viên-nhóm)
+2. [Milestone 1](#milestone-1)
+   - [Các tính năng chính hoàn thành](#các-tính-năng-chính-hoàn-thành-milestone-1)
+   - [Cấu trúc project](#cấu-trúc-project)
+   - [Mô tả các chức năng](#mô-tả-các-chức-năng)
+3. [Milestone 2](#milestone-2)
+   - [Các tính năng chính đã hoàn thành](#các-tính-năng-chính-đã-hoàn-thành-ở-milestone-2)
+   - [Mô tả các chức năng milestone 2](#mô-tả-các-chức-năng-milestone-2)
+4. [Advanced Topics](#advanced-topics)
+5. [Phương pháp đảm bảo chất lượng](#phương-pháp-đảm-bảo-chất-lượng)
+6. [Giao diện hoàn chỉnh](#giao-diện-khi-hoàn-thành-milestone-2)
+7. [Link Project và Demo](#link-project-và-demo-milestone-2)
+
 ## Thành viên nhóm
 
 - **22120120**: Đặng Phúc Hưng
