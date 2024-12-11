@@ -4,17 +4,20 @@
 
 1. [Thành viên nhóm](#thành-viên-nhóm)
 2. [Milestone 1](#milestone-1)
-   - [Các tính năng chính hoàn thành](#các-tính-năng-chính-hoàn-thành-milestone-1)
+   - [Các tính năng chính đã hoàn thành](#các-tính-năng-chính-hoàn-thành-milestone-1)
    - [Cấu trúc project](#cấu-trúc-project)
    - [Mô tả các chức năng](#mô-tả-các-chức-năng)
    - [Advanced Topics](#advanced-topics-milestone-1)
+   - [Phương pháp đảm bảo chất lượng](#phương-pháp-đảm-bảo-chất-lượng-milestone-1)
+   - [Giao diện hoàn chỉnh](#giao-diện-khi-hoàn-thành-milestone-1)
+   - [Demo](#demo-milestone-1)
 3. [Milestone 2](#milestone-2)
    - [Các tính năng chính đã hoàn thành](#các-tính-năng-chính-đã-hoàn-thành-ở-milestone-2)
-   - [Mô tả các chức năng milestone 2](#mô-tả-các-chức-năng-milestone-2)
-4. [Advanced Topics](#advanced-topics)
-5. [Phương pháp đảm bảo chất lượng](#phương-pháp-đảm-bảo-chất-lượng)
-6. [Giao diện hoàn chỉnh](#giao-diện-khi-hoàn-thành-milestone-2)
-7. [Link Project và Demo](#link-project-và-demo-milestone-2)
+   - [Mô tả các chức năng](#mô-tả-các-chức-năng-milestone-2)
+   - [Advanced Topics](#advanced-topics-milestone-2)
+   - [Phương pháp đảm bảo chất lượng](#phương-pháp-đảm-bảo-chất-lượng-milestone-2)
+   - [Giao diện hoàn chỉnh](#giao-diện-khi-hoàn-thành-milestone-2)
+   - [Demo](demo-milestone-2)
 
 ## Thành viên nhóm
 
@@ -168,14 +171,15 @@ Project sử dụng mô hình **MVVM**, với các thành phần chính:
         ![Command](https://a.okmd.dev/md/67584dec2c7f1.png)
 
 ---
-### Phương pháp đảm bảo chất lượng
+### Phương pháp đảm bảo chất lượng milestone 1
 
 - **Kiểm thử thủ công**
 ### Giao diện khi hoàn thành milestone 1
 
 ![Giao diện hoàn chỉnh](https://a.okmd.dev/md/672b79a673ee6.png)
 
-
+### Demo milestone 1
+- [Demo trên YouTube](https://www.youtube.com/watch?v=mV57ojbW5mU)
 ---
 
 ## Milestone 2
@@ -286,7 +290,7 @@ Project sử dụng mô hình **MVVM**, với các thành phần chính:
 
 ---
 
-### Advanced Topics
+### Advanced Topics Milestone 2
 
 1. **Lưu vào biến có chức năng như cache**: 
 	Làm thông báo nghệ sĩ ra bài hát mới bằng cách ban đầu lưu các bài hát của Artist mà User hiện tại đang follow vào 1 biến cache, sau đó mỗi lần Artist thêm bài hát mới thì sẽ so sánh những bài hát có trong database với những bài hát lưu vào cache trước đó, nếu khác cache thì lấy phần khác ra - đó là bài hát mới, đồng thời dùng ProperyChanged và ObservableCollection để lắng nghe sự thay đổi.
@@ -307,7 +311,7 @@ Project sử dụng mô hình **MVVM**, với các thành phần chính:
 	![s10582712112024](https://a.okmd.dev/md/67590de45c27c.png)
 		
 ---
-### Phương pháp đảm bảo chất lượng
+### Phương pháp đảm bảo chất lượng milestone2
 Kiểm thử thủ công
 
 ### Giao diện khi hoàn thành milestone 2
@@ -315,8 +319,12 @@ Kiểm thử thủ công
 ![s11050312112024](https://a.okmd.dev/md/67590f711b3f5.png)
 
 
-### Link Project và Demo Milestone 2
-- [Link demo youtube](https://www.youtube.com/watch?v=mV57ojbW5mU)
+### Demo milestone 2
+- [Demo trên YouTube](https://www.youtube.com/watch?v=mV57ojbW5mU)
+
+
+## Link project và các demo
+- [Link demo 1 youtube](https://www.youtube.com/watch?v=mV57ojbW5mU)
     
 - [Link github](https://github.com/kiin21/Spotify-WP)
     
