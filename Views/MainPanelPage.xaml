@@ -111,7 +111,7 @@
                                 Background="Transparent"
                                 BorderThickness="0"
                                 Click="AddToQueueItem_Click"
-                                Content="&#xE710;"
+                                Content="&#xECC8;"
                                 FontFamily="Segoe MDL2 Assets"
                                 FontSize="10"
                                 FontWeight="Bold"
