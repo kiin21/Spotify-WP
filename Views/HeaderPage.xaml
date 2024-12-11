@@ -70,7 +70,7 @@
             <!--  Use the event handler  -->
         </Grid>
 
-    
+
         <!--  Account Icon  -->
         <StackPanel
             Grid.Column="2"
@@ -133,15 +133,15 @@
 
             <!--  Explore Premium Button  -->
             <Button
-                 Width="140"
-                 Height="50"
-                 Margin="0, 5, 10, 0"
-                 Padding="5"
-                 Background="Transparent"
-                 BorderBrush="Transparent"
-                 Click="ExplorePremium_Click"
-                 CornerRadius="5"
-            >
+                Width="140"
+                Height="50"
+                Margin="0,5,10,0"
+                Padding="5"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Click="ExplorePremium_Click"
+                CornerRadius="5"
+                Foreground="White">
                 Explore Premium
             </Button>
 
