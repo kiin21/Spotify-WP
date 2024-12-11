@@ -32,9 +32,9 @@ public sealed partial class HistoryPage : Page
 
     private void Item_Selected(object sender, ItemClickEventArgs e)
     {
-        if (e.ClickedItem is SongDTO song)
+        if (e.ClickedItem is PlayHistoryWithSongDTO song)
         {
-            Frame.Navigate(typeof(SongDetailPage), song);
+            Frame.Navigate(typeof(SongDetailPage), song.SongDetails);
         }
     }
 }

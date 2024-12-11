@@ -7,18 +7,28 @@ using System.Threading.Tasks;
 
 namespace Spotify.ViewModels
 {
+    /// <summary>
+    /// ViewModel for managing the sharing of playlists.
+    /// </summary>
     public class SharePlaylistViewModel
     {
+        /// <summary>
+        /// Gets or sets the collection of users available for sharing the playlist.
+        /// </summary>
         public ObservableCollection<UserShareDTO> Users { get; set; }
         private readonly PlaylistDTO _playlist;
         private readonly UserService _userService;
         private readonly PlaylistService _playlistService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SharePlaylistViewModel"/> class.
+        /// </summary>
+        /// <param name="playlist">The playlist to be shared.</param>
         public SharePlaylistViewModel(PlaylistDTO playlist)
         {
             _playlist = playlist;
 
-            // Lấy UserService và PlaylistService từ App container
+            // Get UserService and PlaylistService from App container
             _userService = (App.Current as App).Services.GetRequiredService<UserService>();
             _playlistService = (App.Current as App).Services.GetRequiredService<PlaylistService>();
 
@@ -26,11 +36,15 @@ namespace Spotify.ViewModels
             _ = LoadUsersAsync();
         }
 
+        /// <summary>
+        /// Loads the users asynchronously.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         private async Task LoadUsersAsync()
         {
             var users = await _userService.GetUsersAsync();
 
-            // Loai bỏ user hiện tại khỏi danh sách
+            // Exclude the current user from the list
             var currentUserId = (App.Current as App).CurrentUser.Id;
             users = users.Where(u => u.Id != currentUserId).ToList();
 
@@ -45,6 +59,10 @@ namespace Spotify.ViewModels
             }
         }
 
+        /// <summary>
+        /// Shares the playlist with the selected users asynchronously.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         public async Task SharePlaylistAsync()
         {
             var selectedUsers = Users.Where(u => u.IsSelected).ToList();
@@ -55,10 +73,22 @@ namespace Spotify.ViewModels
         }
     }
 
+    /// <summary>
+    /// Data transfer object for sharing a user.
+    /// </summary>
     public class UserShareDTO
     {
+        /// <summary>
+        /// Gets or sets the user ID.
+        /// </summary>
         public string UserId { get; set; }
+        /// <summary>
+        /// Gets or sets the username.
+        /// </summary>
         public string Username { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether the user is selected for sharing.
+        /// </summary>
         public bool IsSelected { get; set; }
     }
 }

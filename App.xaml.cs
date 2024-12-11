@@ -84,6 +84,7 @@ namespace Spotify
             services.AddSingleton<LeftSidebarPageViewModel>();
             services.AddSingleton<PlaylistSongDetailService>();
             services.AddSingleton<UserService>();
+            services.AddSingleton<SongService>();
             services.AddSingleton<LocalStorageService>();
             services.AddSingleton<PlayHistoryService>();
             services.AddSingleton<AdsService>();

@@ -12,9 +12,15 @@ using System.Linq;
 
 namespace Spotify.ViewModels;
 
+/// <summary>
+/// ViewModel for managing lyrics display and synchronization with playback.
+/// </summary>
 public class LyricViewModel : INotifyPropertyChanged
 {
     private SongDTO _song;
+    /// <summary>
+    /// Gets or sets the current song.
+    /// </summary>
     public SongDTO Song
     {
         get => _song;
@@ -30,6 +36,9 @@ public class LyricViewModel : INotifyPropertyChanged
     private readonly PlaybackControlViewModel _playbackViewModel;
 
     private ObservableCollection<LyricLine> _lyricLines = new ObservableCollection<LyricLine>();
+    /// <summary>
+    /// Gets or sets the collection of lyric lines.
+    /// </summary>
     public ObservableCollection<LyricLine> LyricLines
     {
         get => _lyricLines;
@@ -42,23 +51,27 @@ public class LyricViewModel : INotifyPropertyChanged
             }
         }
     }
+    /// <summary>
+    /// Gets the currently highlighted lyric line.
+    /// </summary>
     public LyricLine HighlightedLyric => LyricLines.FirstOrDefault(line => line.IsHighlighted);
-    //public void ScrollToHighlightedLyric()
-    //{
-    //    var highlightedLyric = HighlightedLyric;
-    //    if (highlightedLyric != null)
-    //    {
-    //        HighlightedLyricChanged?.Invoke(this, highlightedLyric);
-    //    }
-    //}
 
+    /// <summary>
+    /// Occurs when the highlighted lyric line changes.
+    /// </summary>
     public event EventHandler<LyricLine> HighlightedLyricChanged;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LyricViewModel"/> class.
+    /// </summary>
+    /// <param name="song">The song for which to display lyrics.</param>
     public LyricViewModel(SongDTO song)
     {
         Song = song;
         _playbackViewModel = PlaybackControlViewModel.Instance;
         _playbackViewModel.PropertyChanged += PlaybackViewModel_PropertyChanged;
     }
+
     private void PlaybackViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(PlaybackControlViewModel.CurrentPositionSeconds))
@@ -90,6 +103,9 @@ public class LyricViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Loads the lyrics for the current song.
+    /// </summary>
     public void LoadLyrics()
     {
         LyricLines.Clear();
@@ -100,7 +116,6 @@ public class LyricViewModel : INotifyPropertyChanged
             {
                 if (!string.IsNullOrWhiteSpace(text))
                 {
-                    // Modify latter part of this project
                     LyricLines.Add(new LyricLine(text, false));
                 }
             }
@@ -112,8 +127,6 @@ public class LyricViewModel : INotifyPropertyChanged
             {
                 if (!string.IsNullOrWhiteSpace(line))
                 {
-
-                    // Modify latter part of this project
                     LyricLines.Add(new LyricLine(line.Trim(), false));
                 }
             }
@@ -129,12 +142,17 @@ public class LyricViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Occurs when a property value changes.
+    /// </summary>
     public event PropertyChangedEventHandler PropertyChanged;
 
+    /// <summary>
+    /// Notifies listeners that a property value has changed.
+    /// </summary>
+    /// <param name="propertyName">The name of the property that changed.</param>
     protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
-
-

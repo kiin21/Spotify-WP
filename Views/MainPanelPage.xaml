@@ -58,6 +58,8 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" MinWidth="150" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" MinWidth="50" />
+                            <!--  Added a third column  -->
                         </Grid.ColumnDefinitions>
 
                         <!--  Song Cover Art  -->
@@ -98,6 +100,28 @@
                                     Style="{StaticResource CustomCaptionTextBlockStyle}"
                                     Text="{x:Bind ReleaseDate}" />
                             </StackPanel>
+                        </StackPanel>
+
+                        <!--  Add to Queue Button in the third column  -->
+                        <StackPanel
+                            Grid.Column="2"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                            <Button
+                                Width="50"
+                                Height="50"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Click="AddToQueueItem_Click"
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="25"
+                                FontWeight="Bold"
+                                Foreground="White">
+                                <TextBlock Text="&#xECC8;" />
+                                <ToolTipService.ToolTip>
+                                    <ToolTip Content="Add to Queue" />
+                                </ToolTipService.ToolTip>
+                            </Button>
                         </StackPanel>
                     </Grid>
                 </DataTemplate>

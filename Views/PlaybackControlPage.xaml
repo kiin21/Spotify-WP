@@ -138,14 +138,13 @@
                     Text="{x:Bind ViewModel.CurrentPositionDisplay, Mode=OneWay}" />
 
                 <Slider
+                    x:Name="ProgressSlider"
                     Grid.Column="1"
                     Margin="8,0"
                     IsThumbToolTipEnabled="False"
                     Maximum="{x:Bind ViewModel.TotalDurationSeconds, Mode=OneWay}"
                     Minimum="0"
-                    PointerPressed="Slider_PointerPressed"
-                    PointerReleased="Slider_PointerReleased"
-                    Value="{x:Bind ViewModel.CurrentPositionSeconds, Mode=TwoWay}" />
+                    Value="{Binding CurrentPositionSeconds, Mode=TwoWay}" />
 
                 <TextBlock
                     Grid.Column="2"
