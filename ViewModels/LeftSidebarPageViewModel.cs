@@ -75,6 +75,9 @@ namespace Spotify.ViewModels
             // Merge both lists
             var allPlaylists = playlists.Concat(sharedPlaylists).ToList();
 
+            // Filter duplicate playlists
+            allPlaylists = allPlaylists.GroupBy(p => p.Id).Select(g => g.First()).ToList();
+
             // Assign to ObservableCollection
             Playlists = new ObservableCollection<PlaylistDTO>(allPlaylists);
 
