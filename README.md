@@ -312,7 +312,7 @@ Project sử dụng mô hình **MVVM**, với các thành phần chính:
 
    ![image](https://github.com/user-attachments/assets/deb54bd2-8702-40fc-b3bb-b031592defe4)
    
-   Đoạn mã trên thực hiện lọc record trong collection **_playHistory** có user_id = userID, chuyển trường song_id của record sang string để tiện so sánh. "JOIN" với collection "Songs" với điều kiện localField=foreignFeild và đặt kết quả và field có tên là songDetails, $unwind để phân rã mảng (biến songDetails từ Array thành nested document), sau đó sắp xếp kết quả theo trường played_at và đổi lại kiểu của song_id thành string. Đây là một cú pháp xử lý theo tư duy **functional programming,** giúp chia nhỏ quá trình xử lý thành các stages.
+   Đoạn mã trên thực hiện lọc record trong collection **_playHistory** có user_id = userID, chuyển trường song_id của record sang string để tiện so sánh. "JOIN" với collection "Songs" với điều kiện localField=foreignField và đặt kết quả và field có tên là songDetails, $unwind để phân rã mảng (biến songDetails từ Array thành nested document), sau đó sắp xếp kết quả theo trường played_at và đổi lại kiểu của song_id thành string. Đây là một cú pháp xử lý theo tư duy **functional programming,** giúp chia nhỏ quá trình xử lý thành các stages.
 
 ---
 
