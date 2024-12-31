@@ -87,6 +87,11 @@ public partial class HeaderViewModel : INotifyPropertyChanged
     public ICommand ShowHistoryCommand { get; }
 
     /// <summary>
+    /// Logs out the current user.
+    /// </summary>  
+    public ICommand LogoutCommand { get; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="HeaderViewModel"/> class.
     /// </summary>
     /// <param name="songService">The service for managing song data.</param>
@@ -97,12 +102,22 @@ public partial class HeaderViewModel : INotifyPropertyChanged
     {
         SearchCommand = new RelayCommand(async _ => await ExecuteSearchAsync(), _ => CanExecuteSearch());
         ShowHistoryCommand = new RelayCommand(async _ => await ExecuteShowHistoryAsync(), _ => CanExecuteShowHistory());
+        LogoutCommand = new RelayCommand(_ => ExecuteLogout(), _ => CanExecuteLogout());
         _songService = songService;
         SearchResults = new ObservableCollection<SongDTO>();
 
         _artistService = artistService;
         _userService = userService;
         _playHistoryService = playHistoryService;
+    }
+
+    private bool CanExecuteLogout()
+    {
+        return App.Current.CurrentUser != null;
+    }
+    private void ExecuteLogout()
+    {
+        App.Current.CurrentUser = null;
     }
 
     private async Task ExecuteShowHistoryAsync()

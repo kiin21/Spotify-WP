@@ -10,6 +10,8 @@ using Microsoft.UI.Xaml;
 using Spotify.Models.DTOs;
 using System.Diagnostics;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using System.Threading.Tasks;
+using System;
 
 namespace Spotify.Views;
 public sealed partial class HeaderPage : Page
@@ -37,6 +39,17 @@ public sealed partial class HeaderPage : Page
         if(ViewModel.ShowHistoryCommand.CanExecute(null))
         {
             ViewModel.ShowHistoryCommand.Execute(null);
+        }
+    }
+
+    public async void LogoutCommand(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel.LogoutCommand.CanExecute(null))
+        {
+            ViewModel.LogoutCommand.Execute(null);
+            await ShowContentDialogAsync("Logout Successful", "You have successfully logged out.");
+            // Sử dụng WindowManager để chuyển đổi sang ShellWindow
+            Spotify.Services.WindowManager.Instance.SwitchToLoginSignupWindow();
         }
     }
 
@@ -104,5 +117,17 @@ public sealed partial class HeaderPage : Page
         var shellWindow = App.Current.ShellWindow;
 
         shellWindow.GetNavigationService().Navigate(typeof(PremiumPage));
+    }
+
+    private async Task ShowContentDialogAsync(string title, string content)
+    {
+        var dialog = new ContentDialog
+        {
+            Title = title,
+            Content = content,
+            CloseButtonText = "Ok",
+            XamlRoot = this.XamlRoot
+        };
+        await dialog.ShowAsync();
     }
 }

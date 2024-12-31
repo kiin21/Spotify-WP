@@ -1,5 +1,4 @@
-﻿// Services/WindowManager.cs
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using System;
 
 namespace Spotify.Services;
@@ -35,18 +34,36 @@ public class WindowManager
     {
         var app = App.Current as App;
 
-        // Create and display ShellWindow
-        if (app._shellWindow == null)
-        {
-            app._shellWindow = new ShellWindow();
-        }
-        app._shellWindow.Activate();
+        var newShellWindow = new ShellWindow();
+        newShellWindow.Activate();
 
-        // After ShellWindow is activated, close the old window
+        app._shellWindow = newShellWindow;
+
         if (app._loginSignupWindow != null)
         {
-            app._loginSignupWindow.Close();
+            var windowToClose = app._loginSignupWindow;
+            app._loginSignupWindow = null;
+            windowToClose.Close();
+        }
+    }
+
+    /// <summary>
+    /// Switches to the login/signup window, closing the shell window if it exists.
+    /// </summary>
+    public void SwitchToLoginSignupWindow()
+    {
+        var app = App.Current as App;
+
+        var newLoginSignupWindow = new LoginSignupWindow();
+        newLoginSignupWindow.Activate();
+
+        app._loginSignupWindow = newLoginSignupWindow;
+
+        if (app._shellWindow != null)
+        {
+            var windowToClose = app._shellWindow;
+            app._shellWindow = null; 
+            windowToClose.Close();
         }
     }
 }
-
