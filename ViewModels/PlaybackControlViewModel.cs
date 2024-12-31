@@ -443,7 +443,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         {
             if (!belongToPlaylist) { _playbacklist.Clear(); }
             // Save in playlist temporarily, not save in database
-            _playbacklist.Insert(_currentIndex, song);
+            _playbacklist.Insert(0, song);
             CurrentSong = song;
             _playbackService.Play(new Uri(song.audio_url));
         }
