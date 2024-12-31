@@ -176,7 +176,7 @@
 
                         <MenuFlyoutSeparator />
 
-                        <MenuFlyoutItem Text="Sign Out">
+                        <MenuFlyoutItem Click="{x:Bind LogoutCommand}" Text="Sign Out">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7E8;" />
                             </MenuFlyoutItem.Icon>
@@ -190,8 +190,6 @@
                     </ToolTipService.ToolTip>
                 </Image>
             </Button>
-
-
         </StackPanel>
     </Grid>
 </Page>
