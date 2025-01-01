@@ -63,8 +63,20 @@ public class PlayHistoryDAO : BaseDAO, IPlayHistoryDAO
 
         if (!existingPlayHistory.Any())
         {
-            // Insert the new play history record
-            await _playHistory.InsertOneAsync(playHistory);
+            if (playHistory.TotalTime > TimeSpan.Zero)
+            {
+                await _playHistory.InsertOneAsync(playHistory);
+            }
+        }
+        else
+        {
+            existingPlayHistory[0].TotalTime += playHistory.TotalTime;
+            await _playHistory.UpdateOneAsync(
+                Builders<PlayHistoryDTO>.Filter.Eq("user_id", playHistory.UserID) &
+                Builders<PlayHistoryDTO>.Filter.Eq("song_id", playHistory.SongID) &
+                Builders<PlayHistoryDTO>.Filter.Eq("played_at", playHistory.PlayedAt.Date),
+                Builders<PlayHistoryDTO>.Update.Set("total_time", existingPlayHistory[0].TotalTime)
+            );
         }
     }
 }

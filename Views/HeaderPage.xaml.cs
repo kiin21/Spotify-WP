@@ -53,6 +53,14 @@ public sealed partial class HeaderPage : Page
         }
     }
 
+    public void ShowWrappedCommand(object sender, RoutedEventArgs e)
+    {
+        if(ViewModel.ShowWrappedCommand.CanExecute(null))
+        {
+            ViewModel.ShowWrappedCommand.Execute(null);
+        }
+    }
+
     private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
         if (ViewModel.SearchCommand.CanExecute(null))

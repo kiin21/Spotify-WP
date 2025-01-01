@@ -186,4 +186,9 @@ public class PlaybackControlService : IDisposable, IPlaybackControlService
         _musicEngine.MediaEnded -= OnMediaEnded;
         _musicEngine.Stop();
     }
+
+    public TimeSpan GetTotalListeningTime()
+    {
+       return _musicEngine.GetTotalListeningTime();
+    }
 }

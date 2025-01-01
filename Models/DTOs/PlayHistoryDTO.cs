@@ -22,5 +22,8 @@ public class PlayHistoryDTO
 
     [BsonElement("played_at")]
     public DateTime PlayedAt { get; set; }
+
+    [BsonElement("total_time")]
+    public TimeSpan TotalTime { get; set; }
 }
 
