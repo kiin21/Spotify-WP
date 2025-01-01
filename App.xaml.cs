@@ -25,7 +25,6 @@ namespace Spotify
         public ShellWindow ShellWindow => _shellWindow;
         public LoginSignupWindow LoginSignupWindow => _loginSignupWindow;
         public static new App Current => Application.Current as App;
-
         public App()
         {
             InitializeComponent();
@@ -74,7 +73,6 @@ namespace Spotify
             services.AddSingleton<IArtistDAO, ArtistDAO>();
             services.AddSingleton<IPlayHistoryDAO, PlayHistoryDAO>();
             
-            // Why AddScoped???????????
             services.AddScoped<IUserDAO, UserDAO>();
 
             // Register Services
@@ -100,8 +98,6 @@ namespace Spotify
             services.AddSingleton<ShellWindow>();
 
 
-
-
             // Register ViewModels
             services.AddSingleton<PlaybackControlViewModel>();
 
@@ -116,13 +112,6 @@ namespace Spotify
         {
             try
             {
-                ////// Create ShellWindow first
-                //_shellWindow = new ShellWindow();
-                //_shellWindow.Activate();
-
-                // Sử dụng WindowManager để chuyển đổi sang ShellWindow
-                //Spotify.Services.WindowManager.Instance.SwitchToShellWindow();
-
                 _loginSignupWindow = new LoginSignupWindow();
                 _loginSignupWindow.Activate();
             }

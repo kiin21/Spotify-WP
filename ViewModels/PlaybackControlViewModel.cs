@@ -149,6 +149,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
+
     #region Properties
 
     /// <summary>
@@ -440,6 +441,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
         else
         {
+            SavePlayHistory(_currentSong);
             if (!belongToPlaylist) { _playbacklist.Clear(); }
             // Save in playlist temporarily, not save in database
             _playbacklist.Insert(0, song);
@@ -609,8 +611,8 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
             var userID = App.Current.CurrentUser.Id;
             var songID = song.Id.ToString();
             var currentTime = DateTime.Now;
-
-            await _playHistoryService.SavePlayHistoryAsync(userID, songID, currentTime);
+            TimeSpan totalTime = _playbackService.GetTotalListeningTime();
+            await _playHistoryService.SavePlayHistoryAsync(userID, songID, currentTime, totalTime);
         }
         catch (Exception ex)
         {
@@ -753,7 +755,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
 
             return;
         }
-
+        SavePlayHistory(_currentSong);
         switch (this._repeatMode)
         {
             case RepeatMode.One:

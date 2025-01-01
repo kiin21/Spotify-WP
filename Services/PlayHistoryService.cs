@@ -29,7 +29,7 @@ public class PlayHistoryService
     /// <param name="songID">The ID of the song that was played.</param>
     /// <param name="playedAt">The date and time when the song was played.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public async Task SavePlayHistoryAsync(string userID, string songID, DateTime playedAt)
+    public async Task SavePlayHistoryAsync(string userID, string songID, DateTime playedAt, TimeSpan totalTime)
     {
         if (string.IsNullOrEmpty(userID))
             throw new ArgumentNullException(nameof(userID), "User ID cannot be null or empty.");
@@ -40,7 +40,8 @@ public class PlayHistoryService
         {
             UserID = userID,
             SongID = songID,
-            PlayedAt = playedAt
+            PlayedAt = playedAt,
+            TotalTime = totalTime
         };
 
         // Call the DAO to save the play history
