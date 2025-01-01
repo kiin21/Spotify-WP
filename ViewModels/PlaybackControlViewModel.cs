@@ -149,7 +149,6 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
     }
 
-
     #region Properties
 
     /// <summary>
@@ -187,7 +186,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
                 }
 
                 // Save play history asynchronously
-                SavePlayHistory(value);
+                // SavePlayHistory(value);
 
                 // Notify UI
                 OnPropertyChanged(nameof(CurrentSongTitle));
