@@ -13,6 +13,7 @@ using Spotify.Views;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using Windows.UI.Notifications;
+using Stripe.Identity;
 
 namespace Spotify.ViewModels;
 
@@ -92,6 +93,11 @@ public partial class HeaderViewModel : INotifyPropertyChanged
     public ICommand LogoutCommand { get; }
 
     /// <summary>
+    /// Show user's listening wrapped 
+    /// </summary>
+    public ICommand ShowWrappedCommand { get; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="HeaderViewModel"/> class.
     /// </summary>
     /// <param name="songService">The service for managing song data.</param>
@@ -103,12 +109,25 @@ public partial class HeaderViewModel : INotifyPropertyChanged
         SearchCommand = new RelayCommand(async _ => await ExecuteSearchAsync(), _ => CanExecuteSearch());
         ShowHistoryCommand = new RelayCommand(async _ => await ExecuteShowHistoryAsync(), _ => CanExecuteShowHistory());
         LogoutCommand = new RelayCommand(_ => ExecuteLogout(), _ => CanExecuteLogout());
+        ShowWrappedCommand = new RelayCommand(async _ => await ExecuteShowWrappedAsync(), _ => CanShowWrapped());
         _songService = songService;
         SearchResults = new ObservableCollection<SongDTO>();
 
         _artistService = artistService;
         _userService = userService;
         _playHistoryService = playHistoryService;
+    }
+
+    private bool CanShowWrapped()
+    {
+        return App.Current.CurrentUser != null;
+    }
+
+    private async Task ExecuteShowWrappedAsync()
+    {
+        List<PlayHistoryWithSongDTO> history = await _playHistoryService.GetUserHistoryAsync(App.Current.CurrentUser.Id);
+        var shellWindow = (App.Current as App).ShellWindow;
+        shellWindow.GetNavigationService().Navigate(typeof(WrappedPage), history);
     }
 
     private bool CanExecuteLogout()
@@ -124,7 +143,6 @@ public partial class HeaderViewModel : INotifyPropertyChanged
     {
         List<PlayHistoryWithSongDTO> history = await _playHistoryService.GetUserHistoryAsync(App.Current.CurrentUser.Id);
         var shellWindow = (App.Current as App).ShellWindow;
-        var mainFrame = shellWindow.getMainFrame();
         shellWindow.GetNavigationService().Navigate(typeof(HistoryPage), history);
     }
 
@@ -152,7 +170,6 @@ public partial class HeaderViewModel : INotifyPropertyChanged
         }
 
         var shellWindow = (App.Current as App).ShellWindow;
-        var mainFrame = shellWindow.getMainFrame();
         shellWindow.GetNavigationService().Navigate(typeof(SearchResultsPage), SearchResults);
     }
 

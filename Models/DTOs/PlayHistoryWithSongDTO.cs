@@ -18,6 +18,9 @@ public class PlayHistoryWithSongDTO
     [BsonElement("played_at")] 
     public DateTime PlayedAt { get; set; }
 
+    [BsonElement("total_time")]
+    public TimeSpan TotalTime { get; set; }
+
     [BsonElement("songDetails")]
     public SongDTO SongDetails { get; set; }
 }
