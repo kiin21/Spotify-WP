@@ -52,23 +52,11 @@
             <Button Grid.Column="2" 
                     Width="32" Height="32" 
                     Background="Transparent"
-                    Margin="4,0"
+                    Margin="4,4"
+                    FontWeight="Bold"
                     BorderThickness="0"
                     Click="OnAddButtonClick">
                 <FontIcon Glyph="&#xE710;" 
-                         FontSize="10"
-                         FontFamily="Segoe MDL2 Assets"
-                         Foreground="#BBBBBD"/>
-            </Button>
-
-            <!-- Arrow Button -->
-            <Button Grid.Column="3" 
-                    Width="32" Height="32" 
-                    Background="Transparent"
-                    Margin="4,0"
-                    BorderThickness="0"
-                    Click="OnArrowButtonClick">
-                <FontIcon Glyph="&#xE72A;" 
                          FontSize="10"
                          FontFamily="Segoe MDL2 Assets"
                          Foreground="#BBBBBD"/>
