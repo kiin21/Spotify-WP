@@ -640,9 +640,12 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         }
         else
         {
-            // FIX_LATTER
             foreach (var song in songs)
             {
+                if(_playbacklist.Contains(song))
+                {
+                    _playbacklist.Remove(song);
+                }
                 _playbacklist.Add(song);
             }
         }

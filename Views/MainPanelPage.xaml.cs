@@ -30,7 +30,6 @@ namespace Spotify.Views
         {
             if (sender is Button button && button.DataContext is SongDTO song)
             {
-                // Call ViewModel to add the song to the queue
                 ViewModel.AddToQueueCommand(song);
             }
         }
