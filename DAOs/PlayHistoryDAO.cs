@@ -24,17 +24,56 @@ public class PlayHistoryDAO : BaseDAO, IPlayHistoryDAO
     {
         var pipeline = new[]
         {
+            // Match play history records for the specific user
             new BsonDocument("$match", new BsonDocument("user_id", userID)),
-            new BsonDocument("$addFields", new BsonDocument("song_id", new BsonDocument("$toObjectId", "$song_id"))),
+        
+            // Convert string song_id to ObjectId for lookup
+            new BsonDocument("$addFields", new BsonDocument("song_id",
+                new BsonDocument("$toObjectId", "$song_id"))),
+        
+            // Lookup song details
             new BsonDocument("$lookup", new BsonDocument{
-                                                            { "from", "Songs" },
-                                                            { "localField", "song_id" },
-                                                            { "foreignField", "_id" },
-                                                            { "as", "songDetails" }
-                                                        }),
+                { "from", "Songs" },
+                { "localField", "song_id" },
+                { "foreignField", "_id" },
+                { "as", "songDetails" }
+            }),
+        
+            // Unwind the song details array
             new BsonDocument("$unwind", new BsonDocument("path", "$songDetails")),
+        
+            // Add field to convert genre ID to ObjectId for next lookup
+            new BsonDocument("$addFields", new BsonDocument(
+                "genreObjectId", new BsonDocument("$toObjectId", "$songDetails.genreId"))),
+        
+            // Lookup genre details
+            new BsonDocument("$lookup", new BsonDocument{
+                { "from", "Genres" },
+                { "localField", "genreObjectId" },
+                { "foreignField", "_id" },
+                { "as", "genreDetails" }
+            }),
+        
+            // Unwind the genre details array
+            new BsonDocument("$unwind", new BsonDocument("path", "$genreDetails")),
+        
+            // Sort by played_at in descending order
             new BsonDocument("$sort", new BsonDocument("played_at", -1)),
-            new BsonDocument("$addFields", new BsonDocument("song_id", new BsonDocument("$toString", "$song_id"))),
+        
+            // Convert ObjectId back to string for the response
+            new BsonDocument("$addFields", new BsonDocument("song_id",
+                new BsonDocument("$toString", "$song_id"))),
+        
+            // Project the final shape of the documents
+            new BsonDocument("$project", new BsonDocument{
+                { "_id", 1 },
+                { "user_id", 1 },
+                { "song_id", 1 },
+                { "played_at", 1 },
+                { "total_time", 1 },
+                { "songDetails", 1 },
+                { "genreDetails", 1 }
+            })
         };
 
         var result = await _playHistory.Aggregate<PlayHistoryWithSongDTO>(pipeline).ToListAsync();

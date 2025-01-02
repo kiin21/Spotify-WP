@@ -14,24 +14,57 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="400" />
                 <RowDefinition Height="400" />
+                <RowDefinition Height="400" />
+                <RowDefinition Height="400" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
+
+            <!-- Line Chart -->
             <lvc:CartesianChart
+                Title="{Binding LineChartTitle}"
                 Grid.Row="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,0,20"
+                LegendPosition="Bottom"
+                LegendTextPaint="{Binding LegendTextPaint}"
+                Series="{Binding LineSeries}"
+                XAxes="{Binding LineXAxes}"
+                YAxes="{Binding LineYAxes}" />
+
+            <!-- Bar Chart -->
+            <lvc:CartesianChart
                 Title="{Binding BarChartTitle}"
+                Grid.Row="1"
+                Grid.Column="0"
+                Margin="0,0,10,20"
                 LegendPosition="Bottom"
                 LegendTextPaint="{Binding LegendTextPaint}"
                 Series="{Binding BarSeries}"
                 XAxes="{Binding XAxes}"
                 YAxes="{Binding YAxes}" />
+
+            <!-- Time Distribution Pie Chart -->
             <lvc:PieChart
-                Grid.Row="1"
                 Title="{Binding PieChartTitle}"
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="10,0,0,20"
                 LegendPosition="Bottom"
                 LegendTextPaint="{Binding LegendTextPaint}"
                 Series="{Binding PieSeries}" />
+
+            <!-- Genre Distribution Pie Chart -->
+            <lvc:PieChart
+                Title="{Binding GenrePieChartTitle}"
+                Grid.Row="2"
+                Grid.ColumnSpan="2"
+                Margin="0,0,0,20"
+                LegendPosition="Bottom"
+                LegendTextPaint="{Binding LegendTextPaint}"
+                Series="{Binding GenrePieSeries}" />
         </Grid>
     </ScrollViewer>
 </Page>

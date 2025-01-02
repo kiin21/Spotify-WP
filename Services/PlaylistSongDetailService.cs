@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using Spotify.Contracts.DAO;
@@ -75,6 +76,11 @@ public class PlaylistSongDetailService
         };
 
         // Add the song to the database
-        await _playlistSongDetailDAO.InsertOneAsync(playlistSong);
+        var playlist = await _playlistSongDetailDAO.GetPlaylistSongDetailAsync(playlistId);
+        var isExisted = playlist.Any(_playlistSongDetailDAO => _playlistSongDetailDAO.SongId == songDetail.SongId);
+        if (!isExisted)
+        { 
+            await _playlistSongDetailDAO.InsertOneAsync(playlistSong); 
+        }
     }
 }

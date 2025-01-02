@@ -23,4 +23,7 @@ public class PlayHistoryWithSongDTO
 
     [BsonElement("songDetails")]
     public SongDTO SongDetails { get; set; }
+
+    [BsonElement("genreDetails")]
+    public GenreDTO Genre { get; set; }
 }

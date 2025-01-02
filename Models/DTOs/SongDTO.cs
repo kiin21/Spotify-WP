@@ -44,6 +44,9 @@ public class SongDTO : INotifyPropertyChanged
     [BsonElement("release_date")]
     public string ReleaseDate { get; set; }
 
+    [BsonElement("genreId")]
+    public string GenreId { get; set; }
+
     [BsonIgnore]
     public List<(TimeSpan Timestamp, string Text)> ParsedSyncedLyrics
     {
