@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Spotify.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:Spotify.Models.DTOs"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
@@ -29,90 +30,119 @@
             Margin="0,60,0,0"
             VerticalScrollBarVisibility="Auto"
             VerticalScrollMode="Auto">
-            <Grid Margin="20,0,20,20">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+            <StackPanel Margin="20,0,20,20" Spacing="20">
+                <!-- Song Information -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
 
-                <!--  Cover Art  -->
-                <Image
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Width="150"
-                    Height="150"
-                    Margin="0,20,20,0"
-                    Source="{x:Bind ViewModel.Song.CoverArtUrl, Mode=OneWay}"
-                    Stretch="UniformToFill" />
+                    <!-- Cover Art -->
+                    <Image
+                        Grid.Column="0"
+                        Width="150"
+                        Height="150"
+                        Margin="0,20,20,0"
+                        Source="{x:Bind ViewModel.Song.CoverArtUrl, Mode=OneWay}"
+                        Stretch="UniformToFill" />
 
-                <!--  Song Information  -->
-                <StackPanel
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Margin="0,20,20,0"
-                    VerticalAlignment="Center"
-                    Spacing="5">
-                    <TextBlock
-                        FontSize="48"
-                        FontWeight="Bold"
-                        Foreground="White"
-                        Text="{x:Bind ViewModel.Song.title, Mode=OneWay}" />
-
-                    <TextBlock
-                        FontSize="16"
-                        Foreground="LightGray"
-                        Text="{x:Bind ViewModel.Song.ArtistName, Mode=OneWay}" />
-                </StackPanel>
-
-                <!--  Playback Controls and Lyrics  -->
-                <StackPanel
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    Margin="0,20,0,0">
+                    <!-- Song Details -->
                     <StackPanel
-                        Margin="0,0,0,20"
-                        Orientation="Horizontal"
-                        Spacing="10">
-                        <!--  Play Button  -->
-                        <Button
-                            x:Name="PlayButton"
-                            Width="50"
-                            Height="50"
-                            Background="Green"
-                            Command="{x:Bind ViewModel.PlayPauseCommand}"
-                            CornerRadius="25">
-                            <FontIcon Foreground="White" Glyph="{x:Bind ViewModel.PlayPauseGlyph, Mode=OneWay}" />
-                        </Button>
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Spacing="5">
+                        <TextBlock
+                            FontSize="48"
+                            FontWeight="Bold"
+                            Foreground="White"
+                            Text="{x:Bind ViewModel.Song.title, Mode=OneWay}" />
 
-                        <!--  Like and More info Icons  -->
-                        <Button
-                            Width="50"
-                            Height="50"
-                            Background="Transparent">
-                            <SymbolIcon Symbol="Like" />
-                        </Button>
-                        <Button
-                            Width="50"
-                            Height="50"
-                            Background="Transparent">
-                            <SymbolIcon Symbol="More" />
-                        </Button>
+                        <TextBlock
+                            FontSize="16"
+                            Foreground="LightGray"
+                            Text="{x:Bind ViewModel.Song.ArtistName, Mode=OneWay}" />
                     </StackPanel>
+                </Grid>
 
-                    <!--  Lyrics  -->
-                    <TextBlock
-                        Margin="10"
-                        FontSize="14"
-                        Foreground="White"
-                        Text="{x:Bind ViewModel.Song.plainLyrics, Mode=OneWay}"
-                        TextWrapping="Wrap" />
+                <!-- Playback Controls -->
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Button
+                        x:Name="PlayButton"
+                        Width="50"
+                        Height="50"
+                        Background="Green"
+                        Command="{x:Bind ViewModel.PlayPauseCommand}"
+                        CornerRadius="25">
+                        <FontIcon Foreground="White" Glyph="{x:Bind ViewModel.PlayPauseGlyph, Mode=OneWay}" />
+                    </Button>
+
+                    <!-- Like and More Info Buttons -->
+                    <Button Width="50" Height="50" Background="Transparent">
+                        <SymbolIcon Symbol="Like" />
+                    </Button>
+                    <Button Width="50" Height="50" Background="Transparent">
+                        <SymbolIcon Symbol="More" />
+                    </Button>
                 </StackPanel>
-            </Grid>
+
+                <!-- Lyrics Section -->
+                <TextBlock
+                    FontSize="14"
+                    Foreground="White"
+                    Text="{x:Bind ViewModel.Song.plainLyrics, Mode=OneWay}"
+                    TextWrapping="Wrap" />
+
+                <!-- Comments Section -->
+                <StackPanel Spacing="10">
+                    <!-- Comments List -->
+                    <ListView
+                        ItemsSource="{x:Bind ViewModel.Comments, Mode=OneWay}"
+                        Margin="0,10,0,0"
+                        Background="#1E1E1E"
+                        Padding="10"
+                        CornerRadius="10">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:CommentDTO">
+                                <StackPanel Margin="0,5,0,5">
+                                    <TextBlock FontWeight="Bold" Foreground="#FFD700" Text="{x:Bind AddedBy}" />
+                                    <TextBlock FontSize="14" Foreground="White" Text="{x:Bind Content}" />
+                                    <TextBlock FontSize="12" Foreground="Gray" Text="{x:Bind AddedAt}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
+
+                <!-- Add Comment Section -->
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <TextBlock
+                        Text="{x:Bind ViewModel.CurrentUserName, Mode=OneWay}"
+                        FontSize="16"
+                        FontWeight="Bold"
+                        Foreground="#FFD700"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        PlaceholderText="Add a comment..."
+                        Text="{x:Bind ViewModel.NewCommentContent, Mode=TwoWay}"
+                        HorizontalAlignment="Stretch"
+                        MinWidth="200"
+                        Margin="0,0,10,0"
+                        Background="#4A4A4A"
+                        Foreground="White"
+                        PlaceholderForeground="LightGray"
+                        CornerRadius="10"
+                        BorderBrush="#6A6A6A"
+                        Padding="10" />
+                    <Button
+                        Content="Post"
+                        Command="{x:Bind ViewModel.AddCommentCommand}"
+                        Background="#4CAF50"
+                        Foreground="White"
+                        Width="80"
+                        CornerRadius="10" />
+                </StackPanel>
+            </StackPanel>
         </ScrollViewer>
     </Grid>
 </Page>
