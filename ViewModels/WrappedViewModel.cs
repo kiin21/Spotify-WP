@@ -163,7 +163,7 @@ public class WrappedViewModel : INotifyPropertyChanged
                 Stroke = new SolidColorPaint(colors[0]) { StrokeThickness = 3 },
                 Name = "Songs Played",
                 GeometrySize = 10,
-                LineSmoothness = 1,
+                LineSmoothness = 0,
             }
         };
 

@@ -28,7 +28,7 @@
         <!-- Page Title -->
         <TextBlock 
             Grid.Row="0"
-            Text="Your Spotify Wrapped"
+            Text="Your Wrapped"
             FontSize="36"
             FontWeight="Bold"
             Margin="20,20,0,10"
