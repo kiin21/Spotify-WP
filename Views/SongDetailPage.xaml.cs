@@ -1,7 +1,10 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Spotify.Models.DTOs;
+using Spotify.Services;
 using Spotify.ViewModels;
 
 namespace Spotify.Views;
@@ -23,8 +26,10 @@ public sealed partial class SongDetailPage : Page
         // Get the song passed during navigation
         if (e.Parameter is SongDTO song)
         {
+            var commentService = (App.Current as App).Services.GetRequiredService<CommentService>();
+
             // Create ViewModel with the song
-            ViewModel = new SongDetailViewModel(song);
+            ViewModel = new SongDetailViewModel(song, commentService);
             DataContext = ViewModel;
         }
     }

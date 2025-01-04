@@ -72,6 +72,7 @@ namespace Spotify
             services.AddSingleton<IPlaylistSongDetailDAO, PlaylistSongDetailDAO>();
             services.AddSingleton<IArtistDAO, ArtistDAO>();
             services.AddSingleton<IPlayHistoryDAO, PlayHistoryDAO>();
+            services.AddSingleton<ICommentDAO, CommentDAO>();
             
             services.AddScoped<IUserDAO, UserDAO>();
 
@@ -92,6 +93,7 @@ namespace Spotify
             services.AddSingleton<ArtistService>();
             services.AddSingleton<PlaylistSongDetailService>();
             services.AddSingleton<ArtistService>();
+            services.AddSingleton<CommentService>();
 
 
             // FIX_LATTER
