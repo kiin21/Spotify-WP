@@ -15,6 +15,7 @@ using System.Runtime.CompilerServices;
 using System.Numerics;
 using System.Security.Principal;
 using LiveChartsCore.Kernel.Sketches;
+using System.Globalization;
 
 namespace Spotify.ViewModels;
 
@@ -162,7 +163,7 @@ public class WrappedViewModel : INotifyPropertyChanged
                 Stroke = new SolidColorPaint(colors[0]) { StrokeThickness = 3 },
                 Name = "Songs Played",
                 GeometrySize = 10,
-                LineSmoothness = 0.5,
+                LineSmoothness = 1,
             }
         };
 
