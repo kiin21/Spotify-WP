@@ -26,7 +26,17 @@
     - [Phương pháp đảm bảo chất lượng milestone 2](#phương-pháp-đảm-bảo-chất-lượng-milestone-2)
     - [Giao diện khi hoàn thành milestone 2](#giao-diện-khi-hoàn-thành-milestone-2)
     - [Demo milestone 2](#demo-milestone-2)
-    - [Document](#document)
+    - [Document milestone 2](#document-milestone-2)
+  - [Milestone 3](#milestone-3)
+    - [Các tính năng chính đã hoàn thành milestone 3](#các-tính-năng-chính-đã-hoàn-thành-milestone-3)
+    - [Mô tả các chức năng milestone 2](#mô-tả-các-chức-năng-milestone-3)
+      - [1. **22120120 - Đặng Phúc Hưng**](#1-22120120---đặng-phúc-hưng-2)
+      - [2. **22120157 - Nguyễn Nam Khánh**](#2-22120157---nguyễn-nam-khánh-2)
+      - [3. **22120163 - Phạm Đào Anh Khoa**](#3-22120163---phạm-đào-anh-khoa-2)
+    - [Advanced Topics Milestone 3](#advanced-topics-milestone-3)
+    - [Phương pháp đảm bảo chất lượng milestone 3](#phương-pháp-đảm-bảo-chất-lượng-milestone-3)
+    - [Giao diện khi hoàn thành milestone 3](#giao-diện-khi-hoàn-thành-milestone-3)
+    - [Document milestone 3](#document-milestone-3)
   - [Link project và các demo](#link-project-và-các-demo)
 
 ## Thành viên nhóm
@@ -274,10 +284,6 @@ Project sử dụng mô hình **MVVM**, với các thành phần chính:
     ![s23522412102024](https://a.okmd.dev/md/675871cbd18e6.png)
 
 - **Một số chức năng thêm**
-
-  - Khi search bài hát và bấm vào button "+" thì sẽ có lựa chọn thêm vào các playlist. Khi click vào thì bài hát sẽ được thêm vào playlist tương ứng
-    ![s10120712112024](https://a.okmd.dev/md/67590308e025f.png)
-    ![s10125412112024](https://a.okmd.dev/md/675903379bc3d.png)
   - Khi bấm vào nút "More options" ở từng bài hát trong playlist thì sẽ có lựa chọn xóa khỏi playlist hoặc thêm vào playlist yêu thích. Ví dụ khi bấm xóa "On My Way" khỏi playlist được mô tả như các hình dưới đây. Thêm vào playlist yêu thích cũng tương tự
     ![s10161812112024](https://a.okmd.dev/md/67590403c8e5d.png)
     ![s10165212112024](https://a.okmd.dev/md/67590424cb520.png)
@@ -305,10 +311,6 @@ Project sử dụng mô hình **MVVM**, với các thành phần chính:
     ![s10005412112024](https://a.okmd.dev/md/675900670d171.png)
 
 - **Một số chức năng thêm**
-
-  - Khi click vào nút Play ở playlist thì sẽ thêm các bài hát trong playlist đó vào hàng chờ phát nhạc và tiến hành phát bài nhạc đầu tiên
-    ![s10225812112024](https://a.okmd.dev/md/675905939ac5b.png)
-    ![s10241112112024](https://a.okmd.dev/md/675905dd05fbe.png)
   - Thay đổi giữa việc hiển thị thông tin bài hát và hiển thị hàng chờ ở phần Right Side
     ![s10290712112024](https://a.okmd.dev/md/67590704940bf.png)
     ![s10292612112024](https://a.okmd.dev/md/675907179c7f1.png)
@@ -361,7 +363,7 @@ Kiểm thử thủ công
 - [Demo trên YouTube](https://youtu.be/l39P_xqKiDE)
 - [Demo du phong](https://drive.google.com/file/d/19MjbKHEmWo7_i0g_mRdVU5avVvAmoBUO/view?usp=sharing)
 
-### Document
+### Document milestone 2
 
 - file index.html trong thư mục doxygen
 
@@ -426,7 +428,7 @@ Kiểm thử thủ công
 ![s13340901042025](https://a.okmd.dev/md/6778d6645aadb.png)
 
 ![s13353601042025](https://a.okmd.dev/md/6778d6bb29bb5.png)
-### Document
+### Document milestone 3
 file index.html trong thư mục doxygen
 ## Link project và các demo
 
