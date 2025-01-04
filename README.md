@@ -29,7 +29,7 @@
     - [Document milestone 2](#document-milestone-2)
   - [Milestone 3](#milestone-3)
     - [Các tính năng chính đã hoàn thành milestone 3](#các-tính-năng-chính-đã-hoàn-thành-milestone-3)
-    - [Mô tả các chức năng milestone 2](#mô-tả-các-chức-năng-milestone-3)
+    - [Mô tả các chức năng milestone 3](#mô-tả-các-chức-năng-milestone-3)
       - [1. **22120120 - Đặng Phúc Hưng**](#1-22120120---đặng-phúc-hưng-2)
       - [2. **22120157 - Nguyễn Nam Khánh**](#2-22120157---nguyễn-nam-khánh-2)
       - [3. **22120163 - Phạm Đào Anh Khoa**](#3-22120163---phạm-đào-anh-khoa-2)
@@ -378,7 +378,7 @@ Kiểm thử thủ công
 	- **Bổ sung dữ liệu vào cơ sở dữ liệu** - 1 giờ - Khoa
 	- **Tài liệu kiểm thử** - 1 giờ - Khoa
 	- **Báo cáo (readme)** - 1 giờ - Khánh
-- **TỔNG SỐ GIỜ LÀM VIỆC: 11h
+- **TỔNG SỐ GIỜ LÀM VIỆC: 11h**
 ### Mô tả các chức năng milestone 3
 #### 1. **22120120 - Đặng Phúc Hưng**
 #### 2. **22120157 - Nguyễn Nam Khánh**
