@@ -27,6 +27,32 @@ public class WrappedViewModel : INotifyPropertyChanged
     private ISeries[] _genrePieSeries;
     private ISeries[] _lineSeries;
 
+    private TimeSpan _totalTimeSpent = TimeSpan.Zero;
+
+    public string TotalTimeSpentDisplay
+    {
+        get
+        {
+            int hours = (int)_totalTimeSpent.TotalHours;
+            int minutes = _totalTimeSpent.Minutes;
+
+            return $"{hours} hours {minutes} minutes";
+        }
+    }
+    public TimeSpan TotalTimeSpent
+    {
+        get => _totalTimeSpent;
+        set
+        {
+            if (_totalTimeSpent != value)
+            {
+                _totalTimeSpent = value;
+                OnPropertyChanged(nameof(TotalTimeSpent));
+                OnPropertyChanged(nameof(TotalTimeSpentDisplay)); 
+            }
+        }
+    }
+
     // Updated colors for better visibility
     private readonly SKColor[] colors = new[]
     {
@@ -238,6 +264,7 @@ public class WrappedViewModel : INotifyPropertyChanged
         Dictionary<string, int> genres = new Dictionary<string, int>();
         foreach (var play in playHistory)
         {
+            _totalTimeSpent += play.TotalTime;
             var genreName = play.Genre.name;
             if (!genres.ContainsKey(genreName))
             {
