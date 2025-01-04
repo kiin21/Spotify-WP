@@ -5,12 +5,20 @@ using System.Security.Cryptography;
 
 namespace Spotify.Helpers;
 
+/// <summary>
+/// Provides methods for hashing and verifying passwords.
+/// </summary>
 public static class PasswordHasher
 {
     //private const int Iterations = 10000;
     private const int Iterations = 10;
     private const int HashSize = 32; // 256 bits
 
+    /// <summary>
+    /// Hashes the specified password and generates a salt.
+    /// </summary>
+    /// <param name="password">The password to hash.</param>
+    /// <returns>A tuple containing the hashed password and the salt.</returns>
     public static (string hashedPassword, string salt) HashPassword(string password)
     {
         // Generate a random salt
@@ -28,6 +36,13 @@ public static class PasswordHasher
         }
     }
 
+    /// <summary>
+    /// Verifies the specified password against the hashed password and salt.
+    /// </summary>
+    /// <param name="password">The password to verify.</param>
+    /// <param name="hashedPassword">The hashed password to compare against.</param>
+    /// <param name="saltString">The salt used to hash the password.</param>
+    /// <returns><c>true</c> if the password is valid; otherwise, <c>false</c>.</returns>
     public static bool VerifyPassword(string password, string hashedPassword, string saltString)
     {
         try

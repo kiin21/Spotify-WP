@@ -95,7 +95,7 @@ namespace Spotify.ViewModels
     /// <summary>
     /// Represents a grouped collection of play history songs.
     /// </summary>
-    public class GroupedPlayHistory
+    public class GroupedPlayHistory : INotifyPropertyChanged
     {
         /// <summary>
         /// Gets the key for the group.
@@ -117,5 +117,7 @@ namespace Spotify.ViewModels
             Key = key;
             Items = items;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

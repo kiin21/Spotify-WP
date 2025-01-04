@@ -11,15 +11,29 @@ using System.Diagnostics;
 
 namespace Spotify.Views;
 
+/// <summary>
+/// A page that handles premium subscription options.
+/// </summary>
 public sealed partial class PremiumPage : Page
 {
+    /// <summary>
+    /// Gets the current user.
+    /// </summary>
     private static UserDTO CurrentUser => App.Current.CurrentUser;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PremiumPage"/> class.
+    /// </summary>
     public PremiumPage()
     {
         this.InitializeComponent();
     }
 
+    /// <summary>
+    /// Handles the click event for the Premium Mini subscription button.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private async void OnGetPremiumMiniClicked(object sender, RoutedEventArgs e)
     {
         var dialog = new ContentDialog
@@ -40,6 +54,11 @@ public sealed partial class PremiumPage : Page
         }
     }
 
+    /// <summary>
+    /// Handles the click event for the Premium Individual subscription button.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private async void OnGetPremiumIndividualClicked(object sender, RoutedEventArgs e)
     {
         var dialog = new ContentDialog
@@ -60,9 +79,13 @@ public sealed partial class PremiumPage : Page
         }
     }
 
+    /// <summary>
+    /// Navigates to the payment page with the specified premium type and price.
+    /// </summary>
+    /// <param name="premiumType">The type of premium subscription.</param>
+    /// <param name="price">The price of the premium subscription.</param>
     private void NavigateToPaymentPage(string premiumType, string price)
     {
-        
         var shellWindow = App.Current.ShellWindow;
 
         if (!CurrentUser.IsPremium)
@@ -75,13 +98,3 @@ public sealed partial class PremiumPage : Page
         }
     }
 }
-       
-  
-        
-        
-
-          
-    //    var paymentWindow = new PaymentWindow(price, (App.Current as App).Services.GetRequiredService<IUserDAO>());
-    //    paymentWindow.Show();
-
-    

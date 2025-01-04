@@ -12,16 +12,31 @@ using Spotify.Models.DTOs;
 
 namespace Spotify;
 
+/// <summary>
+/// A window that serves as the main shell of the application.
+/// </summary>
 public sealed partial class ShellWindow : WindowEx
 {
+    /// <summary>
+    /// Gets the main frame of the window.
+    /// </summary>
+    /// <returns>The main frame.</returns>
     public Frame getMainFrame() => MainFrame;
 
+    /// <summary>
+    /// Gets the right sidebar frame of the window.
+    /// </summary>
+    /// <returns>The right sidebar frame.</returns>
     public Frame getRightSidebarFrame() => RightSidebarFrame;
 
     private readonly INavigationService _navigationService;
     private readonly QueueService _queueService;
 
     private ObservableCollection<SongDTO> _queue = new ObservableCollection<SongDTO>();
+   
+    /// <summary>
+    /// Gets or sets the playback queue.
+    /// </summary>
     public ObservableCollection<SongDTO> Queue
     {
         get => _queue;
@@ -34,8 +49,15 @@ public sealed partial class ShellWindow : WindowEx
         }
     }
 
-    // Event to notify subscribers when the queue is updated
+
+    /// <summary>
+    /// Event to notify subscribers when the queue is updated.
+    /// </summary>
     public event EventHandler<QueueUpdatedEventArgs> QueueUpdated;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ShellWindow"/> class.
+    /// </summary>
 
     public ShellWindow()
     {
@@ -57,6 +79,9 @@ public sealed partial class ShellWindow : WindowEx
         InitializePages();
     }
 
+    /// <summary>
+    /// Initializes the pages of the shell window.
+    /// </summary>
     private async void InitializePages()
     {
         try
@@ -81,6 +106,9 @@ public sealed partial class ShellWindow : WindowEx
         }
     }
 
+    /// <summary>
+    /// Handles the event when the queue is changed.
+    /// </summary>
     private async void OnQueueChanged()
     {
         try
@@ -108,8 +136,12 @@ public sealed partial class ShellWindow : WindowEx
         }
     }
 
-
-
+    /// <summary>
+    /// Navigates to the specified page type.
+    /// </summary>
+    /// <param name="pageType">The type of the page to navigate to.</param>
+    /// <param name="frame">The frame to use for navigation.</param>
+    /// <param name="parameter">The parameter to pass to the page.</param>
     public void NavigateToPage(Type pageType, Frame frame, object parameter = null)
     {
         frame.Navigate(pageType, parameter);
@@ -120,10 +152,20 @@ public sealed partial class ShellWindow : WindowEx
 
 }
 
+/// <summary>
+/// Provides data for the QueueUpdated event.
+/// </summary>
 public class QueueUpdatedEventArgs : EventArgs
 {
+    /// <summary>
+    /// Gets the updated queue.
+    /// </summary>
     public ObservableCollection<SongDTO> UpdatedQueue { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="QueueUpdatedEventArgs"/> class.
+    /// </summary>
+    /// <param name="updatedQueue">The updated queue.</param>
     public QueueUpdatedEventArgs(ObservableCollection<SongDTO> updatedQueue)
     {
         UpdatedQueue = updatedQueue;

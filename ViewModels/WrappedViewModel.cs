@@ -21,14 +21,39 @@ namespace Spotify.ViewModels;
 
 public class WrappedViewModel : INotifyPropertyChanged
 {
+    /// <summary>
+    /// The play history data.
+    /// </summary>
     private List<PlayHistoryWithSongDTO> _playHistory;
+
+    /// <summary>
+    /// The bar series data for the bar chart.
+    /// </summary>
     private ISeries[] _barSeries;
+
+    /// <summary>
+    /// The pie series data for the pie chart.
+    /// </summary>
     private ISeries[] _pieSeries;
+
+    /// <summary>
+    /// The genre pie series data for the genre pie chart.
+    /// </summary>
     private ISeries[] _genrePieSeries;
+
+    /// <summary>
+    /// The line series data for the line chart.
+    /// </summary>
     private ISeries[] _lineSeries;
 
+    /// <summary>
+    /// The total time spent listening to music.
+    /// </summary>
     private TimeSpan _totalTimeSpent = TimeSpan.Zero;
 
+    /// <summary>
+    /// Gets the total time spent listening to music as a display string.
+    /// </summary>
     public string TotalTimeSpentDisplay
     {
         get
@@ -39,6 +64,10 @@ public class WrappedViewModel : INotifyPropertyChanged
             return $"{hours} hours {minutes} minutes";
         }
     }
+
+    /// <summary>
+    /// Gets or sets the total time spent listening to music.
+    /// </summary>
     public TimeSpan TotalTimeSpent
     {
         get => _totalTimeSpent;
@@ -48,12 +77,14 @@ public class WrappedViewModel : INotifyPropertyChanged
             {
                 _totalTimeSpent = value;
                 OnPropertyChanged(nameof(TotalTimeSpent));
-                OnPropertyChanged(nameof(TotalTimeSpentDisplay)); 
+                OnPropertyChanged(nameof(TotalTimeSpentDisplay));
             }
         }
     }
 
-    // Updated colors for better visibility
+    /// <summary>
+    /// The colors used for the charts.
+    /// </summary>
     private readonly SKColor[] colors = new[]
     {
         new SKColor(29, 185, 84, 255),   // Spotify Green
@@ -64,12 +95,29 @@ public class WrappedViewModel : INotifyPropertyChanged
         new SKColor(255, 140, 0, 255)    // Dark Orange
     };
 
+    /// <summary>
+    /// Gets or sets the title of the bar chart.
+    /// </summary>
     public string BarChartTitle { get; set; } = "Total Songs Played by Time of Day";
+
+    /// <summary>
+    /// Gets or sets the title of the pie chart.
+    /// </summary>
     public string PieChartTitle { get; set; } = "Distribution of Songs by Time of Day";
+
+    /// <summary>
+    /// Gets or sets the title of the genre pie chart.
+    /// </summary>
     public string GenrePieChartTitle { get; set; } = "Distribution of Songs by Genre";
+
+    /// <summary>
+    /// Gets or sets the title of the line chart.
+    /// </summary>
     public string LineChartTitle { get; set; } = "Songs Played Over Time";
 
-    // Add LineChart property
+    /// <summary>
+    /// Gets or sets the line series data for the line chart.
+    /// </summary>
     public ISeries[] LineSeries
     {
         get => _lineSeries;
@@ -80,9 +128,19 @@ public class WrappedViewModel : INotifyPropertyChanged
         }
     }
 
-    // Add X and Y axes for line chart
+    /// <summary>
+    /// Gets or sets the X axes for the line chart.
+    /// </summary>
     public Axis[] LineXAxes { get; set; }
+
+    /// <summary>
+    /// Gets or sets the Y axes for the line chart.
+    /// </summary>
     public Axis[] LineYAxes { get; set; }
+
+    /// <summary>
+    /// Gets or sets the bar series data for the bar chart.
+    /// </summary>
     public ISeries[] BarSeries
     {
         get => _barSeries;
@@ -93,6 +151,9 @@ public class WrappedViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the pie series data for the pie chart.
+    /// </summary>
     public ISeries[] PieSeries
     {
         get => _pieSeries;
@@ -103,6 +164,9 @@ public class WrappedViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the genre pie series data for the genre pie chart.
+    /// </summary>
     public ISeries[] GenrePieSeries
     {
         get => _genrePieSeries;
@@ -113,9 +177,19 @@ public class WrappedViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Gets or sets the X axes for the bar chart.
+    /// </summary>
     public Axis[] XAxes { get; set; }
+
+    /// <summary>
+    /// Gets or sets the Y axes for the bar chart.
+    /// </summary>
     public Axis[] YAxes { get; set; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="WrappedViewModel"/> class.
+    /// </summary>
     public WrappedViewModel()
     {
         XAxes = new Axis[]
@@ -144,6 +218,7 @@ public class WrappedViewModel : INotifyPropertyChanged
                 SeparatorsPaint = new SolidColorPaint(SKColors.DarkGray) { StrokeThickness = 1 }
             }
         };
+
         LineXAxes = new Axis[]
         {
             new Axis
@@ -170,6 +245,11 @@ public class WrappedViewModel : INotifyPropertyChanged
             }
         };
     }
+
+    /// <summary>
+    /// Updates the line series data for the line chart.
+    /// </summary>
+    /// <param name="playHistory">The play history data.</param>
     private void UpdateLineSeries(List<PlayHistoryWithSongDTO> playHistory)
     {
         var groupedData = playHistory
@@ -196,6 +276,11 @@ public class WrappedViewModel : INotifyPropertyChanged
         // Update X axis labels
         LineXAxes[0].Labeler = value => new DateTime((long)value).ToString("MM/dd");
     }
+
+    /// <summary>
+    /// Updates the bar series data for the bar chart.
+    /// </summary>
+    /// <param name="values">The values for the bar chart.</param>
     private void UpdateBarSeries(int[] values)
     {
         BarSeries = new ISeries[]
@@ -216,6 +301,11 @@ public class WrappedViewModel : INotifyPropertyChanged
         };
     }
 
+    /// <summary>
+    /// Updates the pie series data for the pie chart.
+    /// </summary>
+    /// <param name="timeSlots">The time slots data.</param>
+    /// <param name="totalPlay">The total number of plays.</param>
     private void UpdatePieSeries(Dictionary<string, int> timeSlots, int totalPlay)
     {
         var values = timeSlots.Select((kvp, index) => new PieSeries<int>
@@ -233,6 +323,11 @@ public class WrappedViewModel : INotifyPropertyChanged
         PieSeries = values.ToArray();
     }
 
+    /// <summary>
+    /// Updates the genre pie series data for the genre pie chart.
+    /// </summary>
+    /// <param name="genreCount">The genre count data.</param>
+    /// <param name="totalPlay">The total number of plays.</param>
     private void UpdateGenrePieSeries(Dictionary<string, int> genreCount, int totalPlay)
     {
         var values = genreCount.Select((kvp, index) => new PieSeries<int>
@@ -250,6 +345,10 @@ public class WrappedViewModel : INotifyPropertyChanged
         GenrePieSeries = values.ToArray();
     }
 
+    /// <summary>
+    /// Updates the data for the charts based on the play history.
+    /// </summary>
+    /// <param name="playHistory">The play history data.</param>
     public void UpdateData(List<PlayHistoryWithSongDTO> playHistory)
     {
         _playHistory = playHistory;
@@ -292,6 +391,11 @@ public class WrappedViewModel : INotifyPropertyChanged
         UpdateLineSeries(playHistory);
     }
 
+    /// <summary>
+    /// Gets the time of day based on the provided time.
+    /// </summary>
+    /// <param name="time">The time to evaluate.</param>
+    /// <returns>A string representing the time of day ("Morning", "Afternoon", or "Evening").</returns>
     private string GetTimeOfDay(DateTime time)
     {
         var hour = time.ToLocalTime().Hour;
@@ -302,8 +406,15 @@ public class WrappedViewModel : INotifyPropertyChanged
         return "Evening";
     }
 
+    /// <summary>
+    /// Occurs when a property value changes.
+    /// </summary>
     public event PropertyChangedEventHandler PropertyChanged;
 
+    /// <summary>
+    /// Raises the <see cref="PropertyChanged"/> event.
+    /// </summary>
+    /// <param name="propertyName">The name of the property that changed.</param>
     protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

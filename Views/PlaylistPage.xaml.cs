@@ -16,14 +16,39 @@ using Catel.MVVM;
 
 namespace Spotify.Views;
 
+/// <summary>
+/// A page that displays the playlist details and allows interaction with the playlist.
+/// </summary>
 public sealed partial class PlaylistPage : Page
 {
+    /// <summary>
+    /// Gets or sets the view model for the playlist page.
+    /// </summary>
     public PlaylistPageViewModel PlaylistPageVM { get; set; }
+
+    /// <summary>
+    /// Gets the view model for playback control.
+    /// </summary>
     public PlaybackControlViewModel PlaybackControlViewModel;
+
+    /// <summary>
+    /// Gets or sets the view model for the left sidebar page.
+    /// </summary>
     public LeftSidebarPageViewModel LeftSidebarPageVM { get; set; }
+
+    /// <summary>
+    /// Gets or sets the play/pause glyph.
+    /// </summary>
     string PlayPauseGlyph;
+
+    /// <summary>
+    /// Gets or sets the notification text.
+    /// </summary>
     public string NotificationText { get; set; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PlaylistPage"/> class.
+    /// </summary>
     public PlaylistPage()
     {
         this.InitializeComponent();
@@ -34,11 +59,13 @@ public sealed partial class PlaylistPage : Page
         PlaybackControlViewModel = PlaybackControlViewModel.Instance;
 
         PlaylistPageVM = new PlaylistPageViewModel(playlistService, playlistSongDetailService);
-        DataContext = PlaylistPageVM;  // Đảm bảo DataContext là PlaylistPageVM
+        DataContext = PlaylistPageVM;  // Ensure DataContext is PlaylistPageVM
     }
 
-
-
+    /// <summary>
+    /// Called when the page is navigated to.
+    /// </summary>
+    /// <param name="e">The event data.</param>
     protected override async void OnNavigatedTo(NavigationEventArgs e)
     {
         base.OnNavigatedTo(e);
@@ -49,6 +76,11 @@ public sealed partial class PlaylistPage : Page
         }
     }
 
+    /// <summary>
+    /// Handles the click event for removing a playlist.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private async void OnRemovePlaylistClick(object sender, RoutedEventArgs e)
     {
         if (PlaylistPageVM.SelectedPlaylist != null)
@@ -86,27 +118,36 @@ public sealed partial class PlaylistPage : Page
         }
     }
 
+
+    /// <summary>
+    /// Handles the tapped event for a song item.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private async void OnSongTapped(object sender, TappedRoutedEventArgs e)
     {
         if (sender is FrameworkElement element && element.DataContext is PlaylistSongDetailDTO songDetail)
         {
-            // Tìm hoặc tạo đối tượng SongDTO từ songDetail
+            // Find or create a SongDTO object from songDetail
             var songId = songDetail.SongId;
             var songService = (App.Current as App).Services.GetRequiredService<SongService>();
 
-            // Giả sử SongService có phương thức GetSongById để lấy dữ liệu bài hát từ cơ sở dữ liệu
+            // Assume SongService has a GetSongById method to fetch song data from the database
             SongDTO song = await songService.GetSongByIdAsync(songId);
 
             if (song != null)
             {
-                // Điều hướng đến SongDetailPage với thông tin bài hát
+                // Navigate to SongDetailPage with the song information
                 Frame.Navigate(typeof(SongDetailPage), song);
             }
         }
     }
 
-
-
+    /// <summary>
+    /// Handles the tapped event for an artist item.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private async void OnArtistTapped(object sender, TappedRoutedEventArgs e)
     {
         if (sender is FrameworkElement element && element.DataContext is PlaylistSongDetailDTO songDetail)
@@ -123,11 +164,21 @@ public sealed partial class PlaylistPage : Page
         }
     }
 
+    /// <summary>
+    /// Handles the click event for the play button.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void OnPlayClick(object sender, RoutedEventArgs e)
     {
-        // TODO: Thêm logic nút Play
+        // TODO: Add play button logic
     }
 
+    /// <summary>
+    /// Handles the click event for the more options button.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void OnMoreOptionsClicked(object sender, RoutedEventArgs e)
     {
         var button = sender as Button;
@@ -136,18 +187,26 @@ public sealed partial class PlaylistPage : Page
             var selectedSong = button.DataContext as PlaylistSongDetailDTO;
             if (selectedSong != null)
             {
-                // Hiển thị menu hoặc thực hiện các hành động khác
+                // Show menu or perform other actions
                 ShowMoreOptionsMenu(selectedSong);
             }
         }
     }
 
+    /// <summary>
+    /// Shows the more options menu for the specified song.
+    /// </summary>
+    /// <param name="song">The song for which to show more options.</param>
     private void ShowMoreOptionsMenu(PlaylistSongDetailDTO song)
     {
-
         Debug.WriteLine($"More options for: {song.SongTitle}");
     }
 
+    /// <summary>
+    /// Handles the pointer entered event for an item.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void OnItemPointerEntered(object sender, PointerRoutedEventArgs e)
     {
         if (sender is FrameworkElement element &&
@@ -157,6 +216,11 @@ public sealed partial class PlaylistPage : Page
         }
     }
 
+    /// <summary>
+    /// Handles the pointer exited event for an item.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void OnItemPointerExited(object sender, PointerRoutedEventArgs e)
     {
         if (sender is FrameworkElement element &&
@@ -166,6 +230,11 @@ public sealed partial class PlaylistPage : Page
         }
     }
 
+    /// <summary>
+    /// Handles the click event for removing a song from the playlist.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private async void OnRemoveFromPlaylistClick(object sender, RoutedEventArgs e)
     {
         if (sender is MenuFlyoutItem menuFlyoutItem &&
@@ -173,23 +242,28 @@ public sealed partial class PlaylistPage : Page
         {
             var playlistId = PlaylistPageVM.SelectedPlaylist.Id;
 
-            // Gọi service để xóa bài hát khỏi playlist
+            // Call service to remove the song from the playlist
             var _playlistSongDetailService = (App.Current as App).Services.GetRequiredService<PlaylistSongDetailService>();
             await _playlistSongDetailService.RemoveSongFromPlaylistAsync(playlistId, songDetail.SongId);
 
-            // Cập nhật danh sách bài hát trong playlist
+            // Update the list of songs in the playlist
             await PlaylistPageVM.LoadPlaylistSongs(playlistId);
 
-            // Hiển thị thông báo
+            // Show notification
             NotificationTextBlock.Text = $"'{songDetail.SongTitle}' has been removed";
             NotificationTextBlock.Visibility = Visibility.Visible;
 
-            // Tự động ẩn sau 3 giây
+            // Auto-hide after 3 seconds
             await Task.Delay(3000);
             NotificationTextBlock.Visibility = Visibility.Collapsed;
         }
     }
 
+    /// <summary>
+    /// Handles the click event for adding a song to liked songs.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private async void OnAddToLikedSongsClick(object sender, RoutedEventArgs e)
     {
         if (sender is MenuFlyoutItem menuFlyoutItem &&
@@ -202,25 +276,29 @@ public sealed partial class PlaylistPage : Page
 
             var likedSongsPlaylist = await _playlistService.GetLikedSongsPlaylistAsync(userId);
 
-            // Gọi service để thêm bài hát vào danh sách yêu thích
+            // Call service to add the song to the liked songs playlist
             await _playlistSongDetailService.AddSongToPlaylistAsync(likedSongsPlaylist.Id, songDetail);
 
-            // Hiển thị thông báo
+            // Show notification
             NotificationTextBlock.Text = $"'{songDetail.SongTitle}' has been added to Liked Songs!";
             NotificationTextBlock.Visibility = Visibility.Visible;
 
-            // Tự động ẩn sau 3 giây
+            // Auto-hide after 3 seconds
             await Task.Delay(3000);
             NotificationTextBlock.Visibility = Visibility.Collapsed;
         }
     }
 
+    /// <summary>
+    /// Handles the click event for sharing a playlist.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private async void OnSharePlaylistClick(object sender, RoutedEventArgs e)
     {
         var playlist = PlaylistPageVM.SelectedPlaylist;
 
-
-        // Mở dialog SharePlaylistDialog
+        // Open the SharePlaylistDialog
         var dialog = new SharePlaylistDialog(playlist) { XamlRoot = this.XamlRoot };
         var result = await dialog.ShowAsync();
 
@@ -230,6 +308,11 @@ public sealed partial class PlaylistPage : Page
         }
     }
 
+    /// <summary>
+    /// Handles the event when the notification is closed.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void Notification_Closed(object sender, EventArgs e)
     {
         NotificationText = string.Empty;

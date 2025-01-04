@@ -5,10 +5,19 @@ using System;
 
 namespace Spotify.Views;
 
-public sealed partial class PaymentPage: Page
+/// <summary>
+/// A page that handles payment processing.
+/// </summary>
+public sealed partial class PaymentPage : Page
 {
+    /// <summary>
+    /// Gets the view model for the payment page.
+    /// </summary>
     public PaymentViewModel ViewModel { get; private set; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PaymentPage"/> class.
+    /// </summary>
     public PaymentPage()
     {
         this.InitializeComponent();
@@ -16,6 +25,10 @@ public sealed partial class PaymentPage: Page
         DataContext = ViewModel;  // Set DataContext here
     }
 
+    /// <summary>
+    /// Called when the page is navigated to.
+    /// </summary>
+    /// <param name="e">The event data.</param>
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
         base.OnNavigatedTo(e);
@@ -28,3 +41,4 @@ public sealed partial class PaymentPage: Page
         }
     }
 }
+

@@ -51,12 +51,10 @@
 
                 <!--  Line Chart  -->
                 <lvc:CartesianChart
-                    Title="{Binding LineChartTitle}"
                     Grid.Row="0"
                     Grid.ColumnSpan="2"
                     Margin="0,0,0,20"
                     LegendPosition="Bottom"
-                    LegendTextPaint="{Binding LegendTextPaint}"
                     Series="{Binding LineSeries}"
                     XAxes="{Binding LineXAxes}"
                     YAxes="{Binding LineYAxes}" />
@@ -68,7 +66,6 @@
                     Grid.Column="0"
                     Margin="0,0,10,20"
                     LegendPosition="Bottom"
-                    LegendTextPaint="{Binding LegendTextPaint}"
                     Series="{Binding BarSeries}"
                     XAxes="{Binding XAxes}"
                     YAxes="{Binding YAxes}" />
@@ -80,7 +77,6 @@
                     Grid.Column="1"
                     Margin="10,0,0,20"
                     LegendPosition="Bottom"
-                    LegendTextPaint="{Binding LegendTextPaint}"
                     Series="{Binding PieSeries}" />
 
                 <!--  Genre Distribution Pie Chart  -->
@@ -90,7 +86,6 @@
                     Grid.ColumnSpan="2"
                     Margin="0,0,0,20"
                     LegendPosition="Bottom"
-                    LegendTextPaint="{Binding LegendTextPaint}"
                     Series="{Binding GenrePieSeries}" />
 
                 <!--  Total time spent  -->

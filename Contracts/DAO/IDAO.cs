@@ -1,2 +1,6 @@
 namespace Spotify.Contracts.DAO;
-public interface IDAO { };
+
+/// <summary>
+/// Marker interface for Data Access Objects
+/// </summary>
+public interface IDAO { }

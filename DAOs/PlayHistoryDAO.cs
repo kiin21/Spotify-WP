@@ -10,16 +10,27 @@ using System.Linq;
 
 namespace Spotify.DAOs;
 
+/// <summary>
+/// Data Access Object for Play History
+/// </summary>
 public class PlayHistoryDAO : BaseDAO, IPlayHistoryDAO
 {
     private readonly IMongoCollection<PlayHistoryDTO> _playHistory;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PlayHistoryDAO"/> class.
+    /// </summary>
     public PlayHistoryDAO()
     {
         var database = connection.GetDatabase("SpotifineDB");
         _playHistory = database.GetCollection<PlayHistoryDTO>("PlayHistory");
     }
 
+    /// <summary>
+    /// Retrieves the play history with song details for a specific user.
+    /// </summary>
+    /// <param name="userID">The ID of the user.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a list of PlayHistoryWithSongDTO.</returns>
     public async Task<List<PlayHistoryWithSongDTO>> GetUserHistoryWithSongAsync(string userID)
     {
         var pipeline = new[]
@@ -80,6 +91,11 @@ public class PlayHistoryDAO : BaseDAO, IPlayHistoryDAO
         return result;
     }
 
+    /// <summary>
+    /// Inserts a new play history record.
+    /// </summary>
+    /// <param name="playHistory">The play history record to insert.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task InsertPlayHistoryAsync(PlayHistoryDTO playHistory)
     {
         // Define the aggregation pipeline to check if the song has been played today
@@ -119,5 +135,3 @@ public class PlayHistoryDAO : BaseDAO, IPlayHistoryDAO
         }
     }
 }
-
-
