@@ -26,7 +26,17 @@
     - [Phương pháp đảm bảo chất lượng milestone 2](#phương-pháp-đảm-bảo-chất-lượng-milestone-2)
     - [Giao diện khi hoàn thành milestone 2](#giao-diện-khi-hoàn-thành-milestone-2)
     - [Demo milestone 2](#demo-milestone-2)
-    - [Document](#document)
+    - [Document milestone 2](#document-milestone-2)
+  - [Milestone 3](#milestone-3)
+    - [Các tính năng chính đã hoàn thành milestone 3](#các-tính-năng-chính-đã-hoàn-thành-milestone-3)
+    - [Mô tả các chức năng milestone 3](#mô-tả-các-chức-năng-milestone-3)
+      - [1. **22120120 - Đặng Phúc Hưng**](#1-22120120---đặng-phúc-hưng-2)
+      - [2. **22120157 - Nguyễn Nam Khánh**](#2-22120157---nguyễn-nam-khánh-2)
+      - [3. **22120163 - Phạm Đào Anh Khoa**](#3-22120163---phạm-đào-anh-khoa-2)
+    - [Advanced Topics Milestone 3](#advanced-topics-milestone-3)
+    - [Phương pháp đảm bảo chất lượng milestone 3](#phương-pháp-đảm-bảo-chất-lượng-milestone-3)
+    - [Giao diện khi hoàn thành milestone 3](#giao-diện-khi-hoàn-thành-milestone-3)
+    - [Document milestone 3](#document-milestone-3)
   - [Link project và các demo](#link-project-và-các-demo)
 
 ## Thành viên nhóm
@@ -274,10 +284,6 @@ Project sử dụng mô hình **MVVM**, với các thành phần chính:
     ![s23522412102024](https://a.okmd.dev/md/675871cbd18e6.png)
 
 - **Một số chức năng thêm**
-
-  - Khi search bài hát và bấm vào button "+" thì sẽ có lựa chọn thêm vào các playlist. Khi click vào thì bài hát sẽ được thêm vào playlist tương ứng
-    ![s10120712112024](https://a.okmd.dev/md/67590308e025f.png)
-    ![s10125412112024](https://a.okmd.dev/md/675903379bc3d.png)
   - Khi bấm vào nút "More options" ở từng bài hát trong playlist thì sẽ có lựa chọn xóa khỏi playlist hoặc thêm vào playlist yêu thích. Ví dụ khi bấm xóa "On My Way" khỏi playlist được mô tả như các hình dưới đây. Thêm vào playlist yêu thích cũng tương tự
     ![s10161812112024](https://a.okmd.dev/md/67590403c8e5d.png)
     ![s10165212112024](https://a.okmd.dev/md/67590424cb520.png)
@@ -305,10 +311,6 @@ Project sử dụng mô hình **MVVM**, với các thành phần chính:
     ![s10005412112024](https://a.okmd.dev/md/675900670d171.png)
 
 - **Một số chức năng thêm**
-
-  - Khi click vào nút Play ở playlist thì sẽ thêm các bài hát trong playlist đó vào hàng chờ phát nhạc và tiến hành phát bài nhạc đầu tiên
-    ![s10225812112024](https://a.okmd.dev/md/675905939ac5b.png)
-    ![s10241112112024](https://a.okmd.dev/md/675905dd05fbe.png)
   - Thay đổi giữa việc hiển thị thông tin bài hát và hiển thị hàng chờ ở phần Right Side
     ![s10290712112024](https://a.okmd.dev/md/67590704940bf.png)
     ![s10292612112024](https://a.okmd.dev/md/675907179c7f1.png)
@@ -361,10 +363,73 @@ Kiểm thử thủ công
 - [Demo trên YouTube](https://youtu.be/l39P_xqKiDE)
 - [Demo du phong](https://drive.google.com/file/d/19MjbKHEmWo7_i0g_mRdVU5avVvAmoBUO/view?usp=sharing)
 
-### Document
+### Document milestone 2
 
 - file index.html trong thư mục doxygen
 
+
+## Milestone 3
+### Các tính năng chính đã hoàn thành milestone 3
+- **Thống kê dựa theo lịch sử phát nhạc** - 2 giờ - Khoa
+- **Cho phép comment bài hát** - 2 giờ - Khánh
+- **Thanh toán tài khoản premium qua VNPAY** - 3 giờ - Hưng
+- **Lưu trạng thái phát trước khi tắt** - 1 giờ - Hưng
+- **Ngoài ra còn bổ sung thêm một số việc để hoàn thiện milestone cũng như project** 
+	- **Bổ sung dữ liệu vào cơ sở dữ liệu** - 1 giờ - Khoa
+	- **Tài liệu kiểm thử** - 1 giờ - Khoa
+	- **Báo cáo (readme)** - 1 giờ - Khánh
+- **TỔNG SỐ GIỜ LÀM VIỆC: 11h**
+### Mô tả các chức năng milestone 3
+#### 1. **22120120 - Đặng Phúc Hưng**
+#### 2. **22120157 - Nguyễn Nam Khánh**
+- **Thêm comment vào bài hát**
+
+   - Khi click vào chi tiết 1 bài hát, kéo xuống phía dưới sẽ thấy những comment cho bài hát đó
+	  ![s09534101042025](https://a.okmd.dev/md/6778a2b7c90cf.png)
+ - Ở dưới các comment sẽ có ô input để viết comment
+	![s09563101042025](https://a.okmd.dev/md/6778a361e874c.png)
+	
+ - Khi gõ nội dung comment và ấn post thì sẽ hiển thị trực tiếp comment vừa gửi lên
+		![s09582001042025](https://a.okmd.dev/md/6778a3ce307f1.png)
+- **Một số chức năng thêm**
+
+  - Khi search bài hát và bấm vào button "+" thì sẽ có lựa chọn thêm vào các playlist. Khi click vào thì bài hát sẽ được thêm vào playlist tương ứng
+	  ![s10120712112024](https://a.okmd.dev/md/67590308e025f.png)
+	  ![s10125412112024](https://a.okmd.dev/md/675903379bc3d.png)
+#### 3. **22120163 - Phạm Đào Anh Khoa**
+- **Thống kê dựa theo lịch sử phát nhạc**
+	- Thống kê số bài hát đã nghe theo ngày
+		![s13165501042025](https://a.okmd.dev/md/6778d25a471c0.png)
+		
+	- Thống kê số bài hát đã nghe theo buổi: sáng, chiều, tối
+		![s13215701042025](https://a.okmd.dev/md/6778d3882e205.png)
+		
+	- Thống kê theo thể loại nhac
+		![s13213001042025](https://a.okmd.dev/md/6778d36c65d8a.png)
+- **Một số chức năng thêm**
+  - Khi click vào nút Play ở playlist thì sẽ thêm các bài hát trong playlist đó vào hàng chờ phát nhạc và tiến hành phát bài nhạc đầu tiên
+	  ![s10225812112024](https://a.okmd.dev/md/675905939ac5b.png)
+	  ![s10241112112024](https://a.okmd.dev/md/675905dd05fbe.png)
+	
+### Advanced Topics Milestone 3
+### Phương pháp đảm bảo chất lượng milestone 3
+Kiểm thử thủ công
+### Giao diện khi hoàn thành milestone 3
+![s13281701042025](https://a.okmd.dev/md/6778d5049f3a1.png)
+
+![s13291801042025](https://a.okmd.dev/md/6778d5411f777.png)
+
+![s13290301042025](https://a.okmd.dev/md/6778d5322a2ba.png)
+
+![s13302601042025](https://a.okmd.dev/md/6778d5846f985.png)
+
+![s13304401042025](https://a.okmd.dev/md/6778d59682f52.png)
+
+![s13340901042025](https://a.okmd.dev/md/6778d6645aadb.png)
+
+![s13353601042025](https://a.okmd.dev/md/6778d6bb29bb5.png)
+### Document milestone 3
+file index.html trong thư mục doxygen
 ## Link project và các demo
 
 - [Link demo milstone 1 youtube](https://www.youtube.com/watch?v=mV57ojbW5mU)
