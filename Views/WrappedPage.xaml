@@ -7,64 +7,91 @@
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
     xmlns:lvcore="using:LiveChartsCore"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid Margin="20">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="400" />
-                <RowDefinition Height="400" />
-                <RowDefinition Height="400" />
-                <RowDefinition Height="400" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+    <!-- Vibrant Gradient Background -->
+    <Page.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FFC3F8" Offset="0.0" />
+            <GradientStop Color="#B2F2BA" Offset="0.25" />
+            <GradientStop Color="#D7F2B3" Offset="0.5" />
+            <GradientStop Color="#7F9E32" Offset="0.75" />
+            <GradientStop Color="#6D6E6C" Offset="1.0" />
+        </LinearGradientBrush>
+    </Page.Background>
 
-            <!-- Line Chart -->
-            <lvc:CartesianChart
-                Title="{Binding LineChartTitle}"
-                Grid.Row="0"
-                Grid.ColumnSpan="2"
-                Margin="0,0,0,20"
-                LegendPosition="Bottom"
-                LegendTextPaint="{Binding LegendTextPaint}"
-                Series="{Binding LineSeries}"
-                XAxes="{Binding LineXAxes}"
-                YAxes="{Binding LineYAxes}" />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-            <!-- Bar Chart -->
-            <lvc:CartesianChart
-                Title="{Binding BarChartTitle}"
-                Grid.Row="1"
-                Grid.Column="0"
-                Margin="0,0,10,20"
-                LegendPosition="Bottom"
-                LegendTextPaint="{Binding LegendTextPaint}"
-                Series="{Binding BarSeries}"
-                XAxes="{Binding XAxes}"
-                YAxes="{Binding YAxes}" />
+        <!-- Page Title -->
+        <TextBlock 
+            Grid.Row="0"
+            Text="Your Wrapped"
+            FontSize="36"
+            FontWeight="Bold"
+            Margin="20,20,0,10"
+            Foreground="Black"/>
 
-            <!-- Time Distribution Pie Chart -->
-            <lvc:PieChart
-                Title="{Binding PieChartTitle}"
-                Grid.Row="1"
-                Grid.Column="1"
-                Margin="10,0,0,20"
-                LegendPosition="Bottom"
-                LegendTextPaint="{Binding LegendTextPaint}"
-                Series="{Binding PieSeries}" />
+        <!-- Scrollable Content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="400" />
+                    <RowDefinition Height="400" />
+                    <RowDefinition Height="400" />
+                    <RowDefinition Height="400" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <!-- Genre Distribution Pie Chart -->
-            <lvc:PieChart
-                Title="{Binding GenrePieChartTitle}"
-                Grid.Row="2"
-                Grid.ColumnSpan="2"
-                Margin="0,0,0,20"
-                LegendPosition="Bottom"
-                LegendTextPaint="{Binding LegendTextPaint}"
-                Series="{Binding GenrePieSeries}" />
-        </Grid>
-    </ScrollViewer>
+                <!-- Line Chart -->
+                <lvc:CartesianChart
+                    Title="{Binding LineChartTitle}"
+                    Grid.Row="0"
+                    Grid.ColumnSpan="2"
+                    Margin="0,0,0,20"
+                    LegendPosition="Bottom"
+                    LegendTextPaint="{Binding LegendTextPaint}"
+                    Series="{Binding LineSeries}"
+                    XAxes="{Binding LineXAxes}"
+                    YAxes="{Binding LineYAxes}" />
+
+                <!-- Bar Chart -->
+                <lvc:CartesianChart
+                    Title="{Binding BarChartTitle}"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Margin="0,0,10,20"
+                    LegendPosition="Bottom"
+                    LegendTextPaint="{Binding LegendTextPaint}"
+                    Series="{Binding BarSeries}"
+                    XAxes="{Binding XAxes}"
+                    YAxes="{Binding YAxes}" />
+
+                <!-- Time Distribution Pie Chart -->
+                <lvc:PieChart
+                    Title="{Binding PieChartTitle}"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="10,0,0,20"
+                    LegendPosition="Bottom"
+                    LegendTextPaint="{Binding LegendTextPaint}"
+                    Series="{Binding PieSeries}" />
+
+                <!-- Genre Distribution Pie Chart -->
+                <lvc:PieChart
+                    Title="{Binding GenrePieChartTitle}"
+                    Grid.Row="2"
+                    Grid.ColumnSpan="2"
+                    Margin="0,0,0,20"
+                    LegendPosition="Bottom"
+                    LegendTextPaint="{Binding LegendTextPaint}"
+                    Series="{Binding GenrePieSeries}" />
+            </Grid>
+        </ScrollViewer>
+    </Grid>
 </Page>

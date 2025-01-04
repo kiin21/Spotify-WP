@@ -108,7 +108,7 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     /// </summary>
     private PlaybackControlViewModel()
     {
-        
+
         _playbackService = PlaybackControlService.Instance;
         _adsService = AdsService.GetInstance(
                 App.Current.Services.GetRequiredService<IAdsDAO>()
@@ -642,9 +642,12 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         {
             foreach (var song in songs)
             {
-                if(_playbacklist.Contains(song))
+                foreach(var item in _playbacklist)
                 {
-                    _playbacklist.Remove(song);
+                    if (item.Id == song.Id)
+                    {
+                        return;
+                    }
                 }
                 _playbacklist.Add(song);
             }
