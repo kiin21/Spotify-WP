@@ -25,6 +25,28 @@ namespace Spotify
         public ShellWindow ShellWindow => _shellWindow;
         public LoginSignupWindow LoginSignupWindow => _loginSignupWindow;
         public static new App Current => Application.Current as App;
+
+        // Premium
+        private bool _isPremium;
+        public bool IsPremium
+        {
+            get => _isPremium;
+            set
+            {
+                if (_isPremium != value)
+                {
+                    _isPremium = value;
+                    OnPremiumStatusChanged();
+                }
+            }
+        }
+
+        public event Action<bool> PremiumStatusChanged;
+
+        private void OnPremiumStatusChanged()
+        {
+            PremiumStatusChanged?.Invoke(_isPremium);
+        }
         public App()
         {
             InitializeComponent();

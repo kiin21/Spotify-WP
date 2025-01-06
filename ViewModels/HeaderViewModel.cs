@@ -78,6 +78,23 @@ public partial class HeaderViewModel : INotifyPropertyChanged
     }
 
     /// <summary>
+    /// Indicates whether the user is a premium user.
+    /// </summary>
+    private bool _isPremium;
+    public bool IsPremium
+    {
+        get => _isPremium;
+        set
+        {
+            if (_isPremium != value)
+            {
+                _isPremium = value;
+                OnPropertyChanged(nameof(IsPremium));
+            }
+        }
+    }
+
+    /// <summary>
     /// Gets the command for executing a search.
     /// </summary>
     public ICommand SearchCommand { get; }
@@ -116,11 +133,29 @@ public partial class HeaderViewModel : INotifyPropertyChanged
         _artistService = artistService;
         _userService = userService;
         _playHistoryService = playHistoryService;
+
+        var app = App.Current as App;
+        IsPremium = app.IsPremium;
+        app.PremiumStatusChanged += OnPremiumStatusChanged; 
     }
 
     private bool CanShowWrapped()
     {
         return App.Current.CurrentUser != null;
+    }
+
+    public async Task InitializeAsync()
+    {
+        var currentUser = App.Current.CurrentUser;
+        if (currentUser != null)
+        {
+            IsPremium = await _userService.CheckPremiumStatusAsync(currentUser.Id);
+        }
+    }
+
+    private void OnPremiumStatusChanged(bool isPremium)
+    {
+        IsPremium = isPremium;
     }
 
     private async Task ExecuteShowWrappedAsync()

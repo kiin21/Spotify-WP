@@ -203,4 +203,10 @@ public class UserService
     {
         return await _userDAO.GetUserByUsernameAsync(username);
     }
+
+    public async Task<bool> CheckPremiumStatusAsync(string userId)
+    {
+        var user = await _userDAO.GetUserByIdAsync(userId);
+        return user?.IsPremium ?? false;
+    }
 }

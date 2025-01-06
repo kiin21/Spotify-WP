@@ -37,13 +37,25 @@ public class PaymentViewModel : INotifyPropertyChanged
     }
 
     private bool _isPaypalSelected;
-    /// <summary>
-    /// Gets or sets a value indicating whether PayPal is selected as the payment method.
-    /// </summary>
+
     public bool IsPaypalSelected
     {
         get => _isPaypalSelected;
         set => SetProperty(ref _isPaypalSelected, value);
+    }
+
+    private bool _isPremium;
+    /// <summary>
+    /// Gets or sets a value indicating whether the user is a premium user.
+    /// </summary>
+    public bool IsPremium
+    {
+        get => _isPremium;
+        set
+        {
+            _isPremium = value;
+            OnPropertyChanged(nameof(IsPremium));
+        }
     }
 
     /// <summary>
@@ -209,12 +221,16 @@ public class PaymentViewModel : INotifyPropertyChanged
                     // Update the user's profile in the database
                     await _userDAO.UpdateUserAsync(currentUser.Id, currentUser);
 
+                    // Update Premium
+                    var app = App.Current as App;
+                    app.IsPremium = true;
+
                     StatusMessage = "Payment successful! You are now a premium user.";
 
                     var shellWindow = App.Current.ShellWindow;
 
-                    // Điều hướng đến ArtistPage và truyền artist
-                    shellWindow.GetNavigationService().Navigate(typeof(MainPanelPage));
+                    // Điều hướng đến ArtistPage và truyền success message
+                    shellWindow.GetNavigationService().Navigate(typeof(SuccessPage));
                 }
                 else
                 {
