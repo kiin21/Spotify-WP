@@ -26,4 +26,41 @@ public sealed partial class PlaybackControlPage : Page
         ViewModel = PlaybackControlViewModel.Instance;
         DataContext = ViewModel;
     }
+
+    private void Playback_KeyDown(object sender, KeyRoutedEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case Windows.System.VirtualKey.Space:
+                {
+                    ViewModel.PlayPauseCommand.Execute(null);
+                    break;
+                }
+            case Windows.System.VirtualKey.Right:
+                {
+                    ViewModel.NextCommand.Execute(null);
+                    break;
+                }
+            case Windows.System.VirtualKey.Left:
+                {
+                    ViewModel.PreviousCommand.Execute(null);
+                    break;
+                }
+            case Windows.System.VirtualKey.Up:
+                {
+                    ViewModel.VolumeUpCommand.Execute(null);
+                    break;
+                }
+            case Windows.System.VirtualKey.Down:
+                {
+                    ViewModel.VolumeDownCommand.Execute(null);
+                    break;
+                }
+            default:
+                {
+                    Debug.WriteLine($"Unhandled key: {e.Key}");
+                    break;
+                }
+        }
+    }
 }

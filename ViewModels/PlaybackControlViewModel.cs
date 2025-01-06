@@ -82,6 +82,12 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
     public IRelayCommand PreviousCommand { get; }
 
     /// <summary>
+    ///  Volume commands
+    /// </summary>
+    public IRelayCommand VolumeUpCommand { get; }
+    public IRelayCommand VolumeDownCommand { get; }
+
+    /// <summary>
     /// Gets the command to toggle shuffle mode.
     /// </summary>
     public IRelayCommand ShuffleCommand { get; }
@@ -119,6 +125,8 @@ public partial class PlaybackControlViewModel : ObservableObject, IDisposable
         PlayPauseCommand = new RelayCommand(TogglePlayPause);
         NextCommand = new RelayCommand(Next);
         PreviousCommand = new RelayCommand(Previous);
+        VolumeUpCommand = new RelayCommand(() => Volume = Math.Min(100, Volume + 10));
+        VolumeDownCommand = new RelayCommand(() => Volume = Math.Max(0, Volume - 10));
         ShuffleCommand = new RelayCommand(ToggleShuffle);
         RepeatCommand = new RelayCommand(ToggleRepeat);
         ToggleQueueCommand = new RelayCommand(ToggleQueue);
