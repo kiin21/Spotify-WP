@@ -439,7 +439,7 @@ Kiểm thử thủ công
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/username/multithreaded-downloader.git
+   git clone https://github.com/kiin21/Spotify-WP.git
 ## Link project và các demo
 
 - [Link demo milstone 1 youtube](https://www.youtube.com/watch?v=mV57ojbW5mU)
