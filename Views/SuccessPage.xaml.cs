@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml.Controls;
+﻿using Catel.MVVM;
+using Microsoft.UI.Xaml.Controls;
 
 namespace Spotify.Views;
 
@@ -13,5 +14,11 @@ public sealed partial class SuccessPage : Page
     public SuccessPage()
     {
         this.InitializeComponent();
+    }
+
+    private void BackToHome_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        var shellWindow = App.Current.ShellWindow;
+        shellWindow.GetNavigationService().Navigate(typeof(MainPanelPage));
     }
 }

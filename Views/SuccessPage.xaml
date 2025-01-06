@@ -3,10 +3,146 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    >
+    Background="#121212">
 
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
-		<TextBlock FontSize="50" Foreground="Yellow"> Your Account Is Premium !!!</TextBlock>
-    </StackPanel>
+    <Grid>
+        <StackPanel HorizontalAlignment="Center" 
+                    VerticalAlignment="Center" 
+                    Spacing="24">
+
+            <!-- Success Icon -->
+            <Ellipse Width="120" Height="120" 
+                     Fill="#1DB954">
+                <Ellipse.RenderTransform>
+                    <ScaleTransform x:Name="IconScale" />
+                </Ellipse.RenderTransform>
+            </Ellipse>
+
+            <Path Data="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"
+                  Fill="White"
+                  Width="60"
+                  Height="60"
+                  Stretch="Uniform"
+                  HorizontalAlignment="Center"
+                  Margin="0,-90,0,30">
+                <Path.RenderTransform>
+                    <ScaleTransform x:Name="CheckScale" />
+                </Path.RenderTransform>
+            </Path>
+
+            <!-- Text Content -->
+            <StackPanel Spacing="16">
+                <TextBlock Text="Premium Activated!"
+                         FontSize="48"
+                         FontWeight="SemiBold"
+                         Foreground="#1DB954"
+                         HorizontalAlignment="Center">
+                    <TextBlock.RenderTransform>
+                        <TranslateTransform x:Name="TitleTransform" />
+                    </TextBlock.RenderTransform>
+                </TextBlock>
+
+                <TextBlock Text="Welcome to your enhanced music experience"
+                         FontSize="20"
+                         Foreground="#B3B3B3"
+                         HorizontalAlignment="Center"
+                         TextWrapping="Wrap"
+                         TextAlignment="Center"
+                         MaxWidth="400">
+                    <TextBlock.RenderTransform>
+                        <TranslateTransform x:Name="SubtitleTransform" />
+                    </TextBlock.RenderTransform>
+                </TextBlock>
+            </StackPanel>
+
+            <!-- Continue Button -->
+            <Button Content="Start Listening"
+                    Background="#1DB954"
+                    Foreground="White"
+                    Padding="32,12"
+                    CornerRadius="20"
+                    Click="BackToHome_Click"
+                    FontSize="16"
+                    FontWeight="SemiBold"
+                    Margin="0,16,0,0">
+                <Button.RenderTransform>
+                    <TranslateTransform x:Name="ButtonTransform" />
+                </Button.RenderTransform>
+            </Button>
+        </StackPanel>
+    </Grid>
+
+    <!-- Animations -->
+    <Page.Resources>
+        <Storyboard x:Name="LoadAnimation">
+            <!-- Icon Scale Animation -->
+            <DoubleAnimation
+                Storyboard.TargetName="IconScale"
+                Storyboard.TargetProperty="ScaleX"
+                From="0" To="1" Duration="0:0:0.5">
+                <DoubleAnimation.EasingFunction>
+                    <BackEase EasingMode="EaseOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation
+                Storyboard.TargetName="IconScale"
+                Storyboard.TargetProperty="ScaleY"
+                From="0" To="1" Duration="0:0:0.5">
+                <DoubleAnimation.EasingFunction>
+                    <BackEase EasingMode="EaseOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <!-- Check Mark Animation -->
+            <DoubleAnimation
+                Storyboard.TargetName="CheckScale"
+                Storyboard.TargetProperty="ScaleX"
+                From="0" To="1" Duration="0:0:0.5"
+                BeginTime="0:0:0.3">
+                <DoubleAnimation.EasingFunction>
+                    <BackEase EasingMode="EaseOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation
+                Storyboard.TargetName="CheckScale"
+                Storyboard.TargetProperty="ScaleY"
+                From="0" To="1" Duration="0:0:0.5"
+                BeginTime="0:0:0.3">
+                <DoubleAnimation.EasingFunction>
+                    <BackEase EasingMode="EaseOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <!-- Text Slide Animations -->
+            <DoubleAnimation
+                Storyboard.TargetName="TitleTransform"
+                Storyboard.TargetProperty="Y"
+                From="50" To="0" Duration="0:0:0.5"
+                BeginTime="0:0:0.5">
+                <DoubleAnimation.EasingFunction>
+                    <ExponentialEase EasingMode="EaseOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation
+                Storyboard.TargetName="SubtitleTransform"
+                Storyboard.TargetProperty="Y"
+                From="50" To="0" Duration="0:0:0.5"
+                BeginTime="0:0:0.6">
+                <DoubleAnimation.EasingFunction>
+                    <ExponentialEase EasingMode="EaseOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <!-- Button Slide Animation -->
+            <DoubleAnimation
+                Storyboard.TargetName="ButtonTransform"
+                Storyboard.TargetProperty="Y"
+                From="50" To="0" Duration="0:0:0.5"
+                BeginTime="0:0:0.7">
+                <DoubleAnimation.EasingFunction>
+                    <ExponentialEase EasingMode="EaseOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+    </Page.Resources>
 </Page>

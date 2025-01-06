@@ -49,7 +49,7 @@
         <Grid
             Grid.Column="1"
             Height="40"
-            Margin="10"
+            Margin="200,0,0,0"
             VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -57,7 +57,6 @@
                 <ColumnDefinition Width="*" />
                 <!--  Search TextBox  -->
             </Grid.ColumnDefinitions>
-
 
             <!--  Search TextBox  -->
             <TextBox
@@ -144,18 +143,15 @@
                 CornerRadius="5"
                 Foreground="White">
                 <StackPanel Orientation="Horizontal">
-                    <!-- Biểu tượng Premium -->
-                    <FontIcon
-                        Glyph="&#xE735;"
-                        Visibility="{Binding IsPremium, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    <!--  Biểu tượng Premium  -->
+                    <FontIcon Glyph="&#xE735;" Visibility="{Binding IsPremium, Converter={StaticResource BooleanToVisibilityConverter}}" />
                     <TextBlock
+                        Margin="10,0,0,0"
                         Text="Premium"
                         Visibility="{Binding IsPremium, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-                    <!-- Explore Premium -->
-                    <TextBlock
-                        Text="Explore Premium"
-                        Visibility="{Binding IsPremium, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Invert}" />
+                    <!--  Explore Premium  -->
+                    <TextBlock Text="Explore Premium" Visibility="{Binding IsPremium, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Invert}" />
                 </StackPanel>
             </Button>
 
@@ -177,11 +173,6 @@
                                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE77B;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Settings">
-                            <MenuFlyoutItem.Icon>
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE713;" />
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
                         <MenuFlyoutItem Click="{x:Bind ShowHistoryCommand}" Text="Recently played">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81C;" />
@@ -198,7 +189,7 @@
                     </MenuFlyout>
                 </Button.Flyout>
 
-                <Image Height="Auto" Source="{x:Bind ViewModel.UserAvatar}">
+                <Image Height="120" Source="{x:Bind ViewModel.UserAvatar}">
                     <ToolTipService.ToolTip>
                         <ToolTip Content="Settings" />
                     </ToolTipService.ToolTip>
