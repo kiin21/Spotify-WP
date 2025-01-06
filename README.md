@@ -428,8 +428,18 @@ Kiểm thử thủ công
 
 ![s13353601042025](https://a.okmd.dev/md/6778d6bb29bb5.png)
 ### Document milestone 3
-file index.html trong thư mục doxygen
-mô tả csdl: [https://drive.google.com/file/d/1t48u7IyroU-gqegTtjc5Kz67LG8n8B9M/view](link)
+
+- **Doxygen Documentation:**  
+  Open the `index.html` file in the `doxygen` directory to view the generated documentation.
+
+## Database Description
+
+- **Database Schema Documentation:**  
+  [Click here to view the database schema](https://drive.google.com/file/d/1t48u7IyroU-gqegTtjc5Kz67LG8n8B9M/view)
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/username/multithreaded-downloader.git
 ## Link project và các demo
 
 - [Link demo milstone 1 youtube](https://www.youtube.com/watch?v=mV57ojbW5mU)
