@@ -62,7 +62,7 @@ public class WindowManager
         if (app._shellWindow != null)
         {
             var windowToClose = app._shellWindow;
-            app._shellWindow = null; 
+            app._shellWindow = null;
             windowToClose.Close();
         }
     }

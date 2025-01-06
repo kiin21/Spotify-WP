@@ -9,6 +9,8 @@ using Microsoft.UI.Dispatching;
 using Spotify.Contracts.DAO;
 using System.Collections.ObjectModel;
 using Spotify.Models.DTOs;
+using Spotify.ViewModels;
+using System.Diagnostics;
 
 namespace Spotify;
 
@@ -150,6 +152,11 @@ public sealed partial class ShellWindow : WindowEx
     // Method to expose navigation service to other parts of the app
     public INavigationService GetNavigationService() => _navigationService;
 
+    private void ShellWindow_OnClose(object sender, Microsoft.UI.Xaml.WindowEventArgs args)
+    {
+        PlaybackControlViewModel instance = PlaybackControlViewModel.Instance;
+        instance.PlayPauseCommand.Execute(null);
+    }
 }
 
 /// <summary>

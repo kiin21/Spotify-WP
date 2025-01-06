@@ -8,6 +8,7 @@
     xmlns:windowex="using:WinUIEx"
     MinWidth="800"
     MinHeight="600"
+    Closed="ShellWindow_OnClose"
     mc:Ignorable="d">
     <Grid>
 
