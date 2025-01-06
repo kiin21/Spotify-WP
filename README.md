@@ -372,16 +372,14 @@ Kiểm thử thủ công
 ### Các tính năng chính đã hoàn thành milestone 3
 - **Thống kê dựa theo lịch sử phát nhạc** - 2 giờ - Khoa
 - **Cho phép comment bài hát** - 2 giờ - Khánh
-- **Thanh toán tài khoản premium qua VNPAY** - 3 giờ - Hưng
-- **Lưu trạng thái phát trước khi tắt** - 1 giờ - Hưng
-- **Ngoài ra còn bổ sung thêm một số việc để hoàn thiện milestone cũng như project** 
+- **Ngoài ra còn bổ sung thêm một số việc để hoàn thiện milestone cũng như project**
+	- **Sửa tính năng thanh toán** - 1 giờ - Khánh 
 	- **Bổ sung dữ liệu vào cơ sở dữ liệu** - 1 giờ - Khoa
 	- **Tài liệu kiểm thử** - 1 giờ - Khoa
 	- **Báo cáo (readme)** - 1 giờ - Khánh
-- **TỔNG SỐ GIỜ LÀM VIỆC: 11h**
+- **TỔNG SỐ GIỜ LÀM VIỆC: 8h**
 ### Mô tả các chức năng milestone 3
-#### 1. **22120120 - Đặng Phúc Hưng**
-#### 2. **22120157 - Nguyễn Nam Khánh**
+#### 1. **22120157 - Nguyễn Nam Khánh**
 - **Thêm comment vào bài hát**
 
    - Khi click vào chi tiết 1 bài hát, kéo xuống phía dưới sẽ thấy những comment cho bài hát đó
@@ -396,7 +394,7 @@ Kiểm thử thủ công
   - Khi search bài hát và bấm vào button "+" thì sẽ có lựa chọn thêm vào các playlist. Khi click vào thì bài hát sẽ được thêm vào playlist tương ứng
 	  ![s10120712112024](https://a.okmd.dev/md/67590308e025f.png)
 	  ![s10125412112024](https://a.okmd.dev/md/675903379bc3d.png)
-#### 3. **22120163 - Phạm Đào Anh Khoa**
+#### 2. **22120163 - Phạm Đào Anh Khoa**
 - **Thống kê dựa theo lịch sử phát nhạc**
 	- Thống kê số bài hát đã nghe theo ngày
  		![image](https://github.com/user-attachments/assets/d8cd5680-618c-4c86-8e1d-d32c53582e6a)
