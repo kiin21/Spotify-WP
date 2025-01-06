@@ -122,6 +122,8 @@ public sealed partial class HeaderPage : Page
     /// </summary>
     private async void HeaderPage_Loaded(object sender, RoutedEventArgs e)
     {
+        await ViewModel.InitializeAsync();
+
         // Kiểm tra và cập nhật thông báo
         await ViewModel.CheckForSongUpdatesAsync();
     }
@@ -163,7 +165,14 @@ public sealed partial class HeaderPage : Page
     {
         var shellWindow = App.Current.ShellWindow;
 
-        shellWindow.GetNavigationService().Navigate(typeof(PremiumPage));
+        if (App.Current.CurrentUser.IsPremium)
+        {
+            shellWindow.GetNavigationService().Navigate(typeof(SuccessPage));
+        }
+        else
+        {
+            shellWindow.GetNavigationService().Navigate(typeof(PremiumPage));
+        }
     }
 
     /// <summary>

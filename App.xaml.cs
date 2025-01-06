@@ -49,12 +49,45 @@ public partial class App : Application
     /// <summary>
     /// Initializes a new instance of the <see cref="App"/> class.
     /// </summary>
+
+    public  UserDTO CurrentUser { get; set; } = new UserDTO();
+    internal ShellWindow _shellWindow;
+    internal LoginSignupWindow _loginSignupWindow;
+    private readonly IServiceProvider _services;
+
+    public IServiceProvider Services => _services;
+    public ShellWindow ShellWindow => _shellWindow;
+    public LoginSignupWindow LoginSignupWindow => _loginSignupWindow;
+    public static new App Current => Application.Current as App;
+
+    // Premium
+    private bool _isPremium;
+    public bool IsPremium
+    {
+        get => _isPremium;
+        set
+        {
+            if (_isPremium != value)
+            {
+                _isPremium = value;
+                OnPremiumStatusChanged();
+            }
+        }
+    }
+
+    public event Action<bool> PremiumStatusChanged;
+
+    private void OnPremiumStatusChanged()
+    {
+        PremiumStatusChanged?.Invoke(_isPremium);
+    }
     public App()
     {
         InitializeComponent();
         LoadEnvironmentVariables();
         _services = ConfigureServices();
     }
+
 
     /// <summary>
     /// Loads environment variables from the .env file.
