@@ -6,80 +6,91 @@
     Background="#121212">
 
     <Grid>
-        <StackPanel HorizontalAlignment="Center" 
-                    VerticalAlignment="Center" 
-                    Spacing="24">
+        <ScrollViewer>
+            <StackPanel
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Spacing="24">
 
-            <!-- Success Icon -->
-            <Ellipse Width="120" Height="120" 
-                     Fill="#1DB954">
-                <Ellipse.RenderTransform>
-                    <ScaleTransform x:Name="IconScale" />
-                </Ellipse.RenderTransform>
-            </Ellipse>
+                <!--  Success Icon  -->
+                <Ellipse
+                    Width="120"
+                    Height="120"
+                    Fill="#1DB954">
+                    <Ellipse.RenderTransform>
+                        <ScaleTransform x:Name="IconScale" />
+                    </Ellipse.RenderTransform>
+                </Ellipse>
 
-            <Path Data="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"
-                  Fill="White"
-                  Width="60"
-                  Height="60"
-                  Stretch="Uniform"
-                  HorizontalAlignment="Center"
-                  Margin="0,-90,0,30">
-                <Path.RenderTransform>
-                    <ScaleTransform x:Name="CheckScale" />
-                </Path.RenderTransform>
-            </Path>
+                <Path
+                    Width="60"
+                    Height="60"
+                    Margin="0,-90,0,60"
+                    HorizontalAlignment="Center"
+                    Data="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"
+                    Fill="White"
+                    Stretch="Uniform">
+                    <Path.RenderTransform>
+                        <ScaleTransform x:Name="CheckScale" />
+                    </Path.RenderTransform>
+                </Path>
 
-            <!-- Text Content -->
-            <StackPanel Spacing="16">
-                <TextBlock Text="Premium Activated!"
-                         FontSize="48"
-                         FontWeight="SemiBold"
-                         Foreground="#1DB954"
-                         HorizontalAlignment="Center">
-                    <TextBlock.RenderTransform>
-                        <TranslateTransform x:Name="TitleTransform" />
-                    </TextBlock.RenderTransform>
-                </TextBlock>
+                <!--  Text Content  -->
+                <StackPanel Spacing="16">
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        FontSize="48"
+                        FontWeight="SemiBold"
+                        Foreground="#1DB954"
+                        Text="Premium Activated!">
+                        <TextBlock.RenderTransform>
+                            <TranslateTransform x:Name="TitleTransform" />
+                        </TextBlock.RenderTransform>
+                    </TextBlock>
 
-                <TextBlock Text="Welcome to your enhanced music experience"
-                         FontSize="20"
-                         Foreground="#B3B3B3"
-                         HorizontalAlignment="Center"
-                         TextWrapping="Wrap"
-                         TextAlignment="Center"
-                         MaxWidth="400">
-                    <TextBlock.RenderTransform>
-                        <TranslateTransform x:Name="SubtitleTransform" />
-                    </TextBlock.RenderTransform>
-                </TextBlock>
-            </StackPanel>
+                    <TextBlock
+                        MaxWidth="400"
+                        HorizontalAlignment="Center"
+                        FontSize="20"
+                        Foreground="#B3B3B3"
+                        Text="Welcome to your enhanced music experience"
+                        TextAlignment="Center"
+                        TextWrapping="Wrap">
+                        <TextBlock.RenderTransform>
+                            <TranslateTransform x:Name="SubtitleTransform" />
+                        </TextBlock.RenderTransform>
+                    </TextBlock>
+                </StackPanel>
 
-            <!-- Continue Button -->
-            <Button Content="Start Listening"
-                    Background="#1DB954"
-                    Foreground="White"
+                <!--  Continue Button  -->
+                <Button
+                    Margin="0,16,0,0"
                     Padding="32,12"
-                    CornerRadius="20"
+                    Background="#1DB954"
                     Click="BackToHome_Click"
+                    Content="Start Listening"
+                    CornerRadius="20"
                     FontSize="16"
                     FontWeight="SemiBold"
-                    Margin="0,16,0,0">
-                <Button.RenderTransform>
-                    <TranslateTransform x:Name="ButtonTransform" />
-                </Button.RenderTransform>
-            </Button>
-        </StackPanel>
+                    Foreground="White">
+                    <Button.RenderTransform>
+                        <TranslateTransform x:Name="ButtonTransform" />
+                    </Button.RenderTransform>
+                </Button>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 
-    <!-- Animations -->
+    <!--  Animations  -->
     <Page.Resources>
         <Storyboard x:Name="LoadAnimation">
-            <!-- Icon Scale Animation -->
+            <!--  Icon Scale Animation  -->
             <DoubleAnimation
                 Storyboard.TargetName="IconScale"
                 Storyboard.TargetProperty="ScaleX"
-                From="0" To="1" Duration="0:0:0.5">
+                From="0"
+                To="1"
+                Duration="0:0:0.5">
                 <DoubleAnimation.EasingFunction>
                     <BackEase EasingMode="EaseOut" />
                 </DoubleAnimation.EasingFunction>
@@ -87,58 +98,70 @@
             <DoubleAnimation
                 Storyboard.TargetName="IconScale"
                 Storyboard.TargetProperty="ScaleY"
-                From="0" To="1" Duration="0:0:0.5">
+                From="0"
+                To="1"
+                Duration="0:0:0.5">
                 <DoubleAnimation.EasingFunction>
                     <BackEase EasingMode="EaseOut" />
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
 
-            <!-- Check Mark Animation -->
+            <!--  Check Mark Animation  -->
             <DoubleAnimation
+                BeginTime="0:0:0.3"
                 Storyboard.TargetName="CheckScale"
                 Storyboard.TargetProperty="ScaleX"
-                From="0" To="1" Duration="0:0:0.5"
-                BeginTime="0:0:0.3">
+                From="0"
+                To="1"
+                Duration="0:0:0.5">
                 <DoubleAnimation.EasingFunction>
                     <BackEase EasingMode="EaseOut" />
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
             <DoubleAnimation
+                BeginTime="0:0:0.3"
                 Storyboard.TargetName="CheckScale"
                 Storyboard.TargetProperty="ScaleY"
-                From="0" To="1" Duration="0:0:0.5"
-                BeginTime="0:0:0.3">
+                From="0"
+                To="1"
+                Duration="0:0:0.5">
                 <DoubleAnimation.EasingFunction>
                     <BackEase EasingMode="EaseOut" />
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
 
-            <!-- Text Slide Animations -->
+            <!--  Text Slide Animations  -->
             <DoubleAnimation
+                BeginTime="0:0:0.5"
                 Storyboard.TargetName="TitleTransform"
                 Storyboard.TargetProperty="Y"
-                From="50" To="0" Duration="0:0:0.5"
-                BeginTime="0:0:0.5">
+                From="50"
+                To="0"
+                Duration="0:0:0.5">
                 <DoubleAnimation.EasingFunction>
                     <ExponentialEase EasingMode="EaseOut" />
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
             <DoubleAnimation
+                BeginTime="0:0:0.6"
                 Storyboard.TargetName="SubtitleTransform"
                 Storyboard.TargetProperty="Y"
-                From="50" To="0" Duration="0:0:0.5"
-                BeginTime="0:0:0.6">
+                From="50"
+                To="0"
+                Duration="0:0:0.5">
                 <DoubleAnimation.EasingFunction>
                     <ExponentialEase EasingMode="EaseOut" />
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
 
-            <!-- Button Slide Animation -->
+            <!--  Button Slide Animation  -->
             <DoubleAnimation
+                BeginTime="0:0:0.7"
                 Storyboard.TargetName="ButtonTransform"
                 Storyboard.TargetProperty="Y"
-                From="50" To="0" Duration="0:0:0.5"
-                BeginTime="0:0:0.7">
+                From="50"
+                To="0"
+                Duration="0:0:0.5">
                 <DoubleAnimation.EasingFunction>
                     <ExponentialEase EasingMode="EaseOut" />
                 </DoubleAnimation.EasingFunction>

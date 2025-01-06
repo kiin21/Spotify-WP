@@ -20,10 +20,6 @@ using Microsoft.UI.Xaml.Controls;
 /// </summary>
 public class PaymentViewModel : INotifyPropertyChanged
 {
-    private readonly IPaymentStrategy _stripeStrategy;
-    private readonly IPaymentStrategy _paypalStrategy;
-    private IPaymentStrategy _currentStrategy;
-
     public string PremiumType;
 
     private bool _isStripeSelected;
@@ -146,10 +142,6 @@ public class PaymentViewModel : INotifyPropertyChanged
 
     public PaymentViewModel(string premiumType, string price)
     {
-        //    _stripeStrategy = new StripeStrategy();
-        //    _paypalStrategy = new PayPalStrategy();
-        //    _currentStrategy = _stripeStrategy;
-
         _userDAO = (App.Current as App).Services.GetRequiredService<IUserDAO>();
         PremiumType = premiumType;
         Amount = price;
@@ -160,14 +152,12 @@ public class PaymentViewModel : INotifyPropertyChanged
 
         ChooseStripeCommand = new RelayCommand(() =>
         {
-            _currentStrategy = _stripeStrategy;
             IsStripeSelected = true;
             IsPaypalSelected = false;
         });
 
         ChoosePaypalCommand = new RelayCommand(() =>
         {
-            _currentStrategy = _paypalStrategy;
             IsStripeSelected = false;
             IsPaypalSelected = true;
         });
@@ -186,7 +176,7 @@ public class PaymentViewModel : INotifyPropertyChanged
             // Validate card details if Stripe is selected
             if (IsStripeSelected && (string.IsNullOrWhiteSpace(CardNumber) || string.IsNullOrWhiteSpace(CVV) || string.IsNullOrWhiteSpace(ExpirationDate)))
             {
-                StatusMessage = "Please provide complete card details.";
+                StatusMessage = "Please provide completed card details.";
                 return;
             }
 
@@ -245,106 +235,6 @@ public class PaymentViewModel : INotifyPropertyChanged
         catch (Exception ex)
         {
             StatusMessage = $"Payment failed: {ex.Message}";
-        }
-    }
-
-
-    //private async Task ProcessPayment()
-    //{
-    //    try
-    //    {
-
-
-    //        if (IsStripeSelected && (string.IsNullOrWhiteSpace(CardNumber) || string.IsNullOrWhiteSpace(CVV) || string.IsNullOrWhiteSpace(ExpirationDate)))
-    //        {
-    //            StatusMessage = "Please provide complete card details.";
-    //            return;
-    //        }
-
-
-
-
-    // Call the ProcessPayment method of the current strategy
-    //var paymentRequestDTO = new PaymentRequestDTO
-    //{
-    //    Amount = Amount,
-    //    CardNumber = CardNumber,
-    //    CVV = CVV,
-    //    ExpirationDate = ExpirationDate,
-    //    Message = Message,
-    //    ReturnUrl = "your-return-url",
-    //    TransactionId = Guid.NewGuid().ToString()
-    //};
-
-    //string clientSecret = await _currentStrategy.ProcessPayment(paymentRequestDTO);
-
-    //// Extract the Payment Intent ID from the client secret (if available)
-    //string paymentIntentId = ExtractPaymentIntentId(clientSecret);
-
-    //if (!string.IsNullOrEmpty(paymentIntentId))
-    //{
-    //    using var cts = new CancellationTokenSource();
-    //    await PollPaymentStatus(paymentIntentId, cts.Token);
-    //}
-    //else
-    //{
-    //    StatusMessage = "Could not extract Payment Intent ID.";
-    //}
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        StatusMessage = $"Payment failed: {ex.Message}";
-    //    }
-    //}
-
-    private async Task PollPaymentStatus(string paymentIntentId, CancellationToken token)
-    {
-        while (!token.IsCancellationRequested)
-        {
-            try
-            {
-                // Call the GetPaymentStatus method to retrieve the payment status
-                PaymentResponseDTO response = await _currentStrategy.GetPaymentStatus(paymentIntentId);
-
-                // Update the PaymentStatus property with the current status
-                PaymentStatus = $"Status: {response.PaymentStatus}";
-                OnPropertyChanged(nameof(PaymentStatus));
-
-                // Stop polling if the payment has succeeded or failed
-                if (response.PaymentStatus == "succeeded" || response.PaymentStatus == "failed")
-                {
-                    StatusMessage = response.PaymentStatus == "succeeded"
-                        ? "Payment successful!"
-                        : "Payment failed.";
-
-                    if (response.PaymentStatus == "succeeded")
-                    {
-                        // change the isPremium field in the user's profile to true
-                        StatusMessage = "Payment successful! You are now a premium user.";
-
-                        var currentUser = (App.Current as App).CurrentUser;
-
-                        if (currentUser == null)
-                            throw new InvalidOperationException("User not found");
-
-                        currentUser.IsPremium = true;
-
-                        // Update the user's profile in the database
-                        await _userDAO.UpdateUserAsync(currentUser.Id, currentUser);
-                    }
-
-                    break; // Exit the polling loop
-                }
-            }
-            catch (Exception ex)
-            {
-                PaymentStatus = "Error while polling: " + ex.Message;
-                OnPropertyChanged(nameof(PaymentStatus));
-                break;
-            }
-
-            // Wait for 5 seconds before the next poll
-            await Task.Delay(5000, token);
         }
     }
 

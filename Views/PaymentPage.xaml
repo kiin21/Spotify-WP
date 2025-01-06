@@ -3,7 +3,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="using:Spotify.Converters"
+    xmlns:local="using:Spotify.Converters"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
@@ -11,41 +12,66 @@
         <local:BoolToColorConverter x:Key="BoolToColorConverter" />
     </Page.Resources>
 
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
-        <TextBlock Text="Choose Payment Method" FontWeight="Bold" />
-<!--
-        <StackPanel Orientation="Horizontal" Spacing="10">
-            <Button Content="Stripe" Command="{Binding ChooseStripeCommand}" 
-                Background="{Binding IsStripeSelected, Converter={StaticResource BoolToColorConverter}}"/>
-            <Button Content="PayPal" Command="{Binding ChoosePaypalCommand}" 
-                Background="{Binding IsPaypalSelected, Converter={StaticResource BoolToColorConverter}}"/>
+    <ScrollViewer>
+        <StackPanel
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Spacing="10">
+            <TextBlock FontWeight="Bold" Text="Choose Payment Method" />
+
+            <TextBlock FontWeight="Bold" Text="Enter Card Details" />
+
+            <!--  Cardholder Name Field  -->
+            <TextBox
+                Width="300"
+                Header="Cardholder Name"
+                Text="{Binding CardholderName, Mode=TwoWay}" />
+
+            <!--  Card Number Field  -->
+            <TextBox
+                Width="300"
+                Header="Card Number"
+                Text="{Binding CardNumber, Mode=TwoWay}" />
+
+            <!--  Expiry Date Field (MM/YYYY)  -->
+
+            <TextBox
+                Width="100"
+                Margin="0,0,200,0"
+                Header="MM/YY"
+                Text="{Binding ExpirationDate, Mode=TwoWay}" />
+
+
+            <!--  CVV Field  -->
+            <TextBox
+                Width="300"
+                Header="CVV"
+                Text="{Binding CVV, Mode=TwoWay}" />
+
+            <!--  Amount Field (Read-Only)  -->
+            <TextBox
+                Width="300"
+                Header="Amount"
+                IsReadOnly="True"
+                Text="{Binding Amount, Mode=OneWay}" />
+
+            <!--  Message Field  -->
+            <TextBox
+                Width="300"
+                Height="60"
+                Header="Message"
+                Text="{Binding Message, Mode=TwoWay}" />
+
+            <Button
+                Width="100"
+                Command="{Binding PayCommand}"
+                Content="Pay" />
+
+            <TextBlock
+                FontWeight="Bold"
+                Foreground="Green"
+                Text="{Binding StatusMessage}" />
+            <TextBlock Foreground="Blue" Text="{Binding PaymentStatus}" />
         </StackPanel>
--->
-        <TextBlock Text="Enter Card Details" FontWeight="Bold" />
-
-        <!-- Cardholder Name Field -->
-        <TextBox Header="Cardholder Name" Text="{Binding CardholderName, Mode=TwoWay}" Width="300" />
-
-        <!-- Card Number Field -->
-        <TextBox Header="Card Number" Text="{Binding CardNumber, Mode=TwoWay}" Width="300" />
-
-        <!-- Expiry Date Field (MM/YYYY) -->
-
-        <TextBox Header="MM/YY" Text="{Binding ExpirationDate, Mode=TwoWay}" Width="100" Margin="0 0 200 0" />
-     
-
-        <!-- CVV Field -->
-        <TextBox Header="CVV" Text="{Binding CVV, Mode=TwoWay}" Width="300" />
-
-        <!-- Amount Field (Read-Only) -->
-        <TextBox Header="Amount" Text="{Binding Amount, Mode=OneWay}" Width="300" IsReadOnly="True" />
-        
-        <!-- Message Field-->
-        <TextBox Header="Message" Text="{Binding Message, Mode=TwoWay}" Width="300" Height="60"/>
-
-        <Button Content="Pay" Command="{Binding PayCommand}" Width="100" />
-
-        <TextBlock Text="{Binding StatusMessage}" Foreground="Green" FontWeight="Bold" />
-        <TextBlock Text="{Binding PaymentStatus}" Foreground="Blue" />
-    </StackPanel>
+    </ScrollViewer>
 </Page>
