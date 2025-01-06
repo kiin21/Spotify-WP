@@ -429,6 +429,7 @@ Kiểm thử thủ công
 ![s13353601042025](https://a.okmd.dev/md/6778d6bb29bb5.png)
 ### Document milestone 3
 file index.html trong thư mục doxygen
+mô tả csdl: ![https://drive.google.com/file/d/1t48u7IyroU-gqegTtjc5Kz67LG8n8B9M/view](link)
 ## Link project và các demo
 
 - [Link demo milstone 1 youtube](https://www.youtube.com/watch?v=mV57ojbW5mU)
