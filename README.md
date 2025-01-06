@@ -399,13 +399,14 @@ Kiểm thử thủ công
 #### 3. **22120163 - Phạm Đào Anh Khoa**
 - **Thống kê dựa theo lịch sử phát nhạc**
 	- Thống kê số bài hát đã nghe theo ngày
-		![s13165501042025](https://a.okmd.dev/md/6778d25a471c0.png)
-		
+ 		![image](https://github.com/user-attachments/assets/d8cd5680-618c-4c86-8e1d-d32c53582e6a)
+
 	- Thống kê số bài hát đã nghe theo buổi: sáng, chiều, tối
-		![s13215701042025](https://a.okmd.dev/md/6778d3882e205.png)
-		
-	- Thống kê theo thể loại nhac
-		![s13213001042025](https://a.okmd.dev/md/6778d36c65d8a.png)
+		![image](https://github.com/user-attachments/assets/0d85ae82-d513-4e75-abc8-e5a657953701)
+
+	- Thống kê theo thể loại nhac và số phút nghe
+		![image](https://github.com/user-attachments/assets/3cd888e6-a47c-4058-b727-7f40c6ee7c44)
+
 - **Một số chức năng thêm**
   - Khi click vào nút Play ở playlist thì sẽ thêm các bài hát trong playlist đó vào hàng chờ phát nhạc và tiến hành phát bài nhạc đầu tiên
 	  ![s10225812112024](https://a.okmd.dev/md/675905939ac5b.png)
