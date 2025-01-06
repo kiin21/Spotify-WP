@@ -6,33 +6,52 @@ using Spotify.Contracts.DAO;
 using Spotify.DAOs;
 using Spotify.Models.DTOs;
 
+namespace Spotify.DAOs;
+
+/// <summary>
+/// Data Access Object for Queue
+/// </summary>
 public class QueueDAO : BaseDAO, IQueueDAO
 {
     private readonly IMongoCollection<QueueDTO> _queues;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="QueueDAO"/> class.
+    /// </summary>
     public QueueDAO()
     {
         var database = connection.GetDatabase("SpotifineDB");
         _queues = database.GetCollection<QueueDTO>("Queue");
     }
 
-    //public async Task<List<QueueDTO>> GetQueueAsync()
-    //{
-    //    return await _queues.Find(q => true).ToListAsync();
-    //}
-
+    /// <summary>
+    /// Retrieves a queue by its ID.
+    /// </summary>
+    /// <param name="id">The ID of the queue.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a QueueDTO object.</returns>
     public async Task<QueueDTO> GetQueueByIdAsync(string id)
     {
         var res = await _queues.Find(q => q.UserId.ToString() == id).FirstOrDefaultAsync();
         return res;
     }
 
+    /// <summary>
+    /// Adds a new queue.
+    /// </summary>
+    /// <param name="queue">The queue to add.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task AddQueueAsync(QueueDTO queue)
     {
         if (queue == null) throw new ArgumentNullException(nameof(queue));
         await _queues.InsertOneAsync(queue);
     }
 
+    /// <summary>
+    /// Updates the queue for a specific user.
+    /// </summary>
+    /// <param name="user_id">The ID of the user.</param>
+    /// <param name="song_ids">The list of song IDs to update the queue with.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task UpdateQueueAsync(string user_id, List<string> song_ids)
     {
         if (string.IsNullOrWhiteSpace(user_id))
@@ -60,13 +79,14 @@ public class QueueDAO : BaseDAO, IQueueDAO
         }
     }
 
-
-
+    /// <summary>
+    /// Deletes the queue for a specific user.
+    /// </summary>
+    /// <param name="user_id">The ID of the user.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task DeleteQueueAsync(string user_id)
     {
         //TODO : Implement this method
         throw new NotImplementedException();
-        //var filter = Builders<QueueDTO>.Filter.Eq(q => q.Id, id);
-        //await _queues.DeleteOneAsync(filter);
     }
 }

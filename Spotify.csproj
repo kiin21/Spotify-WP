@@ -36,7 +36,6 @@
     <None Remove="Views\MainPanelPage.xaml" />
     <None Remove="Views\NowPlayingPreviewUserControl.xaml" />
     <None Remove="Views\PaymentPage.xaml" />
-    <None Remove="Views\PaymentWindow.xaml" />
     <None Remove="Views\PlaybackControlPage.xaml" />
     <None Remove="Views\PlaylistPage.xaml" />
     <None Remove="Views\PremiumPage.xaml" />
@@ -105,9 +104,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Page Update="Views\SuccessPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Views\PaymentWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\SharePlaylistDialog.xaml">

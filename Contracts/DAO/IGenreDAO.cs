@@ -5,5 +5,11 @@ using Spotify.Models.DTOs;
 
 namespace Spotify.Contracts.DAO
 {
-    public interface IGenreDAO : IDAO{}
+    /// <summary>
+    /// Interface for Genre Data Access Object
+    /// </summary>
+    public interface IGenreDAO : IDAO
+    {
+    }
 }
+

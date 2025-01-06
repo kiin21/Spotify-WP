@@ -7,12 +7,24 @@ using Spotify.ViewModels;
 
 namespace Spotify.Views;
 
+/// <summary>
+/// A page that displays the right sidebar, including the playback queue.
+/// </summary>
 public sealed partial class RightSideBarPage : Page
 {
-    // Subscribe to queue updates from ShellWindow
+    /// <summary>
+    /// Subscribes to queue updates from ShellWindow.
+    /// </summary>
     ShellWindow shellWindow = App.Current.Services.GetRequiredService<ShellWindow>();
 
+    /// <summary>
+    /// Gets the view model for playback control.
+    /// </summary>
     public PlaybackControlViewModel playbackControlViewModel;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RightSideBarPage"/> class.
+    /// </summary>
     public RightSideBarPage()
     {
         shellWindow.QueueUpdated += OnQueueUpdated;
@@ -22,7 +34,11 @@ public sealed partial class RightSideBarPage : Page
         DataContext = playbackControlViewModel;
     }
 
-
+    /// <summary>
+    /// Handles the queue updated event.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void OnQueueUpdated(object sender, QueueUpdatedEventArgs e)
     {
         ObservableCollection<SongDTO> updatedQueue = e.UpdatedQueue;
@@ -30,7 +46,5 @@ public sealed partial class RightSideBarPage : Page
         // Add the song from playlist to the PlaybackList
         bool belongToPlaylist = true;
         playbackControlViewModel.AddToPlaybackList(updatedQueue, belongToPlaylist);
-
     }
-
 }

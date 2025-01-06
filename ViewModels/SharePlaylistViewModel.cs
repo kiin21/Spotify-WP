@@ -2,6 +2,7 @@
 using Spotify.Models.DTOs;
 using Spotify.Services;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -76,7 +77,7 @@ namespace Spotify.ViewModels
     /// <summary>
     /// Data transfer object for sharing a user.
     /// </summary>
-    public class UserShareDTO
+    public class UserShareDTO : INotifyPropertyChanged
     {
         /// <summary>
         /// Gets or sets the user ID.
@@ -90,5 +91,7 @@ namespace Spotify.ViewModels
         /// Gets or sets a value indicating whether the user is selected for sharing.
         /// </summary>
         public bool IsSelected { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

@@ -1,14 +1,17 @@
-﻿
+﻿using Microsoft.UI.Xaml.Controls;
 
-using Microsoft.UI.Xaml.Controls;
+namespace Spotify.Views;
 
-namespace Spotify.Views
+/// <summary>
+/// A page that displays a success message.
+/// </summary>
+public sealed partial class SuccessPage : Page
 {
-    public sealed partial class SuccessPage : Page
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SuccessPage"/> class.
+    /// </summary>
+    public SuccessPage()
     {
-        public SuccessPage()
-        {
-            this.InitializeComponent();
-        }
+        this.InitializeComponent();
     }
 }

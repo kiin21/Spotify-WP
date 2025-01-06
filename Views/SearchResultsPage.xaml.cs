@@ -13,15 +13,28 @@ using System.Threading.Tasks;
 
 namespace Spotify.Views;
 
+/// <summary>
+/// A page that displays search results and allows interaction with playlists.
+/// </summary>
 public sealed partial class SearchResultsPage : Page
 {
+    /// <summary>
+    /// Gets the view model for the search results page.
+    /// </summary>
     public SearchResultPageViewModel ViewModel { get; private set; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SearchResultsPage"/> class.
+    /// </summary>
     public SearchResultsPage()
     {
         this.InitializeComponent();
     }
 
+    /// <summary>
+    /// Called when the page is navigated to.
+    /// </summary>
+    /// <param name="e">The event data.</param>
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
         base.OnNavigatedTo(e);
@@ -37,11 +50,16 @@ public sealed partial class SearchResultsPage : Page
         }
     }
 
+    /// <summary>
+    /// Updates the flyout menu with playlists.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void UpdateFlyout(object sender, RoutedEventArgs e)
     {
         var button = sender as Button;
 
-        // Lấy bài hát liên quan từ DataContext
+        // Get the related song from DataContext
         if (button?.DataContext is SongDTO selectedSong)
         {
             if (button.Flyout is MenuFlyout menuFlyout)
@@ -53,10 +71,10 @@ public sealed partial class SearchResultsPage : Page
                     var menuItem = new MenuFlyoutItem
                     {
                         Text = $"Add to {playlist.Title}",
-                        Tag = playlist.Id // Gắn Playlist ID vào MenuItem
+                        Tag = playlist.Id // Attach Playlist ID to MenuItem
                     };
 
-                    // Gắn sự kiện Click
+                    // Attach Click event
                     menuItem.Click += async (s, args) =>
                     {
                         var selectedPlaylistId = (s as MenuFlyoutItem)?.Tag as string;
@@ -69,6 +87,12 @@ public sealed partial class SearchResultsPage : Page
         }
     }
 
+    /// <summary>
+    /// Adds a song to a playlist asynchronously.
+    /// </summary>
+    /// <param name="song">The song to add.</param>
+    /// <param name="playlistId">The ID of the playlist to add the song to.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     private async Task AddSongToPlaylistAsync(SongDTO song, string playlistId)
     {
         try
@@ -80,6 +104,12 @@ public sealed partial class SearchResultsPage : Page
             System.Diagnostics.Debug.WriteLine($"Error adding song to playlist: {ex.Message}");
         }
     }
+
+    /// <summary>
+    /// Handles the item click event for the song list.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void ListView_ItemClick(object sender, ItemClickEventArgs e)
     {
         if (e.ClickedItem is SongDTO song)
@@ -87,5 +117,4 @@ public sealed partial class SearchResultsPage : Page
             ViewModel.SongSelectedCommand.Execute(song);
         }
     }
-
 }

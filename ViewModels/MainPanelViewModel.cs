@@ -59,13 +59,18 @@ public class MainPanelViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Adds the specified song to the playback queue.
+    /// </summary>
+    /// <param name="song">The song to add to the queue.</param>
     public void AddToQueueCommand(SongDTO song)
     {
         var playbackViewModel = PlaybackControlViewModel.Instance;
-        var collection  = new ObservableCollection<SongDTO>();
+        var collection = new ObservableCollection<SongDTO>();
         collection.Add(song);
         playbackViewModel.AddToPlaybackList(collection, false);
     }
+
 
     /// <summary>
     /// Occurs when a property value changes.
